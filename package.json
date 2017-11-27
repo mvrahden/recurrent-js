@@ -21,6 +21,8 @@
     "url": "git+https://github.com/mvrahden/recurrent-ts.git"
   },
   "license": "MIT",
-  "devDependencies": {},
+  "devDependencies": {
+    "typescript": "^2.6.1"
+  },
   "dependencies": {}
 }
