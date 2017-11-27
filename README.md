@@ -20,14 +20,17 @@ npm install --save recurrent-ts
 
 Currently exposed Classes:
 
-* R
-* Mat
-* RandMat
-* Graph
-* Net
-* LSTM
+* *R* - Collection of Utility functions
+* *Mat* - Sophisticated Matrix Structure
+* *RandMat* - `Mat` with populated with random gaussian distributed values
+* *Graph* - Graph with Operations
+* *Net*
+* *LSTM*
 
-These classes can be imported from this modules `index` file.
+These classes can be directly imported from this `npm` module, e.g.:
+```typescript
+import { Garph, Net } from 'recurrent-ts';
+```
 
 # Contribute
 
