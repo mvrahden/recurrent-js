@@ -29,15 +29,17 @@ Currently exposed Classes:
 
 These classes can be imported from this modules `index` file.
 
-# Contributional Development
+# Contribute
 
 1. `Clone` this project to a working directory.
 2. `npm install` to setup the development dependencies.
-2. To compile the codebase:
+3. To compile the codebase:
 
 ```
 tsc -p .
 ```
+
+This project relies on Visual Studio Codes built-in Typescript linting facilities. Let's follow primarily the [Google TypeScript Style-Guide](https://github.com/google/ts-style) through the included *tslint-google.json* configuration file.
 
 # License
 
