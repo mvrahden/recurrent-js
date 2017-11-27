@@ -1,6 +1,6 @@
 # recurrent-ts
 
-*recurrent-ts* is a Typescript port of the _Andrej Karparthys_ RecurrentJS library that implements the following:
+*recurrent-ts* is a Typescript port of the _Andrej Karpathy's_ RecurrentJS library that implements the following:
 
 - Deep **Recurrent Neural Networks** (RNN) 
 - **Long Short-Term Memory networks** (LSTM) 
