@@ -4,8 +4,8 @@ export class Mat extends Assertable {
   n: number;
   d: number;
   // TODO: should be declared private
-  dw: Array<number>;
-  w: Array<number>;
+  dw: Array<number> | Float64Array;
+  w: Array<number> | Float64Array;
 
   constructor(n:number, d:number) {
     super();
@@ -30,7 +30,7 @@ export class Mat extends Assertable {
     this.w[ix] = v;
   }
 
-  setFrom (arr:Array<any>):void {
+  setFrom (arr:Array<number>):void {
     for(let i = 0, n = arr.length; i<n; i++) {
       this.w[i] = arr[i];
     }
@@ -54,7 +54,7 @@ export class Mat extends Assertable {
 
   // helper function returns array of zeros of length n
   // and uses typed arrays if available
-  static zeros(n): any {
+  static zeros(n): Array<number> | Float64Array {
     if (typeof (n) === 'undefined' || isNaN(n)) { return []; }
     if (typeof ArrayBuffer === 'undefined') {
       // lacking browser support
