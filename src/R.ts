@@ -2,8 +2,9 @@ import { RandMat } from './RandMat';
 import { Graph } from "./Graph";
 import { Net } from './Net';
 import { Mat } from './Mat';
+import { Assertable } from './utils/Assertable';
 
-export class R {
+export class R extends Assertable {
 
   // Random numbers utils
   public static randf(a: number, b: number):number { return Math.random() * (b - a) + a; }
@@ -79,21 +80,20 @@ export class R {
     }
     return maxix;
   }
-  // // return Mat but filled with random numbers from gaussian
-  // static Graph (needsBackprop:boolean):Graph {
-  //   return new Graph(needsBackprop);
-  // }
 
-  // // return Mat but filled with random numbers from gaussian
-  // static Mat (n, d):Mat {
-  //   return new Mat(n, d);
-  // }
+  /**
+   * Returns an index of the weighted sample of Array `p`
+   * @param p Array to be sampled
+   */
+  public static sampleWeighted(p:Array<number>):number {
+    const r = Math.random();
+    let c = 0.0;
+    for (let i = 0; i < p.length; i++) {
+      c += p[i];
+      if (c >= r) { return i; }
+    }
 
-  // // return Mat but filled with random numbers from gaussian
-  // static RandMat (n:number, d:number, mu:number, std:number):Mat {
-  //   return new RandMat(n, d, mu, std);
-  // }
-
-  // static updateNet (net:Net, alpha:number):void { Net.update(net, alpha); }
+    this.assert(false, 'wtf');
+  }
 
 }
