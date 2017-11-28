@@ -1,5 +1,7 @@
 import { Assertable } from './utils/Assertable';
 
+import { R } from './R';
+
 export class Mat extends Assertable {
   n: number;
   d: number;
@@ -11,8 +13,8 @@ export class Mat extends Assertable {
     super();
     this.n = n;
     this.d = d;
-    this.w = Mat.zeros(n * d);
-    this.dw = Mat.zeros(n * d);
+    this.w = R.zeros(n * d);
+    this.dw = R.zeros(n * d);
   }
 
   get (row:number, col:number):number {
@@ -52,20 +54,6 @@ export class Mat extends Assertable {
     }
   }
 
-  // helper function returns array of zeros of length n
-  // and uses typed arrays if available
-  static zeros(n): any {
-    if (typeof (n) === 'undefined' || isNaN(n)) { return []; }
-    if (typeof ArrayBuffer === 'undefined') {
-      // lacking browser support
-      const arr = new Array(n);
-      for (let i = 0; i < n; i++) { arr[i] = 0; }
-      return arr;
-    } else {
-      return new Float64Array(n);
-    }
-  }
-
   toJSON ():{} {
     const json = {};
     json['n'] = this.n;
@@ -77,8 +65,8 @@ export class Mat extends Assertable {
   fromJSON (json):void {
     this.n = json.n;
     this.d = json.d;
-    this.w = Mat.zeros(this.n * this.d);
-    this.dw = Mat.zeros(this.n * this.d);
+    this.w = R.zeros(this.n * this.d);
+    this.dw = R.zeros(this.n * this.d);
     for (let i = 0, n = this.n * this.d; i < n; i++) {
       this.w[i] = json.w[i]; // copy over weights
     }
