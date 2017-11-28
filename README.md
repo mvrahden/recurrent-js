@@ -1,6 +1,6 @@
 # RECURRENT-ts
 
-*RECURRENT-ts* is an object-oriented Typescript port of the _Andrej Karpathy's_ RecurrentJS library that implements the following:
+**RECURRENT-ts** is an object-oriented Typescript port of the _Andrej Karpathy's_ RecurrentJS library that implements the following:
 
 * Deep **Recurrent Neural Networks** (RNN) 
 * **Long Short-Term Memory networks** (LSTM) 
@@ -12,6 +12,9 @@ For further Information see the [recurrent-js](https://github.com/karpathy/recur
 
 ## To install as dependency:
 
+Download available `@npm`: [recurrent-ts](https://www.npmjs.com/package/recurrent-ts)
+
+Install via command line:
 ```
 npm install --save recurrent-ts
 ```
