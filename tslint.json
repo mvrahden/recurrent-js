@@ -4,6 +4,7 @@
     "array-type": [
       false
     ],
+    "arrow-return-shorthand": false,
     "eofline": true,
     "member-access": false,
     "no-any": false,

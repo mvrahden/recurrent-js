@@ -4,7 +4,7 @@
   "description": "Deep Recurrent Neural Networks and LSTMs in Typescript. Ported, object-oriented and refactored version of Andrej Karpathy's recurrent-js (https://github.com/karpathy/recurrentjs)",
   "main": "index.js",
   "scripts": {
-    "compile": "tsc -p .",
+    "prepare": "tsc -p .",
     "pretest": "npm run compile",
     "test": "node"
   },
