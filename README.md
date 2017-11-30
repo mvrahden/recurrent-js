@@ -1,12 +1,12 @@
 # RECURRENT-ts
 
-**RECURRENT-ts** is an object-oriented Typescript port of the _Andrej Karpathy's_ RecurrentJS library that implements the following:
+**RECURRENT-ts** is an object-oriented Typescript-supported port of the _Andrej Karpathy's_ RecurrentJS library that implements the following:
 
 * Deep **Recurrent Neural Networks** (RNN) 
 * **Long Short-Term Memory networks** (LSTM) 
 * In fact, the library is more general because it has functionality to construct arbitrary **expression graphs** over which the library can perform **automatic differentiation** similar to what you may find in Theano for Python, or in Torch etc. Currently, the code uses this very general functionality to implement RNN/LSTM, but one can build arbitrary Neural Networks and do automatic backprop.
 
-For further Information see the [recurrent-js](https://github.com/karpathy/recurrentjs) repository.
+For further Information see the [recurrentjs](https://github.com/karpathy/recurrentjs) repository.
 
 # Use as `npm`-Project Dependency
 
@@ -34,6 +34,10 @@ These classes can be directly imported from this `npm` module, e.g.:
 ```typescript
 import { Garph, Net } from 'recurrent-ts';
 ```
+
+## Further Info
+
+The transpiled Javascript-target is `ES6`. The supported module format is `CommonJS`.
 
 # Contribute
 
