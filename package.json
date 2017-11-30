@@ -1,6 +1,6 @@
 {
   "name": "recurrent-ts",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Deep Recurrent Neural Networks and LSTMs in Typescript. Ported, object-oriented and refactored version of Andrej Karpathy's recurrent-js (https://github.com/karpathy/recurrentjs)",
   "main": "index.js",
   "scripts": {
