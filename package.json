@@ -12,6 +12,7 @@
     "backprop"
   ],
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "prepare": "tsc -p .",
     "pretest": "npm run compile",
