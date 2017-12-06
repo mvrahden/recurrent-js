@@ -12,7 +12,7 @@ For further Information see the [recurrentjs](https://github.com/karpathy/recurr
 
 ## How to install as dependency
 
-Download available `@npm`: [recurrent-ts](https://www.npmjs.com/package/recurrent-js)
+Download available `@npm`: [recurrent-js](https://www.npmjs.com/package/recurrent-js)
 
 Install via command line:
 ```
