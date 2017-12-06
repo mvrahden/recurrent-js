@@ -1,6 +1,6 @@
-# RECURRENT-ts
+# RECURRENT-js
 
-**RECURRENT-ts** is an object-oriented Typescript-supported port of the _Andrej Karpathy's_ RecurrentJS library that implements the following:
+**RECURRENT-js** is an object-oriented Javascript library (baked with Typescript). It is a port of _Andrej Karpathy's_ RecurrentJS library that implements the following:
 
 * Deep **Recurrent Neural Networks** (RNN) 
 * **Long Short-Term Memory networks** (LSTM) 
@@ -8,18 +8,18 @@
 
 For further Information see the [recurrentjs](https://github.com/karpathy/recurrentjs) repository.
 
-# Use as `npm`-Project Dependency
+# For Production Use
 
-## To install as dependency:
+## How to install as dependency
 
-Download available `@npm`: [recurrent-ts](https://www.npmjs.com/package/recurrent-ts)
+Download available `@npm`: [recurrent-ts](https://www.npmjs.com/package/recurrent-js)
 
 Install via command line:
 ```
-npm install --save recurrent-ts
+npm install --save recurrent-js
 ```
 
-## To use the Library in Production:
+## How To use the Library in Production
 
 Currently exposed Classes:
 
@@ -32,14 +32,14 @@ Currently exposed Classes:
 
 These classes can be directly imported from this `npm` module, e.g.:
 ```typescript
-import { Garph, Net } from 'recurrent-ts';
+import { Garph, Net } from 'recurrent-js';
 ```
 
 ## Further Info
 
 The transpiled Javascript-target is `ES6`. The supported module format is `CommonJS`.
 
-# Contribute
+# For Contributors
 
 1. `Clone` this project to a working directory.
 2. `npm install` to setup the development dependencies.
@@ -49,7 +49,7 @@ The transpiled Javascript-target is `ES6`. The supported module format is `Commo
 tsc -p .
 ```
 
-This project relies on Visual Studio Codes built-in Typescript linting facilities. Let's follow primarily the [Google TypeScript Style-Guide](https://github.com/google/ts-style) through the included *tslint-google.json* configuration file.
+This project relies on Visual Studio Codes built-in Typescript linting facilities. It primarily follows the [Google TypeScript Style-Guide](https://github.com/google/ts-style) through the provided *tslint-google.json* configuration file.
 
 # License
 

@@ -1,5 +1,5 @@
 {
-  "name": "recurrent-ts",
+  "name": "recurrent-js",
   "version": "1.2.2",
   "description": "Deep Recurrent Neural Networks and LSTMs in Typescript. Ported, object-oriented and refactored version of Andrej Karpathy's recurrent-js (https://github.com/karpathy/recurrentjs)",
   "keywords": [
@@ -19,13 +19,13 @@
     "test": "node"
   },
   "author": "Menno van Rahden",
-  "homepage": "https://github.com/mvrahden/recurrent-ts#readme",
+  "homepage": "https://github.com/mvrahden/recurrent-js#readme",
   "bugs": {
-    "url": "https://github.com/mvrahden/recurrent-ts/issues"
+    "url": "https://github.com/mvrahden/recurrent-js/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mvrahden/recurrent-ts.git"
+    "url": "git+https://github.com/mvrahden/recurrent-js.git"
   },
   "license": "MIT",
   "devDependencies": {
