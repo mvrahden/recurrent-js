@@ -19,33 +19,33 @@ export class LSTM {
   cellb: Array<RandMat>;
   cellWh: Array<RandMat>;
   cellWx: Array<RandMat>;
-  
+
   decoderb: Mat;
   decoderWh: RandMat;
 
-  constructor(inputSize:number, hiddenSizes:Array<number>, outputSize:number) {
+  constructor(inputSize: number, hiddenSizes: Array<number>, outputSize: number) {
     this.inputSize = inputSize;
     this.hiddenSizes = hiddenSizes;
     this.outputSize = outputSize;
 
-    for(let d = 0; d<hiddenSizes.length; d++) {
+    for (let i = 0; i < hiddenSizes.length; i++) {
       // loop over hidden depths
-      const prevSize = d === 0 ? inputSize : hiddenSizes[d - 1];
-      const hiddenSize = hiddenSizes[d];
+      const prevSize = i === 0 ? inputSize : hiddenSizes[i - 1];
+      const hiddenSize = hiddenSizes[i];
       // gates parameters
-      this.inputWx[d] = new RandMat(hiddenSize, prevSize, 0, 0.08);
-      this.inputWh[d] = new RandMat(hiddenSize, hiddenSize, 0, 0.08);
-      this.inputb[d] = new Mat(hiddenSize, 1);
-      this.forgetWx[d] = new RandMat(hiddenSize, prevSize, 0, 0.08);
-      this.forgetWh[d] = new RandMat(hiddenSize, hiddenSize, 0, 0.08);
-      this.forgetb[d] = new Mat(hiddenSize, 1);
-      this.outputWx[d] = new RandMat(hiddenSize, prevSize, 0, 0.08);
-      this.outputWh[d] = new RandMat(hiddenSize, hiddenSize, 0, 0.08);
-      this.outputb[d] = new Mat(hiddenSize, 1);
+      this.inputWx[i] = new RandMat(hiddenSize, prevSize, 0, 0.08);
+      this.inputWh[i] = new RandMat(hiddenSize, hiddenSize, 0, 0.08);
+      this.inputb[i] = new Mat(hiddenSize, 1);
+      this.forgetWx[i] = new RandMat(hiddenSize, prevSize, 0, 0.08);
+      this.forgetWh[i] = new RandMat(hiddenSize, hiddenSize, 0, 0.08);
+      this.forgetb[i] = new Mat(hiddenSize, 1);
+      this.outputWx[i] = new RandMat(hiddenSize, prevSize, 0, 0.08);
+      this.outputWh[i] = new RandMat(hiddenSize, hiddenSize, 0, 0.08);
+      this.outputb[i] = new Mat(hiddenSize, 1);
       // cell write params
-      this.cellWx[d] = new RandMat(hiddenSize, prevSize, 0, 0.08);
-      this.cellWh[d] = new RandMat(hiddenSize, hiddenSize, 0, 0.08);
-      this.cellb[d] = new Mat(hiddenSize, 1);
+      this.cellWx[i] = new RandMat(hiddenSize, prevSize, 0, 0.08);
+      this.cellWh[i] = new RandMat(hiddenSize, hiddenSize, 0, 0.08);
+      this.cellb[i] = new Mat(hiddenSize, 1);
     }
     // decoder params
     this.decoderWh = new RandMat(outputSize, (hiddenSizes.length - 1), 0, 0.08);
@@ -59,10 +59,10 @@ export class LSTM {
    * @param prev Structure containing hidden representation ['h'] and cell memory ['c'] of type `Mat[]` from previous iteration
    * @returns Structure containing hidden representation ['h'] and cell memory ['c'] of type `Mat[]` and output ['output'] of type `Mat`
    */
-  public forwardLSTM (graph:Graph, observations:Mat, prev:any):{'c':Mat[], 'h':Mat[], 'o':Mat} {
+  public forwardLSTM(graph: Graph, observations: Mat, prev: any): { 'c': Mat[], 'h': Mat[], 'o': Mat } {
 
-    let hiddenPrevs:Array<Mat>, cellPrevs:Array<Mat>;
-    
+    let hiddenPrevs: Array<Mat>, cellPrevs: Array<Mat>;
+
     if (prev == null || typeof prev.h === 'undefined') {
       hiddenPrevs = new Array<Mat>();
       cellPrevs = new Array<Mat>();
@@ -76,8 +76,8 @@ export class LSTM {
       cellPrevs = prev.c;
     }
 
-    const hidden:Array<Mat> = [];
-    const cell:Array<Mat> = [];
+    const hidden: Array<Mat> = [];
+    const cell: Array<Mat> = [];
     for (let d = 0; d < this.hiddenSizes.length; d++) {
 
       const inputVector = (d === 0) ? observations : hidden[d - 1]; // first iteration fill Observations

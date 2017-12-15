@@ -1,6 +1,7 @@
 # RECURRENT-js
+[![js-google-style](https://img.shields.io/badge/code%20style-google-blue.svg)](https://google.github.io/styleguide/jsguide.html)
 
-**RECURRENT-js** is an object-oriented Javascript library (baked with Typescript). It is a port of _Andrej Karpathy's_ RecurrentJS library that implements the following:
+**RECURRENT-js** is an object-oriented Javascript library (baked with [Typescript](https://github.com/Microsoft/TypeScript)). It is a port of _Andrej Karpathy's_ RecurrentJS library that implements the following:
 
 * Deep **Recurrent Neural Networks** (RNN) 
 * **Long Short-Term Memory networks** (LSTM) 

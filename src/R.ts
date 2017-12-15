@@ -7,15 +7,15 @@ import { Assertable } from './utils/Assertable';
 export class R extends Assertable {
 
   // Random numbers utils
-  public static randf(a: number, b: number):number { return Math.random() * (b - a) + a; }
-  public static randi(a: number, b: number):number { return Math.floor(R.randf(a, b)); }
-  public static randn(mu: number, std: number):number { return mu + R.gaussRandom() * std; }
+  public static randf(a: number, b: number): number { return Math.random() * (b - a) + a; }
+  public static randi(a: number, b: number): number { return Math.floor(R.randf(a, b)); }
+  public static randn(mu: number, std: number): number { return mu + R.gaussRandom() * std; }
 
   // TODO: Static could lead to unwanted behavior in async processes
   private static returnV = false;
   private static vVal = 0.0;
 
-  private static gaussRandom ():number {
+  private static gaussRandom(): number {
     if (R.returnV) {
       R.returnV = false;
       return R.vVal;
@@ -42,7 +42,7 @@ export class R extends Assertable {
    * @param arr Array to be filled
    * @param c value to be set
    */
-  public static setConst(arr:Array<number>, c:number) {
+  public static setConst(arr: Array<number>, c: number) {
     for (let i = 0; i < arr.length; i++) {
       arr[i] = c;
     }
@@ -68,7 +68,7 @@ export class R extends Assertable {
    * @param w Array of Numbers
    * @returns Index of Argmax Operation
    */
-  public static maxi(w:Array<number>): number {
+  public static maxi(w: Array<number>): number {
     let maxv = w[0];
     let maxix = 0;
     for (let i = 1; i < w.length; i++) {
@@ -85,7 +85,7 @@ export class R extends Assertable {
    * Returns an index of the weighted sample of Array `p`
    * @param p Array to be sampled
    */
-  public static sampleWeighted(p:Array<number>):number {
+  public static sampleWeighted(p: Array<number>): number {
     const r = Math.random();
     let c = 0.0;
     for (let i = 0; i < p.length; i++) {
@@ -95,5 +95,5 @@ export class R extends Assertable {
 
     this.assert(false, 'wtf');
   }
-  
+
 }

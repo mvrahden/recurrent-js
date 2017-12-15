@@ -1,12 +1,12 @@
 import { Mat } from './Mat';
 
 export class Net {
-  public W1:Mat | null = null;
-  public b1:Mat | null = null;
-  public W2:Mat | null = null;
-  public b2:Mat | null = null;
+  public W1: Mat | null = null;
+  public b1: Mat | null = null;
+  public W2: Mat | null = null;
+  public b2: Mat | null = null;
 
-  static update(net: Net, alpha: number):void {
+  static update(net: Net, alpha: number): void {
     for (const property in net) {
       if (net.hasOwnProperty(property)) {
         Mat.update(net[property], alpha);
@@ -14,7 +14,7 @@ export class Net {
     }
   }
 
-  static toJSON(net:Net): {} {
+  static toJSON(net: Net): {} {
     const j = {};
     for (const property in net) {
       if (net.hasOwnProperty(property)) {

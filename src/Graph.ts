@@ -6,7 +6,7 @@ export class Graph extends Assertable {
   backprop: Array<any>;
   private needsBackprop: boolean;
 
-  constructor(needsBackprop:boolean) {
+  constructor(needsBackprop: boolean) {
     super();
     if (typeof needsBackprop === 'undefined') { needsBackprop = true; };
     this.needsBackprop = needsBackprop;
@@ -17,13 +17,13 @@ export class Graph extends Assertable {
     this.backprop = [];
   }
 
-  public backward ():void {
-    for(let i = this.backprop.length - 1; i >= 0; i--) {
+  public backward(): void {
+    for (let i = this.backprop.length - 1; i >= 0; i--) {
       this.backprop[i](); // tick!
     }
   }
 
-  public rowPluck (m:Mat, ix:number):Mat {
+  public rowPluck(m: Mat, ix: number): Mat {
     // pluck a row of m with index ix and return it as col vector
     Mat.assert(ix >= 0 && ix < m.n);
     const d = m.d;
@@ -41,7 +41,7 @@ export class Graph extends Assertable {
     return out;
   }
 
-  public tanh (m:Mat):Mat {
+  public tanh(m: Mat): Mat {
     // tanh nonlinearity
     const out = new Mat(m.n, m.d);
     const n = m.w.length;
@@ -62,7 +62,7 @@ export class Graph extends Assertable {
     return out;
   }
 
-  public sigmoid (m:Mat):Mat {
+  public sigmoid(m: Mat): Mat {
     // sigmoid nonlinearity
     const out = new Mat(m.n, m.d);
     const n = m.w.length;
@@ -82,13 +82,13 @@ export class Graph extends Assertable {
     }
     return out;
   }
-  
+
   private static sig(x): number {
     // helper function for computing sigmoid
     return 1.0 / (1 + Math.exp(-x));
   }
 
-  public relu (m:Mat):Mat {
+  public relu(m: Mat): Mat {
     const out = new Mat(m.n, m.d);
     const n = m.w.length;
     for (let i = 0; i < n; i++) {
@@ -105,7 +105,7 @@ export class Graph extends Assertable {
     return out;
   }
 
-  public mul (m1:Mat, m2:Mat):Mat {
+  public mul(m1: Mat, m2: Mat): Mat {
     // multiply matrices m1 * m2
     Mat.assert(m1.d === m2.n, 'matmul dimensions misaligned');
 
@@ -139,7 +139,7 @@ export class Graph extends Assertable {
     return out;
   }
 
-  public add (m1:Mat, m2:Mat):Mat {
+  public add(m1: Mat, m2: Mat): Mat {
     Mat.assert(m1.w.length === m2.w.length);
 
     const out = new Mat(m1.n, m1.d);
@@ -158,7 +158,7 @@ export class Graph extends Assertable {
     return out;
   }
 
-  public dot (m1:Mat, m2:Mat):Mat {
+  public dot(m1: Mat, m2: Mat): Mat {
     // m1 m2 are both column vectors
     Mat.assert(m1.w.length === m2.w.length);
     const out = new Mat(1, 1);
@@ -179,7 +179,7 @@ export class Graph extends Assertable {
     return out;
   }
 
-  public eltmul (m1:Mat, m2:Mat):Mat {
+  public eltmul(m1: Mat, m2: Mat): Mat {
     Mat.assert(m1.w.length === m2.w.length);
 
     const out = new Mat(m1.n, m1.d);
