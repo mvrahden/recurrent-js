@@ -13,10 +13,10 @@ export class Net {
    * @param net 
    * @param alpha 
    */
-  public static update(net: Net, alpha: number): void {
-    for (const property in net) {
-      if (net.hasOwnProperty(property)) {
-        Mat.update(net[property], alpha);
+  public update(alpha: number): void {
+    for (const property in this) {
+      if (this.hasOwnProperty(property)) {
+        Mat.update(this[property], alpha);
       }
     }
   }
