@@ -30,6 +30,7 @@ Currently exposed Classes:
   * **RandMat** - `Mat` populated with random gaussian distributed values
   * **Graph** - Graph holding the Operations
   * **NNModel** - Genralized Class containing the Weights (and `Graph`) for `RNN` and `LSTM` 
+  * **PreviousOutputs** - Standardized Interface for parameter injection in forward-pass of `NNModel`s.
 
 * Network Classes:
   * **Net** - Simple Neural Network
