@@ -65,4 +65,4 @@ This project relies on Visual Studio Codes built-in Typescript linting facilitie
 
 # License
 
-As of License-File: *MIT*
+As of License-File: [MIT](LICENSE)
