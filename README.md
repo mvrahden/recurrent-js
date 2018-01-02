@@ -26,11 +26,11 @@ Currently exposed Classes:
 
 * Utility Classes:
   * **R** - Collection of Utility functions
-  * **Mat** - Sophisticated Matrix Structure
+  * **Mat** - Sophisticated Matrix Structure for Weights in Networks.
   * **RandMat** - `Mat` populated with random gaussian distributed values
   * **Graph** - Graph holding the Operations
-  * **NNModel** - Genralized Class holding the Weights for `RNN` and `LSTM` 
-  
+  * **NNModel** - Genralized Class containing the Weights (and `Graph`) for `RNN` and `LSTM` 
+
 * Network Classes:
   * **Net** - Simple Neural Network
   * **RNN** - Recurrent Neural Network. Extends `NNModel`.
