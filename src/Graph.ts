@@ -3,23 +3,23 @@ import { Assertable } from './utils/Assertable';
 import { Mat } from './Mat';
 
 export class Graph extends Assertable {
-  backprop: Array<any>;
   private needsBackprop: boolean;
 
-  constructor(needsBackprop: boolean) {
+  public readonly backprop: Array<Function>;
+
+  constructor(needsBackprop: boolean = true) {
     super();
-    if (typeof needsBackprop === 'undefined') { needsBackprop = true; };
     this.needsBackprop = needsBackprop;
 
     // this will store a list of functions that perform backprop,
     // in their forward pass order. So in backprop we will go
     // backwards and evoke each one
-    this.backprop = [];
+    this.backprop = new Array<Function>();
   }
 
   public backward(): void {
     for (let i = this.backprop.length - 1; i >= 0; i--) {
-      this.backprop[i](); // tick!
+      this.backprop[i]();
     }
   }
 

@@ -3,11 +3,11 @@ import { Assertable } from './utils/Assertable';
 import { R } from './R';
 
 export class Mat extends Assertable {
-  n: number;
-  d: number;
-  // TODO: should be declared private
-  dw: Array<number>;
-  w: Array<number>;
+  public n: number;
+  public d: number;
+
+  public dw: Array<number>;
+  public w: Array<number>;
 
   constructor(n: number, d: number) {
     super();
@@ -46,7 +46,7 @@ export class Mat extends Assertable {
 
   static update(m: Mat, alpha: number): void {
     // updates in place
-    for (let i = 0, n = m.n * m.d; i < n; i++) {
+    for (let i = 0; i < m.n * m.d; i++) {
       if (m.dw[i] !== 0) {
         m.w[i] += - alpha * m.dw[i];
         m.dw[i] = 0;

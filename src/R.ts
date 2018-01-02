@@ -1,6 +1,3 @@
-import { RandMat } from './RandMat';
-import { Graph } from "./Graph";
-import { Net } from './Net';
 import { Mat } from './Mat';
 import { Assertable } from './utils/Assertable';
 

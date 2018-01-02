@@ -6,7 +6,14 @@ export class Net {
   public W2: Mat | null = null;
   public b2: Mat | null = null;
 
-  static update(net: Net, alpha: number): void {
+  constructor() {}
+
+  /**
+   * Updates all 
+   * @param net 
+   * @param alpha 
+   */
+  public static update(net: Net, alpha: number): void {
     for (const property in net) {
       if (net.hasOwnProperty(property)) {
         Mat.update(net[property], alpha);
@@ -14,7 +21,7 @@ export class Net {
     }
   }
 
-  static toJSON(net: Net): {} {
+  public static toJSON(net: Net): {} {
     const j = {};
     for (const property in net) {
       if (net.hasOwnProperty(property)) {
@@ -24,11 +31,10 @@ export class Net {
     return j;
   }
 
-  static fromJSON(j): Net {
+  public static fromJSON(j: { W1: Mat, b1: Mat, W2: Mat, b2: Mat }): Net {
     const net = new Net();
     for (const property in j) {
       if (j.hasOwnProperty(property)) {
-        net[property] = new Mat(1, 1); // not proud of this
         net[property].fromJSON(j[property]);
       }
     }

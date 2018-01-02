@@ -1,8 +1,11 @@
-import { LSTM } from './LSTM';
-import { Net } from './Net';
 import { Graph } from './Graph';
-import { RandMat } from './RandMat';
+import { LSTM } from './LSTM';
 import { Mat } from './Mat';
+import { Net } from './Net';
+import { NNModel } from './NNModel';
 import { R } from './R';
+import { RandMat } from './RandMat';
+import { RNN } from './RNN';
+import { Solver } from './Solver';
 
-export { R, Mat, RandMat, Graph, Net, LSTM };
+export { R, Mat, RandMat, Graph, Net, LSTM, RNN, Solver, NNModel };
