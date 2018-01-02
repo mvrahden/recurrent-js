@@ -24,16 +24,27 @@ npm install --save recurrent-js
 
 Currently exposed Classes:
 
-* *R* - Collection of Utility functions
-* *Mat* - Sophisticated Matrix Structure
-* *RandMat* - `Mat` with populated with random gaussian distributed values
-* *Graph* - Graph with Operations
-* *Net*
-* *LSTM*
+* Utility Classes:
+  * **R** - Collection of Utility functions
+  * **Mat** - Sophisticated Matrix Structure
+  * **RandMat** - `Mat` populated with random gaussian distributed values
+  * **Graph** - Graph holding the Operations
+  * **NNModel** - Genralized Class holding the Weights for `RNN` and `LSTM` 
+  
+* Network Classes:
+  * **Net** - Simple Neural Network
+  * **RNN** - Recurrent Neural Network. Extends `NNModel`.
+  * **LSTM** - Long Short Term Memory Network. Extends `NNModel`.
 
 These classes can be directly imported from this `npm` module, e.g.:
 ```typescript
-import { Garph, Net } from 'recurrent-js';
+import { Graph, Net } from 'recurrent-js';
+```
+
+For JavaScript usage `require` classes from this `npm` module as follows:
+```javascript
+const Graph = require('recurrent-js').Graph;
+const Net = require('recurrent-js').Net;
 ```
 
 ## Further Info
