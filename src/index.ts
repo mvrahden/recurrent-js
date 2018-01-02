@@ -7,5 +7,6 @@ import { R } from './R';
 import { RandMat } from './RandMat';
 import { RNN } from './RNN';
 import { Solver } from './Solver';
+import { PreviousOutput } from './utils/PreviousOutput';
 
-export { R, Mat, RandMat, Graph, Net, LSTM, RNN, Solver, NNModel };
+export { R, Mat, RandMat, Graph, Net, LSTM, RNN, Solver, NNModel, PreviousOutput };
