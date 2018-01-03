@@ -4,7 +4,7 @@ import { PreviousOutput } from './utils/PreviousOutput';
 
 export abstract class NNModel {
 
-  public readonly model;
+  public readonly model: any;
   protected readonly graph: Graph;
 
   constructor(needsBackProp: boolean = true) {
