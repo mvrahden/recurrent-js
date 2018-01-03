@@ -37,7 +37,7 @@ Currently exposed Classes:
   * **RNN** - Recurrent Neural Network. Extends `NNModel`.
   * **LSTM** - Long Short Term Memory Network. Extends `NNModel`.
 
-These classes can be directly imported from this `npm` module, e.g.:
+These classes can be imported from this `npm` module, e.g.:
 ```typescript
 import { Graph, Net } from 'recurrent-js';
 ```
