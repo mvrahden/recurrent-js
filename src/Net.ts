@@ -42,7 +42,6 @@ export class Net {
    * @param alpha discount factor for weight updates
    */
   public update(alpha: number): void {
-    new Net({})
     this.W1.update(alpha);
     this.b1.update(alpha);
     this.W2.update(alpha);
