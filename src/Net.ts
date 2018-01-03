@@ -59,8 +59,7 @@ export class Net {
   }
 
   public static fromJSON(json: { W1, b1, W2, b2 }): Net {
-    const net = new Net(json);
-    return net;
+    return new Net(json);
   }
 
   private static has(object: any, keys: Array<string>) {
