@@ -6,9 +6,14 @@ export class Mat extends Assertable {
   public n: number;
   public d: number;
 
-  public dw: Array<number>;
-  public w: Array<number>;
+  public readonly w: Array<number>;
+  public readonly dw: Array<number>;
 
+  /**
+   * 
+   * @param n length of Matrix
+   * @param d depth of Matrix
+   */
   constructor(n: number, d: number) {
     super();
     this.n = n;
@@ -17,58 +22,77 @@ export class Mat extends Assertable {
     this.dw = R.zeros(n * d);
   }
 
+  /**
+   * Accesses the value of given row and column.
+   * @param row 
+   * @param col
+   * @returns the value of given row and column
+   */
   get(row: number, col: number): number {
-    // slow but careful accessor function
-    // we want row-major order
-    const ix = (this.d * row) + col;
+    const ix = this.getIndexBy(row, col);
     Mat.assert(ix >= 0 && ix < this.w.length);
     return this.w[ix];
   }
 
+  /**
+   * Mutates the value of given row and column.
+   * @param row 
+   * @param col 
+   * @param v 
+   */
   set(row: number, col: number, v: number): void {
-    // slow but careful accessor function
-    const ix = (this.d * row) + col;
+    const ix = this.getIndexBy(row, col);
     Mat.assert(ix >= 0 && ix < this.w.length);
     this.w[ix] = v;
   }
 
-  setFrom(arr: Array<number>): void {
-    for (let i = 0, n = arr.length; i < n; i++) {
+  /**
+   * Get Index by Row-major order
+   * @param row 
+   * @param col 
+   */
+  private getIndexBy(row: number, col: number) {
+    return (row * this.d) + col;
+  }
+
+  public setFrom(arr: Array<number>): void {
+    for (let i = 0; i < arr.length; i++) {
       this.w[i] = arr[i];
     }
   }
 
-  setColumn(m: Mat, i: number): void {
-    for (let q = 0, n = m.w.length; q < n; q++) {
+  public setColumn(m: Mat, i: number): void {
+    for (let q = 0; q < m.w.length; q++) {
       this.w[(this.d * q) + i] = m.w[q];
     }
   }
 
-  static update(m: Mat, alpha: number): void {
-    // updates in place
-    for (let i = 0; i < m.n * m.d; i++) {
-      if (m.dw[i] !== 0) {
-        m.w[i] += - alpha * m.dw[i];
-        m.dw[i] = 0;
+  /**
+   * updates all values
+   * @param alpha discount rate
+   */
+  public update(alpha: number): void {
+    for (let i = 0, n = this.n * this.d; i < n; i++) {
+      if (this.dw[i] !== 0) {
+        this.w[i] += - alpha * this.dw[i];
+        this.dw[i] = 0;
       }
     }
   }
 
-  toJSON(): {} {
+  static toJSON(m: Mat): {} {
     const json = {};
-    json['n'] = this.n;
-    json['d'] = this.d;
-    json['w'] = this.w;
+    json['n'] = m.n;
+    json['d'] = m.d;
+    json['w'] = m.w;
     return json;
   }
 
-  fromJSON(json): void {
-    this.n = json.n;
-    this.d = json.d;
-    this.w = R.zeros(this.n * this.d);
-    this.dw = R.zeros(this.n * this.d);
-    for (let i = 0, n = this.n * this.d; i < n; i++) {
-      this.w[i] = json.w[i]; // copy over weights
+  static fromJSON(json: {n, d, w}): Mat {
+    const mat = new Mat(json.n, json.d);
+    for (let i = 0, n = mat.n * mat.d; i < n; i++) {
+      mat.w[i] = json.w[i]; // copy over weights
     }
+    return mat;
   }
 }
