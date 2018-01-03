@@ -62,9 +62,9 @@ export class Net {
     return new Net(json);
   }
 
-  private static has(object: any, keys: Array<string>) {
+  private static has(obj: any, keys: Array<string>) {
     for (const key of keys) {
-      if (Object.hasOwnProperty.call(object, key)) { continue; }
+      if (Object.hasOwnProperty.call(obj, key)) { continue; }
       return false;
     }
     return true;
