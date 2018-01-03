@@ -31,7 +31,7 @@ export class Net {
     return j;
   }
 
-  public static fromJSON(j: { W1: Mat, b1: Mat, W2: Mat, b2: Mat }): Net {
+  public static fromJSON(j: { W1, b1, W2, b2 }): Net {
     const net = new Net();
     for (const property in j) {
       if (j.hasOwnProperty(property)) {
