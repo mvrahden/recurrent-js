@@ -64,6 +64,6 @@ tsc -p .
 
 This project relies on Visual Studio Codes built-in Typescript linting facilities. It primarily follows the [Google TypeScript Style-Guide](https://github.com/google/ts-style) through the provided *tslint-google.json* configuration file.
 
-# License
+## License
 
 As of License-File: [MIT](LICENSE)
