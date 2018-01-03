@@ -9,9 +9,9 @@
 
 For further Information see the [recurrentjs](https://github.com/karpathy/recurrentjs) repository.
 
-# For Production Use
+## For Production Use
 
-## How to install as dependency
+### How to install as dependency
 
 Download available `@npm`: [recurrent-js](https://www.npmjs.com/package/recurrent-js)
 
@@ -20,7 +20,7 @@ Install via command line:
 npm install --save recurrent-js
 ```
 
-## How To use the Library in Production
+### How To use the Library in Production
 
 Currently exposed Classes:
 
@@ -48,11 +48,11 @@ const Graph = require('recurrent-js').Graph;
 const Net = require('recurrent-js').Net;
 ```
 
-## Further Info
+#### Further Info for Production Usage
 
 The transpiled Javascript-target is `ES6`, with a `CommonJS` module format.
 
-# For Contributors
+## For Contributors
 
 1. `Clone` this project to a working directory.
 2. `npm install` to setup the development dependencies.
