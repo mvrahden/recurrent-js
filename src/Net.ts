@@ -63,7 +63,7 @@ export class Net {
   }
 
   private static has(object: any, keys: Array<string>) {
-    for (const key of keys.entries()) {
+    for (const key of keys) {
       if (Object.hasOwnProperty.call(object, key)) { continue; }
       return false;
     }
