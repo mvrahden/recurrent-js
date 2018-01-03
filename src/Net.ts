@@ -49,13 +49,12 @@ export class Net {
   }
 
   public static toJSON(net: Net): {} {
-    const j = {};
-    for (const property in net) {
-      if (net.hasOwnProperty(property)) {
-        j[property] = net[property].toJSON();
-      }
-    }
-    return j;
+    const json = {};
+    json['W1'] = Mat.toJSON(net.W1);
+    json['b1'] = Mat.toJSON(net.b1);
+    json['W2'] = Mat.toJSON(net.W2);
+    json['b2'] = Mat.toJSON(net.b2);
+    return json;
   }
 
   public static fromJSON(json: { W1, b1, W2, b2 }): Net {
