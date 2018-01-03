@@ -50,7 +50,7 @@ const Net = require('recurrent-js').Net;
 
 ## Further Info
 
-The transpiled Javascript-target is `ES6`. The supported module format is `CommonJS`.
+The transpiled Javascript-target is `ES6`, with a `CommonJS` module format.
 
 # For Contributors
 
