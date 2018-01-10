@@ -24,34 +24,32 @@ export class Graph extends Assertable {
   }
 
   public rowPluck(m: Mat, ix: number): Mat {
-    // pluck a row of m with index ix and return it as col vector
-    Mat.assert(ix >= 0 && ix < m.n);
-    const d = m.d;
-    const out = new Mat(d, 1);
-    for (let i = 0, n = d; i < n; i++) { out.w[i] = m.w[d * ix + i]; } // copy over the data
+    const out = Mat.rowPluck(m, ix);
+    this.addRowPluckToBackprop(m, ix, out);
+    return out;
+  }
 
+  private addRowPluckToBackprop(m: Mat, ix: number, out: Mat) {
     if (this.needsBackprop) {
       const backward = () => {
-        for (let i = 0, n = d; i < n; i++) {
-          m.dw[d * ix + i] += out.dw[i];
+        for (let i = 0; i < m.cols; i++) {
+          m.dw[m.cols * ix + i] += out.dw[i];
         }
       };
       this.backprop.push(backward);
     }
-    return out;
   }
 
   public tanh(m: Mat): Mat {
-    // tanh nonlinearity
-    const out = new Mat(m.n, m.d);
-    const n = m.w.length;
-    for (let i = 0; i < n; i++) {
-      out.w[i] = Math['tanh'](m.w[i]);
-    }
+    const out = Mat.tanh(m);
+    this.addTanhToBackprop(m, out);
+    return out;
+  }
 
+  private addTanhToBackprop(m: Mat, out: Mat) {
     if (this.needsBackprop) {
       const backward = () => {
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < m.w.length; i++) {
           // grad for z = tanh(x) is (1 - z^2)
           const mwi = out.w[i];
           m.dw[i] += (1.0 - mwi * mwi) * out.dw[i];
@@ -59,20 +57,18 @@ export class Graph extends Assertable {
       };
       this.backprop.push(backward);
     }
-    return out;
   }
 
   public sigmoid(m: Mat): Mat {
-    // sigmoid nonlinearity
-    const out = new Mat(m.n, m.d);
-    const n = m.w.length;
-    for (let i = 0; i < n; i++) {
-      out.w[i] = Graph.sig(m.w[i]);
-    }
+    const out = Mat.sig(m);
+    this.addSigmoidToBackprop(m, out);
+    return out;
+  }
 
+  private addSigmoidToBackprop(m: Mat, out: Mat) {
     if (this.needsBackprop) {
       const backward = () => {
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < m.w.length; i++) {
           // grad for z = tanh(x) is (1 - z^2)
           const mwi = out.w[i];
           m.dw[i] += mwi * (1.0 - mwi) * out.dw[i];
@@ -80,121 +76,100 @@ export class Graph extends Assertable {
       };
       this.backprop.push(backward);
     }
-    return out;
-  }
-
-  private static sig(x): number {
-    // helper function for computing sigmoid
-    return 1.0 / (1 + Math.exp(-x));
   }
 
   public relu(m: Mat): Mat {
-    const out = new Mat(m.n, m.d);
-    const n = m.w.length;
-    for (let i = 0; i < n; i++) {
-      out.w[i] = Math.max(0, m.w[i]); // relu
-    }
+    const out = Mat.relu(m);
+    this.addReluToBackprop(m, out);
+    return out;
+  }
+
+  private addReluToBackprop(m: Mat, out: Mat) {
     if (this.needsBackprop) {
       const backward = () => {
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < m.w.length; i++) {
           m.dw[i] += m.w[i] > 0 ? out.dw[i] : 0.0;
         }
       };
       this.backprop.push(backward);
     }
-    return out;
   }
 
   public mul(m1: Mat, m2: Mat): Mat {
-    // multiply matrices m1 * m2
-    Mat.assert(m1.d === m2.n, 'matmul dimensions misaligned');
+    const out = Mat.mul(m1, m2);
+    this.addMultiplyToBackprop(m1, m2, out);
+    return out;
+  }
 
-    const n = m1.n;
-    const d = m2.d;
-    const out = new Mat(n, d);
-    for (let i = 0; i < m1.n; i++) { // loop over rows of m1
-      for (let j = 0; j < m2.d; j++) { // loop over cols of m2
-        let dot = 0.0;
-        for (let k = 0; k < m1.d; k++) { // dot product loop
-          dot += m1.w[m1.d * i + k] * m2.w[m2.d * k + j];
-        }
-        out.w[d * i + j] = dot;
-      }
-    }
-
+  private addMultiplyToBackprop(m1: Mat, m2: Mat, out: Mat) {
     if (this.needsBackprop) {
       const backward = () => {
-        for (let i = 0; i < m1.n; i++) { // loop over rows of m1
-          for (let j = 0; j < m2.d; j++) { // loop over cols of m2
-            for (let k = 0; k < m1.d; k++) { // dot product loop
-              const b = out.dw[d * i + j];
-              m1.dw[m1.d * i + k] += m2.w[m2.d * k + j] * b;
-              m2.dw[m2.d * k + j] += m1.w[m1.d * i + k] * b;
+        for (let i = 0; i < m1.rows; i++) {
+          for (let j = 0; j < m2.cols; j++) {
+            for (let k = 0; k < m1.cols; k++) {
+              const b = out.dw[m2.cols * i + j];
+              m1.dw[m1.cols * i + k] += m2.w[m2.cols * k + j] * b;
+              m2.dw[m2.cols * k + j] += m1.w[m1.cols * i + k] * b;
             }
           }
         }
       };
       this.backprop.push(backward);
     }
-    return out;
   }
 
   public add(m1: Mat, m2: Mat): Mat {
-    Mat.assert(m1.w.length === m2.w.length);
+    const out = Mat.add(m1, m2);
+    this.addAdditionToBackprop(m1, m2, out);
+    return out;
+  }
 
-    const out = new Mat(m1.n, m1.d);
-    for (let i = 0, n = m1.w.length; i < n; i++) {
-      out.w[i] = m1.w[i] + m2.w[i];
-    }
+  private addAdditionToBackprop(m1: Mat, m2: Mat, out: Mat) {
     if (this.needsBackprop) {
       const backward = () => {
-        for (let i = 0, n = m1.w.length; i < n; i++) {
+        for (let i = 0; i < m1.w.length; i++) {
           m1.dw[i] += out.dw[i];
           m2.dw[i] += out.dw[i];
         }
       };
       this.backprop.push(backward);
     }
+  }
+
+
+  public dot(m1: Mat, m2: Mat): Mat {
+    const out = Mat.dot(m1, m2);
+    this.addDotToBackprop(m1, m2, out);
     return out;
   }
 
-  public dot(m1: Mat, m2: Mat): Mat {
-    // m1 m2 are both column vectors
-    Mat.assert(m1.w.length === m2.w.length);
-    const out = new Mat(1, 1);
-    let dot = 0.0;
-    for (let i = 0, n = m1.w.length; i < n; i++) {
-      dot += m1.w[i] * m2.w[i];
-    }
-    out.w[0] = dot;
+  private addDotToBackprop(m1: Mat, m2: Mat, out: Mat) {
     if (this.needsBackprop) {
       const backward = () => {
-        for (let i = 0, n = m1.w.length; i < n; i++) {
+        for (let i = 0; i < m1.w.length; i++) {
           m1.dw[i] += m2.w[i] * out.dw[0];
           m2.dw[i] += m1.w[i] * out.dw[0];
         }
       };
       this.backprop.push(backward);
     }
-    return out;
   }
 
   public eltmul(m1: Mat, m2: Mat): Mat {
-    Mat.assert(m1.w.length === m2.w.length);
+    const out = Mat.eltmul(m1, m2);
+    this.addEltmulToBackprop(m1, m2, out);
+    return out;
+  }
 
-    const out = new Mat(m1.n, m1.d);
-    for (let i = 0, n = m1.w.length; i < n; i++) {
-      out.w[i] = m1.w[i] * m2.w[i];
-    }
+  private addEltmulToBackprop(m1: Mat, m2: Mat, out: Mat) {
     if (this.needsBackprop) {
       const backward = () => {
-        for (let i = 0, n = m1.w.length; i < n; i++) {
+        for (let i = 0; i < m1.w.length; i++) {
           m1.dw[i] += m2.w[i] * out.dw[i];
           m2.dw[i] += m1.w[i] * out.dw[i];
         }
       };
       this.backprop.push(backward);
     }
-    return out;
   }
 }

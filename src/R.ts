@@ -4,8 +4,8 @@ import { Assertable } from './utils/Assertable';
 export class R extends Assertable {
 
   // Random numbers utils
-  public static randf(a: number, b: number): number { return Math.random() * (b - a) + a; }
-  public static randi(a: number, b: number): number { return Math.floor(R.randf(a, b)); }
+  public static randf(min: number, max: number): number { return Math.random() * (max - min) + min; }
+  public static randi(min: number, max: number): number { return Math.floor(R.randf(min, max)); }
   public static randn(mu: number, std: number): number { return mu + R.gaussRandom() * std; }
 
   // TODO: Static could lead to unwanted behavior in async processes
