@@ -14,9 +14,14 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "prepare": "tsc -p .",
-    "pretest": "npm run compile",
-    "test": "node"
+    "prepare": "npm run test",
+    "test": "./node_modules/.bin/jasmine",
+    "pretest": "npm run build:test",
+    "build:test": "tsc -p ./tsconfig.spec.json",
+    "prebuild:test": "npm run build",
+    "build": "tsc -p .",
+    "prebuild": "rimraf dist & rimraf spec/dist",
+    "posttest": "rimraf spec/dist"
   },
   "author": "Menno van Rahden",
   "homepage": "https://github.com/mvrahden/recurrent-js#readme",
@@ -29,6 +34,9 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/jasmine": "^2.8.3",
+    "jasmine": "^2.8.0",
+    "rimraf": "^2.6.2",
     "typescript": "^2.6.1"
   },
   "dependencies": {}
