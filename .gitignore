@@ -1,8 +1,18 @@
-dist
+# IDE config
+.vscode
+
+# Dependency directories
 node_modules
-*.js
-*.js.map
-*.d.ts
-**/*.js
-**/*.js.map
-**/*.d.ts
+
+# Compiled outputs
+dist
+
+# Temporary testing outputs
+test
+
+# Logs
+logs
+*.log*
+
+# Coverage directory used by tools like istanbul
+coverage
