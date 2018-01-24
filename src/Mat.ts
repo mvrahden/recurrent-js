@@ -8,8 +8,8 @@ export class Mat extends Assertable {
   public readonly cols: number;
   private readonly length: number;  // length of 1d-representaion of Mat
 
-  public readonly w: Array<number>;
-  public readonly dw: Array<number>;
+  public readonly w: Array<number> | Float64Array;
+  public readonly dw: Array<number> | Float64Array;
 
   /**
    * 

@@ -49,10 +49,10 @@ export class R extends Assertable {
    * returns array of zeros of length n and uses typed arrays if available
    * @param n length of Array
    */
-  public static zeros(n): any {
+  public static zeros(n): Array<number> | Float64Array {
     if (typeof (n) === 'undefined' || isNaN(n)) { return []; }
     if (typeof ArrayBuffer === 'undefined') {
-      const arr = new Array(n);
+      const arr = new Array<number>(n);
       R.setConst(arr, 0);
       return arr;
     } else {
