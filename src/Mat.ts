@@ -75,7 +75,7 @@ export class Mat extends Assertable {
   }
 
   /**
-   * Discounts all values as follows: w[i] = w[i] - (alpha * dw[i]);
+   * Discounts all values as follows: w[i] = w[i] - (alpha * dw[i]) (Stochastic Gradient Descent)
    * @param alpha discount factor
    */
   public update(alpha: number): void {
@@ -95,8 +95,10 @@ export class Mat extends Assertable {
     return json;
   }
 
-  public static fromJSON(json: {n, d, w}): Mat {
-    const mat = new Mat(json.n, json.d);
+  public static fromJSON(json: {rows, n?, cols, d?, w}): Mat {
+    const rows = json.rows || json.n;
+    const cols = json.cols || json.d;
+    const mat = new Mat(rows, cols);
     for (let i = 0; i < mat.length; i++) {
       mat.w[i] = json.w[i]; // copy over weights
     }
