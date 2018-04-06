@@ -3,7 +3,7 @@
  */
 export abstract class Assertable {
   /**
-   * Asserts a condition and throws Error of not <i>truthy</i>
+   * Asserts a condition and throws Error if not assertion fails
    * @param condition 
    * @param message 
    */

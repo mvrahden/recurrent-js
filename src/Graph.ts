@@ -1,14 +1,11 @@
-import { Assertable } from './utils/Assertable';
-
 import { Mat } from './Mat';
 
-export class Graph extends Assertable {
+export class Graph {
   private needsBackprop: boolean;
 
   public readonly backprop: Array<Function>;
 
   constructor(needsBackprop: boolean = true) {
-    super();
     this.needsBackprop = needsBackprop;
 
     // this will store a list of functions that perform backprop,
