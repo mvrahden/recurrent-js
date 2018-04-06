@@ -25,7 +25,7 @@ npm install --save recurrent-js
 Currently exposed Classes:
 
 * Utility Classes:
-  * **R** - Collection of Utility functions
+  * **Utils** - Collection of Utility functions
   * **Mat** - Sophisticated Matrix Structure for Weights in Networks.
   * **RandMat** - `Mat` populated with random gaussian distributed values
   * **Graph** - Graph holding the Operations
