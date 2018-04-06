@@ -1,6 +1,6 @@
 import { Assertable } from './utils/Assertable';
 
-import { R } from './R';
+import { Utils } from './Utils';
 
 export class Mat extends Assertable {
   
@@ -21,8 +21,8 @@ export class Mat extends Assertable {
     this.rows = rows;
     this.cols = cols;
     this.length = rows * cols;
-    this.w = R.zeros(this.length);
-    this.dw = R.zeros(this.length);
+    this.w = Utils.zeros(this.length);
+    this.dw = Utils.zeros(this.length);
   }
 
   /**
@@ -33,7 +33,7 @@ export class Mat extends Assertable {
    */
   get(row: number, col: number): number {
     const ix = this.getIndexBy(row, col);
-    Mat.assert(ix >= 0 && ix < this.w.length);
+    Mat.assert(ix >= 0 && ix < this.w.length, 'index out of bounds.');
     return this.w[ix];
   }
 
@@ -45,7 +45,7 @@ export class Mat extends Assertable {
    */
   set(row: number, col: number, v: number): void {
     const ix = this.getIndexBy(row, col);
-    Mat.assert(ix >= 0 && ix < this.w.length);
+    Mat.assert(ix >= 0 && ix < this.w.length, 'index out of bounds.');
     this.w[ix] = v;
   }
 

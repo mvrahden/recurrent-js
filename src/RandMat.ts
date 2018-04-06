@@ -1,5 +1,5 @@
-import { Mat } from "./Mat";
-import { R } from "./R";
+import { Mat } from './Mat';
+import { Utils } from './Utils';
 
 export class RandMat extends Mat {
 
@@ -12,6 +12,6 @@ export class RandMat extends Mat {
    */
   constructor(n: number, d: number, mu: number, std: number) {
     super(n, d);
-    R.fillRandn(this, mu, std);
+    Utils.fillRandn(this, mu, std);
   }
 }
