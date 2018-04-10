@@ -43,7 +43,7 @@ export class Utils extends Assertable {
   public static gradFillConst(m: Mat, c: number): void {
     for (let i = 0; i < m.dw.length; i++) { m.dw[i] = c; }
   }
-  public static fillConst(arr: Array<number>, c: number): void {
+  public static fillConst(arr: Array<number> | Float64Array, c: number): void {
     for (let i = 0; i < arr.length; i++) { arr[i] = c; }
   }
 
@@ -69,7 +69,7 @@ export class Utils extends Assertable {
    * @param w Array of Numbers
    * @returns Index of Argmax Operation
    */
-  public static maxi(w: Array<number>): number {
+  public static maxi(w: Array<number> | Float64Array): number {
     let maxv = w[0];
     let maxix = 0;
     for (let i = 1; i < w.length; i++) {

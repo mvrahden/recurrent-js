@@ -62,7 +62,7 @@ export class Mat extends Assertable {
    * Sets values according to the given Array.
    * @param arr 
    */
-  public setFrom(arr: Array<number>): void {
+  public setFrom(arr: Array<number> | Float64Array): void {
     for (let i = 0; i < arr.length; i++) {
       this.w[i] = arr[i];
     }
