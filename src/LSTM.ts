@@ -1,8 +1,4 @@
-import { Mat } from './Mat';
-import { RandMat } from './RandMat';
-import { Graph } from './Graph';
-import { RNNModel } from './RNNModel';
-import { InnerState } from './utils/InnerState';
+import { RandMat, Mat, Graph, RNNModel, InnerState, NetOpts } from '.';
 
 export class LSTM extends RNNModel {
   /**
@@ -12,9 +8,9 @@ export class LSTM extends RNNModel {
   constructor(opt: { hidden: { input: { Wh, Wx, bh }, forget: { Wh, Wx, bh }, output: { Wh, Wx, bh }, cell: { Wh, Wx, bh } }, decoder: { Wh, b } });
   /**
    * Generates a Neural Net with given specs.
-   * @param {{inputSize: number, hiddenSize: Array<number>, outputSize: number, needsBackprop?: boolean, mu: number = 0, std: number = 0.01}} opt Specs of the Neural Net.
+   * @param {NetOpts} opt Specs of the Neural Net. [defaults to: needsBackprop = true, mu = 0, std = 0.01]
    */
-  constructor(opt: { inputSize: number, hiddenUnits: Array<number>, outputSize: number, needsBackprop?: boolean, mu?: number, std?: number });
+  constructor(opt: NetOpts);
   constructor(opt: any) {
     super(opt);
   }

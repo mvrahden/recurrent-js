@@ -1,6 +1,4 @@
-import { Mat } from './Mat';
-import { RandMat } from './RandMat';
-import { Graph } from './Graph';
+import { Mat, RandMat, Graph, NetOpts } from '.';
 
 export class Net {
   public W1: Mat | null = null;
@@ -9,22 +7,16 @@ export class Net {
   public b2: Mat | null = null;
 
   /**
-   * Generates a default initialized Neural Net.
-   * Default Setup:
-   * @param {{inputSize: number = 1, hiddenUnits: number = 1, outputSize: number = 1}} opt Specs of the Neural Net.
-   */
-  constructor();
-  /**
    * Generates a Neural Net instance from a pretrained Neural Net JSON.
    * @param {{W1, b1, W2, b2}} opt Specs of the Neural Net.
    */
   constructor(opt: { W1, b1, W2, b2 });
   /**
    * Generates a Neural Net with given specs.
-   * @param {{inputSize: number, hiddenSize: number, outputSize: number, mu: number = 0, std: number = 0.01}} opt Specs of the Neural Net.
+   * @param {NetOpts} opt Specs of the Neural Net.
    */
-  constructor(opt: { inputSize: number, hiddenUnits: number, outputSize: number, mu?: number, std?: number });
-  constructor(opt?: any) {
+  constructor(opt: NetOpts);
+  constructor(opt: any) {
     if (this.isFromJSON(opt)) {
       this.initializeFromJSONObject(opt);
     } else if (this.isFreshInstanceCall(opt)) {
