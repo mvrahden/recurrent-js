@@ -184,6 +184,21 @@ export class Mat extends Assertable {
   }
 
   /**
+   * Non-destructive elementwise gaussian-distributed noise-addition.
+   * @param {Mat} m 
+   * @param {number} std Matrix with STD values
+   * @returns {Mat} Matrix with results
+   */
+  public static gauss(m: Mat, std: Mat): Mat {
+    Mat.assert(m.w.length === std.w.length, '[class:Mat] gauss: dimensions misaligned');
+    const out = new Mat(m.rows, m.cols);
+    for (let i = 0; i < m.w.length; i++) {
+      out.w[i] = Utils.randn(m.w[i], std.w[i]);
+    }
+    return out;
+  }
+
+  /**
    * Non-destructive dot Product.
    * @param m1 
    * @param m2 

@@ -1,13 +1,15 @@
+import { BNN } from './BNN';
+import { DNN } from './DNN';
+import { FNNModel } from './FNNModel';
 import { Graph } from './Graph';
+import { InnerState } from './utils/InnerState';
 import { LSTM } from './LSTM';
 import { Mat } from './Mat';
 import { Net } from './Net';
-import { RNNModel } from './RNNModel';
 import { Utils } from './Utils';
 import { RandMat } from './RandMat';
 import { RNN } from './RNN';
+import { RNNModel } from './RNNModel';
 import { Solver } from './Solver';
-import { InnerState } from './utils/InnerState';
-import { FNNModel } from './FNNModel';
 
-export { Utils, Mat, RandMat, Graph, Net, LSTM, RNN, Solver, RNNModel, FNNModel, InnerState };
+export { Utils, Mat, DNN, RandMat, Graph, Net, LSTM, RNN, RNNModel, FNNModel, InnerState, Solver };

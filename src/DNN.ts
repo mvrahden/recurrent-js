@@ -31,7 +31,7 @@ export class DNN extends FNNModel {
     return output;
   }
 
-  private computeHiddenActivations(state: Mat, graph: Graph): Mat[] {
+  protected computeHiddenActivations(state: Mat, graph: Graph): Mat[] {
     const hiddenActivations = new Array<Mat>();
     for (let d = 0; d < this.hiddenUnits.length; d++) {
       const inputVector = d === 0 ? state : hiddenActivations[d - 1];
