@@ -32,8 +32,8 @@ Currently exposed Classes:
   * **RandMat** - `Mat` populated with random gaussian distributed values.
   * **Graph** - Graph holding the Operation sequence for backpropagation.
   * **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
-  * **FNNModel** - Genralized Class containing the Weights (and `Graph`) for `FNN`-models, such as `DNN` or `BNN`.
-  * **RNNModel** - Genralized Class containing the Weights (and `Graph`) for `RNN`-models, such as a `RNN` or `LSTM`.
+  * **FNNModel** - Genralized Class containing the Weights (and `Graph`) for stateless `FNN`-models, such as `DNN` or `BNN`.
+  * **RNNModel** - Genralized Class containing the Weights (and `Graph`) for statefull `RNN`-models, such as a `RNN` or `LSTM`.
   * **InnerState** - Standardized `Interface` for parameter injection in forward-pass of `RNNModel`s holding the previous state.
 
 * Neural Network Classes:
