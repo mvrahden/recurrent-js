@@ -8,5 +8,6 @@ import { RandMat } from './RandMat';
 import { RNN } from './RNN';
 import { Solver } from './Solver';
 import { InnerState } from './utils/InnerState';
+import { FNNModel } from './FNNModel';
 
-export { Utils, Mat, RandMat, Graph, Net, LSTM, RNN, Solver, RNNModel, InnerState };
+export { Utils, Mat, RandMat, Graph, Net, LSTM, RNN, Solver, RNNModel, FNNModel, InnerState };
