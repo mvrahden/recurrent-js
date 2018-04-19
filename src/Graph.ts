@@ -14,12 +14,20 @@ export class Graph {
     this.backprop = new Array<Function>();
   }
 
+  /**
+   * Backpropagation
+   */
   public backward(): void {
     for (let i = this.backprop.length - 1; i >= 0; i--) {
       this.backprop[i]();
     }
   }
 
+  /**
+   * Non-destructively pluck a row of m with rowIndex
+   * @param m 
+   * @param ix 
+   */
   public rowPluck(m: Mat, ix: number): Mat {
     const out = Mat.rowPluck(m, ix);
     this.addRowPluckToBackprop(m, ix, out);
@@ -37,6 +45,10 @@ export class Graph {
     }
   }
 
+  /**
+   * Non-destructive elementwise tanh
+   * @param m 
+   */
   public tanh(m: Mat): Mat {
     const out = Mat.tanh(m);
     this.addTanhToBackprop(m, out);
@@ -56,6 +68,10 @@ export class Graph {
     }
   }
 
+  /**
+   * Non-destructive elementwise sigmoid
+   * @param m 
+   */
   public sigmoid(m: Mat): Mat {
     const out = Mat.sig(m);
     this.addSigmoidToBackprop(m, out);
@@ -75,6 +91,10 @@ export class Graph {
     }
   }
 
+  /**
+   * Non-destructive elementwise ReLU (rectified linear unit)
+   * @param m 
+   */
   public relu(m: Mat): Mat {
     const out = Mat.relu(m);
     this.addReluToBackprop(m, out);
@@ -91,7 +111,11 @@ export class Graph {
       this.backprop.push(backward);
     }
   }
-
+  /**
+   * Non-destructive matrix multiplication
+   * @param m1 
+   * @param m2 
+   */
   public mul(m1: Mat, m2: Mat): Mat {
     const out = Mat.mul(m1, m2);
     this.addMultiplyToBackprop(m1, m2, out);
@@ -115,6 +139,11 @@ export class Graph {
     }
   }
 
+  /**
+   * Non-destructive elementwise addition
+   * @param m1 
+   * @param m2 
+   */
   public add(m1: Mat, m2: Mat): Mat {
     const out = Mat.add(m1, m2);
     this.addAdditionToBackprop(m1, m2, out);
@@ -133,7 +162,11 @@ export class Graph {
     }
   }
 
-
+  /**
+   * Non-destructive Dot product.
+   * @param m1 
+   * @param m2 
+   */
   public dot(m1: Mat, m2: Mat): Mat {
     const out = Mat.dot(m1, m2);
     this.addDotToBackprop(m1, m2, out);
@@ -152,6 +185,11 @@ export class Graph {
     }
   }
 
+  /**
+   * Non-destructively elementwise multiplication
+   * @param m1 
+   * @param m2 
+   */
   public eltmul(m1: Mat, m2: Mat): Mat {
     const out = Mat.eltmul(m1, m2);
     this.addEltmulToBackprop(m1, m2, out);
