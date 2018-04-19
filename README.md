@@ -82,23 +82,26 @@ const net = new DNN(netOpts);
 const graph = new Graph(true);
 
 /*
-Create a single row `Mat` which holds an observation.
-Dimensions of `Mat` are per configuration of the net (rows = inputSize = 3, cols = 1).
+Create a single row of type `Mat`, which holds an observation. Dimensions of `Mat` are per configuration of the net (rows = inputSize = 3, cols = 1).
 */
 
-// forward pass with observed state and graph
-// result is a `Mat` holding multiple output values (here: 4)
+/*
+Forward pass with observed state and graph.
+Result is of type `Mat` and holding multiple output values (here: 4).
+*/
 const result = net.forward(/* inject some observed state */, graph);
 
-// after forward pass: 
-// inject a loss value into the derivative of your targeted value
-// here you could also apply e.g. loss clipping before injecting the value
+/* 
+after forward pass: 
+Inject a loss value into the derivative of your targeted value. Here you could also apply e.g. loss clipping before injecting the value.
+*/
 result.dw[1] = /* some value e.g. 0.5 */;
 
 
 graph.backward(); // since graph is keeping a reference of `result`, it can now perform the backpropagation
 
-/* The loss manipulated gradient has now been propagated back into the network.
+/*
+The loss manipulated gradient has now been propagated back into the network.
 In addition you could also marginally discount all existing weights with a gradient on a global scale (meaning: throughout the whole net) as follows:
 */
 net.update(0.01);
@@ -106,8 +109,8 @@ net.update(0.01);
 /*  */
 ```
 
-The training is identical for `Net`, `DNN`, `BNN`, `RNN`, `LSTM`.
-For `RNN` and `LSTM` keep in mind the statefulness of those approximators.
+The training is somehow identical for `Net`, `DNN`, `BNN`, `RNN`, `LSTM`.
+For timely unfolding `RNN` and `LSTM` networks, keep in mind the statefulness of those approximators.
 
 Should you want to get some deeper insights on "how to train the network", it is recommendable to have a look into the source of the DQN-Solver from the [reinforce-js](https://github.com/mvrahden/reinforce-js) library (`learnFromSarsaTuple`-Method).
 
