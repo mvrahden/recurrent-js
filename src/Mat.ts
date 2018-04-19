@@ -75,7 +75,7 @@ export class Mat extends Assertable {
   }
 
   /**
-   * Discounts all values as follows: w[i] = w[i] - (alpha * dw[i]) (Stochastic Gradient Descent)
+   * Discounts all values as follows: w[i] = w[i] - (alpha * dw[i])
    * @param alpha discount factor
    */
   public update(alpha: number): void {
@@ -111,7 +111,7 @@ export class Mat extends Assertable {
    * @param {Mat} m2 
    */
   public static add(m1: Mat, m2: Mat): Mat {
-    Mat.assert(m1.w.length === m2.w.length, 'matadd dimensions misaligned');
+    Mat.assert(m1.w.length === m2.w.length && m1.rows === m2.rows, 'matadd dimensions misaligned');
     const out = new Mat(m1.rows, m1.cols);
     for (let i = 0; i < m1.w.length; i++) {
       out.w[i] = m1.w[i] + m2.w[i];
