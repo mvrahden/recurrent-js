@@ -1,5 +1,5 @@
 import { Mat } from './Mat';
-import { NNModel } from './NNModel';
+import { RNNModel } from './RNNModel';
 
 export class Solver {
   protected readonly decayRate: number;
@@ -27,7 +27,7 @@ export class Solver {
    * @param clippingValue Gradient clipping
    * @returns an Object containing the Clipping Ratio
    */
-  public step(model: NNModel, stepSize: number, l2Regularization: number, clippingValue: number): { 'ratioClipped': number } {
+  public step(model: RNNModel, stepSize: number, l2Regularization: number, clippingValue: number): { 'ratioClipped': number } {
     this.reset();
     const solverStats = { ratioClipped: 0 };
 
@@ -41,7 +41,7 @@ export class Solver {
     return solverStats;
   }
 
-  private iterateModelLayer(model: NNModel, key: any, clipval: number, regc: number, stepSize: number): void {
+  private iterateModelLayer(model: RNNModel, key: any, clipval: number, regc: number, stepSize: number): void {
     const currentModelLayer = model[key];
     if (!(this.stepCache.hasOwnProperty(key))) {
       this.stepCache[key] = new Mat(currentModelLayer.n, currentModelLayer.d);
