@@ -1,10 +1,13 @@
-# RECURRENT-js
+# recurrent-js
 [![js-google-style](https://img.shields.io/badge/code%20style-google-blue.svg)](https://google.github.io/styleguide/jsguide.html)
+[![dependency-free](https://img.shields.io/badge/dependencies-none-brightgreen.svg)]()
 
-**RECURRENT-js** is an object-oriented Javascript library (baked with [Typescript](https://github.com/Microsoft/TypeScript)). It is a port of _Andrej Karpathy's_ RecurrentJS library that implements the following:
+**The recurrent-js library** &ndash; Amazingly simple to build and train neural networks. The library is an object-oriented library (baked with [Typescript](https://github.com/Microsoft/TypeScript)). It is an extended version of _Andrej Karpathy's_ RecurrentJS library that implements the following:
 
-* Deep **Recurrent Neural Networks** (RNN) 
-* **Long Short-Term Memory networks** (LSTM) 
+* Deep **Recurrent Neural Networks** (RNN)
+* Deep **Long Short-Term Memory** Networks (LSTM) 
+* **Bonus**: Deep **Feedforward** Neural Networks (DNN)
+* **Bonus**: Deep **Bayesian Neural Networks** (BNN)
 * In fact, the library is more general because it has functionality to construct arbitrary **expression graphs** over which the library can perform **automatic differentiation** similar to what you may find in Theano for Python, or in Torch etc. Currently, the code uses this very general functionality to implement RNN/LSTM, but one can build arbitrary Neural Networks and do automatic backprop.
 
 For further Information see the [recurrentjs](https://github.com/karpathy/recurrentjs) repository.
