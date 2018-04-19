@@ -25,17 +25,19 @@ npm install --save recurrent-js
 Currently exposed Classes:
 
 * Utility Classes:
-  * **Utils** - Collection of Utility functions
+  * **Utils** - Collection of Utility functions.
   * **Mat** - Sophisticated Matrix Structure for Weights in Networks.
-  * **RandMat** - `Mat` populated with random gaussian distributed values
-  * **Graph** - Graph holding the Operations
-  * **NNModel** - Genralized Class containing the Weights (and `Graph`) for `RNN` and `LSTM` 
-  * **PreviousOutputs** - Standardized Interface for parameter injection in forward-pass of `NNModel`s.
+  * **RandMat** - `Mat` populated with random gaussian distributed values.
+  * **Graph** - Graph holding the Operation sequence for backpropagation.
+  * **FNNModel** - Genralized Class containing the Weights (and `Graph`) for `FNN`-models, such as `DNN` .
+  * **RNNModel** - Genralized Class containing the Weights (and `Graph`) for `RNN`-models, such as a `RNN` or `LSTM`.
+  * **InnerState** - Standardized Interface for parameter injection in forward-pass of `RNNModel`s holding the previous state.
 
 * Network Classes:
-  * **Net** - Simple Neural Network
-  * **RNN** - Recurrent Neural Network. Extends `NNModel`.
-  * **LSTM** - Long Short Term Memory Network. Extends `NNModel`.
+  * **Net** - Simple Neural Network.
+  * **DNN** - Deep Feedfoward Neural Network. Extends `FNNModel`.
+  * **RNN** - Recurrent Neural Network. Extends `RNNModel`.
+  * **LSTM** - Long Short Term Memory Network. Extends `RNNModel`.
 
 These classes can be imported from this `npm` module, e.g.:
 ```typescript
@@ -63,6 +65,14 @@ tsc -p .
 ```
 
 This project relies on Visual Studio Codes built-in Typescript linting facilities. It primarily follows the [Google TypeScript Style-Guide](https://github.com/google/ts-style) through the provided *tslint-google.json* configuration file.
+
+## Example Projects
+
+This project is an integral part of the `reinforce-js` library.
+As such it is vividly demonstrated in the `learning-agents` model.
+
+- [learning-agents](https://mvrahden.github.io/learning-agents) (GitHub Page)
+- [reinforce-js](https://github.com/mvrahden/reinforce-js) (GitHub Repository)
 
 ## License
 
