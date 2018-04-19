@@ -173,7 +173,7 @@ export class Mat extends Assertable {
   /**
    * Non-destructive elementwise tanh.
    * @param {Mat} m
-   * @returns {Mat} Mat with results
+   * @returns {Mat} Matrix with results
    */
   public static tanh(m: Mat): Mat {
     const out = new Mat(m.rows, m.cols);
@@ -187,7 +187,7 @@ export class Mat extends Assertable {
    * Non-destructive dot Product.
    * @param m1 
    * @param m2 
-   * @return {Mat} Mat of dimension 1x1
+   * @return {Mat} Matrix of dimension 1x1
    */
   public static dot(m1: Mat, m2: Mat): Mat {
     Mat.assert(m1.w.length === m2.w.length, 'matdot dimensions misaligned');
@@ -200,8 +200,14 @@ export class Mat extends Assertable {
     return out;
   }
 
+  /**
+   * Non-destructive elementwise Matrix multiplication.
+   * @param m1 
+   * @param m2 
+   * @return {Mat} Matrix with results
+   */
   public static eltmul(m1: Mat, m2: Mat): Mat {
-    Mat.assert(m1.w.length === m2.w.length, 'mateltmul dimensions misaligned');
+    Mat.assert(m1.w.length === m2.w.length && m1.rows === m2.rows, 'mateltmul dimensions misaligned');
     const out = new Mat(m1.rows, m1.cols);
     for (let i = 0; i < m1.w.length; i++) {
       out.w[i] = m1.w[i] * m2.w[i];
