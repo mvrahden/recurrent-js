@@ -79,19 +79,16 @@ export class Net {
   }
 
   /**
-   * Forward propagation for a single tick of RNN
+   * Forward pass for a single tick of Neural Network
    * @param state 1D column vector with observations
    * @param graph optional: inject Graph to append Operations
-   * @returns Structure containing hidden representation ['h'] of type `Mat[]` and output ['output'] of type `Mat`
+   * @returns output of type `Mat`
    */
   public forward(state: Mat, graph: Graph): Mat {
-    // TODO: Is this a Deep Net? 
-    // TODO: Hyperbolic activation h1 is a Vector of size hiddenUnits
     const weightedInput = graph.mul(this.W1, state);
-    // a1 = Activation Input Vector of Weights 1 (W1) and stateVector
+
     const a1mat = graph.add(weightedInput, this.b1);
 
-    // h1 = Hyperbolic activation
     const h1mat = graph.tanh(a1mat);
 
     const a2Mat = this.computeOutput(h1mat, graph);
