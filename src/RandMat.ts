@@ -12,6 +12,6 @@ export class RandMat extends Mat {
    */
   constructor(n: number, d: number, mu: number, std: number) {
     super(n, d);
-    Utils.fillRandn(this, mu, std);
+    Utils.fillRandn(this.w, mu, std);
   }
 }

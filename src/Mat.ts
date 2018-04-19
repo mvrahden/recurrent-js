@@ -33,7 +33,7 @@ export class Mat extends Assertable {
    */
   get(row: number, col: number): number {
     const ix = this.getIndexBy(row, col);
-    Mat.assert(ix >= 0 && ix < this.w.length, 'index out of bounds.');
+    Mat.assert(ix >= 0 && ix < this.w.length, '[class:Mat] get: index out of bounds.');
     return this.w[ix];
   }
 
@@ -45,7 +45,7 @@ export class Mat extends Assertable {
    */
   set(row: number, col: number, v: number): void {
     const ix = this.getIndexBy(row, col);
-    Mat.assert(ix >= 0 && ix < this.w.length, 'index out of bounds.');
+    Mat.assert(ix >= 0 && ix < this.w.length, '[class:Mat] set: index out of bounds.');
     this.w[ix] = v;
   }
 
@@ -111,7 +111,7 @@ export class Mat extends Assertable {
    * @param {Mat} m2 
    */
   public static add(m1: Mat, m2: Mat): Mat {
-    Mat.assert(m1.w.length === m2.w.length && m1.rows === m2.rows, 'matadd dimensions misaligned');
+    Mat.assert(m1.w.length === m2.w.length && m1.rows === m2.rows, '[class:Mat] add: dimensions misaligned');
     const out = new Mat(m1.rows, m1.cols);
     for (let i = 0; i < m1.w.length; i++) {
       out.w[i] = m1.w[i] + m2.w[i];
@@ -156,7 +156,7 @@ export class Mat extends Assertable {
    * @returns Mat with results
    */
   public static mul(m1: Mat, m2: Mat): Mat {
-    Mat.assert(m1.cols === m2.rows, 'matmul dimensions misaligned');
+    Mat.assert(m1.cols === m2.rows, '[class:Mat] mul: dimensions misaligned');
     const out = new Mat(m1.rows, m2.cols);
     for (let row = 0; row < m1.rows; row++) { // loop over rows of m1
       for (let col = 0; col < m2.cols; col++) { // loop over cols of m2
@@ -190,7 +190,7 @@ export class Mat extends Assertable {
    * @return {Mat} Matrix of dimension 1x1
    */
   public static dot(m1: Mat, m2: Mat): Mat {
-    Mat.assert(m1.w.length === m2.w.length, 'matdot dimensions misaligned');
+    Mat.assert(m1.w.length === m2.w.length, '[class:Mat] dot: dimensions misaligned');
     const out = new Mat(1, 1);
     let dot = 0.0;
     for (let i = 0; i < m1.w.length; i++) {
@@ -207,7 +207,7 @@ export class Mat extends Assertable {
    * @return {Mat} Matrix with results
    */
   public static eltmul(m1: Mat, m2: Mat): Mat {
-    Mat.assert(m1.w.length === m2.w.length && m1.rows === m2.rows, 'mateltmul dimensions misaligned');
+    Mat.assert(m1.w.length === m2.w.length && m1.rows === m2.rows, '[class:Mat] eltmul: dimensions misaligned');
     const out = new Mat(m1.rows, m1.cols);
     for (let i = 0; i < m1.w.length; i++) {
       out.w[i] = m1.w[i] * m2.w[i];
@@ -222,7 +222,7 @@ export class Mat extends Assertable {
    * @returns a column Vector [cols, 1]
    */
   static rowPluck(m: Mat, rowIndex: number): Mat {
-    Mat.assert(rowIndex >= 0 && rowIndex < m.rows, 'mateltmul dimensions misaligned');
+    Mat.assert(rowIndex >= 0 && rowIndex < m.rows, '[class:Mat] rowPluck: dimensions misaligned');
     const out = new Mat(m.cols, 1);
     for (let i = 0; i < m.cols; i++) {
       out.w[i] = m.w[m.cols * rowIndex + i];

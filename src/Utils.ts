@@ -34,14 +34,11 @@ export class Utils extends Assertable {
   }
 
   // Mat utils
-  public static fillRandn(m: Mat, mu: number, std: number): void {
-    for (let i = 0; i < m.w.length; i++) { m.w[i] = Utils.randn(mu, std); }
+  public static fillRandn(arr: Array<number> | Float64Array, mu: number, std: number): void {
+    for (let i = 0; i < arr.length; i++) { arr[i] = Utils.randn(mu, std); }
   }
-  public static fillRand(m: Mat, lo: number, hi: number): void {
-    for (let i = 0; i < m.w.length; i++) { m.w[i] = Utils.randf(lo, hi); }
-  }
-  public static gradFillConst(m: Mat, c: number): void {
-    for (let i = 0; i < m.dw.length; i++) { m.dw[i] = c; }
+  public static fillRand(arr: Array<number> | Float64Array, lo: number, hi: number): void {
+    for (let i = 0; i < arr.length; i++) { arr[i] = Utils.randf(lo, hi); }
   }
   public static fillConst(arr: Array<number> | Float64Array, c: number): void {
     for (let i = 0; i < arr.length; i++) { arr[i] = c; }
