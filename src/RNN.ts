@@ -47,7 +47,7 @@ export class RNN extends RNNModel {
         Wh: null,
         b: null
       }
-    }
+    };
   }
 
   protected initializeHiddenLayer(): void {

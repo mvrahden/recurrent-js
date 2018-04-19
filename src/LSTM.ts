@@ -47,7 +47,7 @@ export class LSTM extends RNNModel {
         Wh: null,
         b: null
       }
-    }
+    };
   }
 
   protected isFromJSON(opt: any) {

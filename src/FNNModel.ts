@@ -136,7 +136,7 @@ export abstract class FNNModel extends Assertable {
   }
 
   private static has(obj: any, keys: Array<string>) {
-    FNNModel.assert(obj, 'Improper input for DNN.')
+    FNNModel.assert(obj, 'Improper input for DNN.');
     for (const key of keys) {
       if (Object.hasOwnProperty.call(obj, key)) { continue; }
       return false;
