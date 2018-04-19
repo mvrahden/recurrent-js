@@ -82,7 +82,9 @@ const net = new DNN(netOpts);
 const graph = new Graph(true);
 
 /*
-Create a single row of type `Mat`, which holds an observation. Dimensions of `Mat` are per configuration of the net (rows = inputSize = 3, cols = 1).
+Before forward pass:
+Create a single row of type `Mat`, which holds an observation.
+Dimensions of `Mat` are per configuration of the net (rows = inputSize = 3, cols = 1).
 */
 
 /*
@@ -92,8 +94,9 @@ Result is of type `Mat` and holding multiple output values (here: 4).
 const result = net.forward(/* inject some observed state */, graph);
 
 /* 
-after forward pass: 
-Inject a loss value into the derivative of your targeted value. Here you could also apply e.g. loss clipping before injecting the value.
+After forward pass: 
+Inject a loss value into the derivative of your targeted value.
+Here you could also apply e.g. loss clipping before injecting the value.
 */
 result.dw[1] = /* some value e.g. 0.5 */;
 
