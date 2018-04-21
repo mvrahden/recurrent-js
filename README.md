@@ -13,15 +13,6 @@
 
 ## For Production Use
 
-### How to install as dependency
-
-Download available `@npm`: [recurrent-js](https://www.npmjs.com/package/recurrent-js)
-
-Install via command line:
-```
-npm install --save recurrent-js
-```
-
 ### What does the Library offer?
 
 Currently exposed Classes:
@@ -44,6 +35,15 @@ Currently exposed Classes:
   * **BNN** - Deep Bayesian Neural Network. Extends `FNNModel`.
   * **RNN** - Recurrent Neural Network. Extends `RNNModel`.
   * **LSTM** - Long Short Term Memory Network. Extends `RNNModel`.
+
+### How to install as dependency
+
+Download available `@npm`: [recurrent-js](https://www.npmjs.com/package/recurrent-js)
+
+Install via command line:
+```
+npm install --save recurrent-js
+```
 
 ### How to import?
 
