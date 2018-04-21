@@ -1,16 +1,10 @@
-# Tests and Test data
-spec
-
-# Source Files
-src
-
-# Dependencies
 node_modules
-
-# Todo Files
-TODO.node_modules
+examples
+docs
+src
 
 # Config Files
 .travis.yml
+tsconfig.json
 tslint-google.json
 tslint.json
