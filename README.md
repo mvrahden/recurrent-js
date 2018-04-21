@@ -60,9 +60,10 @@ const DNN = require('recurrent-js').DNN;
 
 ### How to train?
 
-Training of neural networks is achieved by iteratively reinforcing wanted activation behavior and by surpressing the unwanted.
+Training of neural networks is achieved by iteratively reinforcing wanted activation behavior and by surpressing the unwanted activation paths.
 The training is achieved via an expression `Graph`, that holds the sequences of matrix operations being done during the forwardpass.
-This Graph can then be used to propagate a loss value back into the neural network, via a gradient descent approach.
+The results of the Matrix operations are contained in a `Mat`-Object, which contains the resulting values (`w`) and their automatically differentiated counterparts (`dw`).
+By manipulating a derivative value of the resulting output-`Mat`, the `Graph`-object can then be used to propagate that gradient modification back into the neural network, via a gradient descent approach.
 The so called backpropagation will then lead to supporting wanted neural net activity and surpressing unwanted activation behavior.
 Backpropagation can be achieved as follows:
 
@@ -72,8 +73,8 @@ import { Graph, DNN } from 'recurrent-js';
 // define network structure
 const netOpts = {
   inputSize: 3,
-  hiddenUnits: [6,2,6],
-  output: 4
+  hiddenUnits: [ 6, 2, 6 ],
+  outputSize: 4
 };
 
 // instantiate network
@@ -104,6 +105,7 @@ result.dw[1] = /* some value e.g. 0.5 */;
 graph.backward(); // since graph is keeping a reference of `result`, it can now perform the backpropagation
 
 /*
+OPTIONAL:
 The loss manipulated gradient has now been propagated back into the network.
 In addition you could also marginally discount all existing weights with a gradient on a global scale (meaning: throughout the whole net) as follows:
 */
