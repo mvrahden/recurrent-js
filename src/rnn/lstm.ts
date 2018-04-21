@@ -1,4 +1,4 @@
-import { RandMat, Mat, Graph, RNNModel, InnerState, NetOpts } from '.';
+import { RandMat, Mat, Graph, RNNModel, InnerState, NetOpts } from './..';
 
 export class LSTM extends RNNModel {
   /**

@@ -1,8 +1,5 @@
-import { Graph } from './Graph';
-import { Mat } from './Mat';
-import { InnerState } from './utils/InnerState';
-import { RandMat } from './RandMat';
-import { Assertable } from './utils/Assertable';
+import { Graph, Mat, RandMat, InnerState } from './..';
+import { Assertable } from './../utils/assertable';
 
 export abstract class RNNModel extends Assertable {
 

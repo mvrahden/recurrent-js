@@ -1,5 +1,4 @@
-import { Mat } from './Mat';
-import { Utils } from './Utils';
+import { Mat, Utils } from '.';
 
 export class RandMat extends Mat {
 

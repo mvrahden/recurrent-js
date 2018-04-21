@@ -1,7 +1,5 @@
-import { Graph } from './Graph';
-import { Mat } from './Mat';
-import { RandMat } from './RandMat';
-import { Assertable } from './utils/Assertable';
+import { Graph, Mat, RandMat } from './..';
+import { Assertable } from './../utils/assertable';
 
 export abstract class FNNModel extends Assertable {
   protected inputSize: number;
