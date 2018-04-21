@@ -4,12 +4,19 @@
   "description": "Deep Recurrent Neural Networks and LSTMs in Typescript. Ported, object-oriented and refactored version of Andrej Karpathy's recurrent-js (https://github.com/karpathy/recurrentjs)",
   "keywords": [
     "recurrent",
+    "recurrent neural netowrks",
+    "rnn",
+    "deep learning",
+    "dnn",
+    "baysian networks",
+    "bnn",
     "neural networks",
     "lstm",
     "long short-term memory",
     "expression graphs",
     "automatic differentiation",
-    "backprop"
+    "backprop",
+    "backpropagation"
   ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
