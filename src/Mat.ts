@@ -1,6 +1,6 @@
-import { Assertable } from './utils/Assertable';
+import { Assertable } from './utils/assertable';
 
-import { Utils } from './Utils';
+import { Utils } from './utils';
 
 export class Mat extends Assertable {
   
