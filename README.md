@@ -42,8 +42,11 @@ Download available `@npm`: [recurrent-js](https://www.npmjs.com/package/recurren
 
 Install via command line:
 ```
-npm install --save recurrent-js
+npm install --save recurrent-js@latest
 ```
+
+The project directly ships with the transpiled Javascript code.
+For TypeScript development it also contains Map-files and Declaration-files.
 
 ### How to import?
 
