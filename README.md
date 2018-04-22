@@ -122,7 +122,7 @@ For timely unfolding `RNN` and `LSTM` networks, keep in mind the statefulness of
 
 Should you want to get some deeper insights on "how to train the network", it is recommendable to have a look into the source of the DQN-Solver from the [reinforce-js](https://github.com/mvrahden/reinforce-js) library (`learnFromSarsaTuple`-Method).
 
-## Example Projects
+## Example Applications
 
 This project is an integral part of the `reinforce-js` library.
 As such it is vividly demonstrated in the `learning-agents` model.
