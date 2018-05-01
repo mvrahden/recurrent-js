@@ -71,7 +71,7 @@ The so called backpropagation will then lead to supporting wanted neural net act
 Backpropagation can be achieved as follows:
 
 ```typescript
-import { Graph, DNN } from 'recurrent-js';
+import { Graph, DNN, Mat } from 'recurrent-js';
 
 // define network structure
 const netOpts = {
@@ -86,35 +86,46 @@ const net = new DNN(netOpts);
 const graph = new Graph(true);
 
 /*
-Before forward pass:
+1. Before forward pass:
 Create a single row of type `Mat`, which holds an observation.
-Dimensions of `Mat` are per configuration of the net (rows = inputSize = 3, cols = 1).
+We will refer to this as the state.
+Dimensions of state are according to the configuration of the net (rows = inputSize = 3, cols = 1).
 */
+const observation = [1, 0, 1]; /* an observation (ideally normalized) */
+const state = new Mat(3, 1);
+state.setFrom(observation);
 
 /*
-Forward pass with observed state and graph.
-Result is of type `Mat` and holding multiple output values (here: 4).
+2. Decision making:
+Forward pass with observed state of type `Mat` and graph.
+The resulting decision is of type `Mat` and is holding multiple output values (here: 4).
 */
-const result = net.forward(/* inject some observed state */, graph);
+const decision = net.forward(state, graph);
 
 /* 
-After forward pass: 
-Inject a loss value into the derivative of your targeted value.
+3. After forward pass:
+Compute the decision errors.
+We refer to this as the loss value(s).
+Inject that loss value into the derivative of your targeted value.
 Here you could also apply e.g. loss clipping before injecting the value.
+NOTE: You can also apply multiple loss values, to the respective array fields.
 */
-result.dw[1] = /* some value e.g. 0.5 */;
-
-
-graph.backward(); // since graph is keeping a reference of `result`, it can now perform the backpropagation
+decision.dw[1] = /* some value e.g. 0.5 */;
 
 /*
-OPTIONAL:
+4. After injecting the loss value:
+since graph is keeping a reference of `decision`, it can now perform the backpropagation and therefore adjust the decisions gradient.
+*/
+graph.backward();
+
+/*
+5. OPTIONAL:
 The loss manipulated gradient has now been propagated back into the network.
 In addition you could also marginally discount all existing weights with a gradient on a global scale (meaning: throughout the whole net) as follows:
 */
 net.update(0.01);
 
-/*  */
+/* REPEAT numbers 1 to 5 till the loss value(s) reach a certain threshold */
 ```
 
 The training is somehow identical for `Net`, `DNN`, `BNN`, `RNN`, `LSTM`.
