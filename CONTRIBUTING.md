@@ -1,3 +1,5 @@
+# Contributing
+
 Thanks for taking the time to contribute to recurrent-js. Follow these guidelines to make the process smoother:
 
 1. One feature per pull request.  
