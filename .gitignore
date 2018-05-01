@@ -1,18 +1,12 @@
-# IDE config
+# Directories
 .vscode
-
-# Dependency directories
-node_modules
-
-# Compiled outputs
+coverage
 dist
-
-# Temporary testing outputs
+logs
+node_modules
 test
 
-# Logs
-logs
-*.log*
+# Config Files
 
-# Coverage directory used by tools like istanbul
-coverage
+# Other Files
+*.log*
