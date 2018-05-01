@@ -10,8 +10,8 @@ src
 .travis.yml
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
-PULL_REQUEST_TEMPLATE.md
 jasmine.json
+PULL_REQUEST_TEMPLATE.md
 tsconfig.json
 tslint-google.json
 tslint.json
