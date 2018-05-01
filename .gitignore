@@ -9,4 +9,10 @@ test
 # Config Files
 
 # Other Files
+*.js
+*.js.map
+*.d.ts
+**/*.js
+**/*.js.map
+**/*.d.ts
 *.log*
