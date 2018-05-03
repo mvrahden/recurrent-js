@@ -2,7 +2,7 @@
 [![js-google-style](https://img.shields.io/badge/code%20style-google-blue.svg)](https://google.github.io/styleguide/jsguide.html)
 [![dependency-free](https://img.shields.io/badge/dependencies-none-brightgreen.svg)]()
 
-**The recurrent-js library** &ndash; Amazingly simple to build and train various neural networks. The library is an object-oriented neural network approach (baked with [Typescript](https://github.com/Microsoft/TypeScript)), containing stateless and statefull neural network architectures. It is a redesigned and extended version of _Andrej Karpathy's_ RecurrentJS library that implements the following:
+**The recurrent-js library** &ndash; Amazingly simple to build and train various neural networks. The library is an object-oriented neural network approach (baked with [Typescript](https://github.com/Microsoft/TypeScript)), containing stateless and stateful neural network architectures. It is a redesigned and extended version of _Andrej Karpathy's_ RecurrentJS library that implements the following:
 
 * Vanilla Feedforward Neural Network (Net)
 * Deep **Recurrent Neural Networks** (RNN)
@@ -19,22 +19,24 @@ Currently exposed Classes:
 
 * Utility Classes:
   * **Utils** - Collection of Utility functions.
-  * **Mat** - Sophisticated Matrix Structure for Weights in Networks.
+  * **Graph** - Graph holding matrix operation sequences for backpropagation.
+  * **Mat** - Sophisticated matrix structure for Weights in Networks.
   * **RandMat** - `Mat` populated with random gaussian distributed values.
-  * **Graph** - Graph holding the Operation sequence for backpropagation.
   * **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
-  * **FNNModel** - Genralized Class containing the Weights (and `Graph`) for stateless `FNN`-models
+  <!-- * **FNNModel** - Genralized Class containing the Weights (and `Graph`) for stateless `FNN`-models
     * such as `DNN` or `BNN`.
-  * **RNNModel** - Genralized Class containing the Weights (and `Graph`) for statefull `RNN`-models
-    * such as `RNN` or `LSTM`.
-  * **InnerState** - Standardized `Interface` for parameter injection in forward-pass of `RNNModel`s holding the previous state.
+  * **RNNModel** - Genralized Class containing the Weights (and `Graph`) for stateful `RNN`-models
+    * such as `RNN` or `LSTM`. -->
+  * **InnerState** - Standardized `Interface` for parameter injection in forward-pass of stateful networks holding the previous state.
 
 * Neural Network Classes:
-  * **Net** - Simple Neural Network.
-  * **DNN** - Deep Feedfoward Neural Network. Extends `FNNModel`.
-  * **BNN** - Deep Bayesian Neural Network. Extends `FNNModel`.
-  * **RNN** - Recurrent Neural Network. Extends `RNNModel`.
-  * **LSTM** - Long Short Term Memory Network. Extends `RNNModel`.
+  * stateless:
+    * **Net** - Simple Neural Network.
+    * **DNN** - Deep Feedforward Neural Network.
+    * **BNN** - Deep Bayesian Neural Network.
+  * stateful:
+    * **RNN** - Recurrent Neural Network.
+    * **LSTM** - Long Short Term Memory Network.
 
 ### How to install as dependency
 
@@ -63,11 +65,11 @@ const DNN = require('recurrent-js').DNN;
 
 ### How to train?
 
-Training of neural networks is achieved by iteratively reinforcing wanted activation behavior and by surpressing the unwanted activation paths.
-The training is achieved via an expression `Graph`, that holds the sequences of matrix operations being done during the forwardpass.
+Training of neural networks is achieved by iteratively reinforcing wanted activation behavior or by suppressing the unwanted activation paths through adjusting the slopes of activation paths.
+The training is achieved via an expression `Graph`, that holds the sequences of matrix operations being done during the forward-pass.
 The results of the Matrix operations are contained in a `Mat`-Object, which contains the resulting values (`w`) and their automatically differentiated counterparts (`dw`).
 By manipulating a derivative value of the resulting output-`Mat`, the `Graph`-object can then be used to propagate that gradient modification back into the neural network, via a gradient descent approach.
-The so called backpropagation will then lead to supporting wanted neural net activity and surpressing unwanted activation behavior.
+The so called backpropagation will then lead to supporting wanted neural net activity and suppressing unwanted activation behavior.
 Backpropagation can be achieved as follows:
 
 ```typescript
