@@ -2,7 +2,8 @@ sudo: false
 language: node_js
 node_js:  # Test only current versions of NodeJS >= 8.0 (Mid 2017) to reduce server loads
   - stable
-  - "9.3.0"   # same results as 9.0, 9.1, 9.2
+  - "10.0.0"  # 
+  - "9.11.1" # same results as 8.10, 8.11, 9.0, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9, 9.10., 9.11
   - "8.9.4"   # same results as 8.7, 8.8, 8.9
   - "8.6.0"   # same results as 8.3, 8.4, 8.5
   - "8.2.1"   # same results as 8.0, 8.1, 8.2
