@@ -1,4 +1,5 @@
-import { Mat, Graph, DNN, Utils, NetOpts } from './..';
+import { Mat, Graph, Utils, NetOpts } from './..';
+import { DNN } from './dnn';
 
 export class BNN extends DNN {
 

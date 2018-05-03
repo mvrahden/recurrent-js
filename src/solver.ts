@@ -1,4 +1,5 @@
-import { Mat, RNNModel } from '.';
+import { Mat } from '.';
+import { RNNModel } from './rnn/rnn-model';
 
 export class Solver {
   protected readonly decayRate: number;

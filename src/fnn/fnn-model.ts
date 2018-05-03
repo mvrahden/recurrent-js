@@ -1,4 +1,4 @@
-import { Graph, Mat, RandMat } from './..';
+import { Graph, Mat, RandMat, NetOpts } from './..';
 import { Assertable } from './../utils/assertable';
 
 export abstract class FNNModel extends Assertable {
