@@ -1,6 +1,6 @@
 # recurrent-js
 [![Build Status](https://travis-ci.org/mvrahden/recurrent-js.svg?branch=master)](https://travis-ci.org/mvrahden/recurrent-js)
-[![Build status](https://ci.appveyor.com/api/projects/status/1gbi2lkll4d48cy6/branch/master?svg=true)](https://ci.appveyor.com/project/mvrahden/recurrent-js/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/7qkcof8t6b0io44f/branch/master?svg=true)](https://ci.appveyor.com/project/mvrahden/recurrent-js/branch/master)
 [![js-google-style](https://img.shields.io/badge/code%20style-google-blue.svg)](https://google.github.io/styleguide/jsguide.html)
 [![dependency-free](https://img.shields.io/badge/dependencies-none-brightgreen.svg)]()
 
@@ -25,9 +25,9 @@ Currently exposed Classes:
   * **Mat** - Sophisticated matrix structure for Weights in Networks.
   * **RandMat** - `Mat` populated with random gaussian distributed values.
   * **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
-  <!-- * **FNNModel** - Genralized Class containing the Weights (and `Graph`) for stateless `FNN`-models
+  <!-- * **FNNModel** - Generalized Class containing the Weights (and `Graph`) for stateless `FNN`-models
     * such as `DNN` or `BNN`.
-  * **RNNModel** - Genralized Class containing the Weights (and `Graph`) for stateful `RNN`-models
+  * **RNNModel** - Generalized Class containing the Weights (and `Graph`) for stateful `RNN`-models
     * such as `RNN` or `LSTM`. -->
   * **InnerState** - Standardized `Interface` for parameter injection in forward-pass of stateful networks holding the previous state.
 
