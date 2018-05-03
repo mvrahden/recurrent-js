@@ -18,7 +18,7 @@ export abstract class FNNModel extends Assertable {
    * Generates a Neural Net with given specs.
    * @param {{inputSize: number, hiddenSize: Array<number>, outputSize: number, needsBackprop: boolean = true, mu: number = 0, std: number = 0.01}} opt Specs of the Neural Net.
    */
-  constructor(opt: { inputSize: number, hiddenUnits: Array<number>, outputSize: number, needsBackprop?: boolean, mu?: number, std?: number });
+  constructor(opt: NetOpts);
   constructor(opt: any) {
     super();
     const needsBackprop = opt && opt.needsBackprop ? opt.needsBackprop : true;
