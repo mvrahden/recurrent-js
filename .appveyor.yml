@@ -39,7 +39,10 @@ skip_commits:
     - .gitignore
     - .npmignore
     - .travis.yml
+    - CODE_OF_CONDUCT.md
     - LICENSE
+    - CONTRIBUTING.md
+    - PULL_REQUEST_TEMPLATE.md
     - README.md
     - TODO.md
-- tslint*
+    - tslint*
