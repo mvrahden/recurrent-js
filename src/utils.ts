@@ -1,4 +1,4 @@
-import { Mat } from './Mat';
+import { Mat } from '.';
 import { Assertable } from './utils/assertable';
 
 export class Utils extends Assertable {
