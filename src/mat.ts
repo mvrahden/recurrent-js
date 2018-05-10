@@ -204,7 +204,7 @@ export class Mat extends Assertable {
    * @return {Mat} Matrix of dimension 1x1
    */
   public static dot(m1: Mat, m2: Mat): Mat {
-    Mat.assert(m1.w.length === m2.w.length, '[class:Mat] dot: dimensions misaligned');
+    Mat.assert(m1.w.length === m2.w.length && m1.rows === m2.rows, '[class:Mat] dot: dimensions misaligned');
     const out = new Mat(1, 1);
     let dot = 0.0;
     for (let i = 0; i < m1.w.length; i++) {
