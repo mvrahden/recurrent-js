@@ -19,7 +19,7 @@ describe('Mat:', () => {
       it('given a matrix >> rowPluck >> should return new instance of matrix-object (reference)', () => {
         actual = sut.rowPluck(mat1, rowIndex);
 
-        expectOperationHadReturnedNewInstance();
+        expectOperationHasReturnedNewInstance();
       });
 
       it('given a matrix with dimensions (2,4) >> rowPluck >> should return matrix with dimensions (4,1)', () => {
@@ -64,7 +64,7 @@ describe('Mat:', () => {
       it('given a matrix >> gauss >> should return new instance of matrix-object (reference)', () => {
         actual = sut.gauss(mat1, std);
 
-        expectOperationHadReturnedNewInstance();
+        expectOperationHasReturnedNewInstance();
       });
 
       it('given a matrix with dimensions (2,4) >> gauss >> should return matrix with dimensions (2,4)', () => {
@@ -113,7 +113,7 @@ describe('Mat:', () => {
         it('given a matrix >> tanh >> should return new instance of matrix-object (reference)', () => {
           actual = sut.tanh(mat1);
 
-          expectOperationHadReturnedNewInstance();
+          expectOperationHasReturnedNewInstance();
         });
 
         it('given a matrix with dimensions (2,4) >> tanh >> should return matrix with dimensions (2,4)', () => {
@@ -133,7 +133,7 @@ describe('Mat:', () => {
         it('given a matrix >> sig >> should return new instance of matrix-object (reference)', () => {
           actual = sut.sig(mat1);
 
-          expectOperationHadReturnedNewInstance();
+          expectOperationHasReturnedNewInstance();
         });
 
         it('given a matrix with dimensions (2,4) >> sig >> should return matrix with dimensions (2,4)', () => {
@@ -155,12 +155,10 @@ describe('Mat:', () => {
 
       const expectSigHasReturnedMatrixWithContent = (content: Array<number>) => {
         expected.setFrom(content);
-        const tmp = [];
+
         for (let i = 0; i < actual.w.length; i++) {
-          tmp.push(1.0 / (1 + Math.exp(-expected.w[i])));
           expect(actual.w[i]).toBeCloseTo(expected.w[i], 5);
         }
-        // throw tmp;
       }
     });
   });
@@ -209,7 +207,7 @@ describe('Mat:', () => {
       
       const expectMultiplicationHasReturnedMatrixWithContent = (content: Array<number>) => {
         expected.setFrom(content);
-        // test content
+
         for (let i = 0; i < actual.w.length; i++) {
           expect(actual.w[i]).toBe(expected.w[i]);
         }
@@ -349,12 +347,12 @@ describe('Mat:', () => {
     });
 
     const expectDualMatrixOperationHasReturnedNewInstance = (): void => {
-      expectOperationHadReturnedNewInstance();
+      expectOperationHasReturnedNewInstance();
       expect(actual === mat2).toBe(false);
     }
   });
 
-  const expectOperationHadReturnedNewInstance = (): void => {
+  const expectOperationHasReturnedNewInstance = (): void => {
     expect(actual === mat1).toBe(false);
   }
 
