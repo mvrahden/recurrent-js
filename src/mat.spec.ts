@@ -6,13 +6,16 @@ describe('Mat:', () => {
   let expected: Mat;
   let mat1: Mat;
 
+  beforeEach(() => {
+    mat1 = new Mat(2, 4);
+    mat1.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
+  });
+
   describe('Single Matrix Operations:', ()  => {
     describe('Row Pluck:', () => {
       let rowIndex: number;
 
       beforeEach(() => {
-        mat1 = new Mat(2, 4);
-        mat1.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
         rowIndex = 0;
       });
 
@@ -54,9 +57,8 @@ describe('Mat:', () => {
 
     describe('Gauss noise-addition:', () => {
       let std: Mat;
+
       beforeEach(() => {
-        mat1 = new Mat(2, 4);
-        mat1.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
         std = new Mat(2, 4);
         std.setFrom([0.1, 0.2, 0.02, 0.5, 1, 0.01, 0, 1]);
       });
@@ -104,10 +106,6 @@ describe('Mat:', () => {
     });
 
     describe('Monadic Operations', () => {
-      beforeEach(() => {
-        mat1 = new Mat(2, 4);
-        mat1.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
-      });
 
       describe('Hyperbolic Tangens', () => {
         it('given a matrix >> tanh >> should return new instance of matrix-object (reference)', () => {
@@ -125,7 +123,7 @@ describe('Mat:', () => {
         it('given a matrix with dimensions (2,4) >> tanh >> should return matrix with dimensions (2,4)', () => {
           actual = sut.tanh(mat1);
 
-          expectSigHasReturnedMatrixWithContent([0.761594, 0.999329, 0.999987, 0.999999, 0.964027, 0.999998, 0.999909, 0.995054]);
+          expectMonadicOperationHasReturnedMatrixWithContent([0.761594, 0.999329, 0.999987, 0.999999, 0.964027, 0.999998, 0.999909, 0.995054]);
         });
       });
   
@@ -145,7 +143,7 @@ describe('Mat:', () => {
         it('given a matrix with dimensions (2,4) >> sig >> should return matrix with dimensions (2,4)', () => {
           actual = sut.sig(mat1);
 
-          expectSigHasReturnedMatrixWithContent([0.731058, 0.982013, 0.997527, 0.999954, 0.880797, 0.999088, 0.993307, 0.952574]);
+          expectMonadicOperationHasReturnedMatrixWithContent([0.731058, 0.982013, 0.997527, 0.999954, 0.880797, 0.999088, 0.993307, 0.952574]);
         });
       });
   
@@ -153,7 +151,7 @@ describe('Mat:', () => {
         
       });
 
-      const expectSigHasReturnedMatrixWithContent = (content: Array<number>) => {
+      const expectMonadicOperationHasReturnedMatrixWithContent = (content: Array<number>) => {
         expected.setFrom(content);
 
         for (let i = 0; i < actual.w.length; i++) {
@@ -168,7 +166,8 @@ describe('Mat:', () => {
 
     describe('Multiplication:', () => {
       beforeEach(() => {
-        prepareMatricesForMultiplication();
+        mat2 = new Mat(4, 3);
+        mat2.setFrom([1, 4, 6, 2, 7, 5, 9, 0, 11, 3, 1, 0]);
       });
 
       it('given two matrices >> multiply >> should return new instance of matrix-object (reference)', () => {
@@ -197,13 +196,6 @@ describe('Mat:', () => {
         expected = new Mat(2, 3);
         expectMultiplicationHasReturnedMatrixWithContent([93, 42, 92, 70, 60, 102]);
       });
-
-      const prepareMatricesForMultiplication = (): void => {
-        mat1 = new Mat(2, 4);
-        mat1.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
-        mat2 = new Mat(4, 3);
-        mat2.setFrom([1, 4, 6, 2, 7, 5, 9, 0, 11, 3, 1, 0]);
-      }
       
       const expectMultiplicationHasReturnedMatrixWithContent = (content: Array<number>) => {
         expected.setFrom(content);
@@ -216,8 +208,6 @@ describe('Mat:', () => {
 
     describe('Addition:', () => {
       beforeEach(() => {
-        mat1 = new Mat(2, 4);
-        mat1.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
         mat2 = new Mat(2, 4);
         mat2.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
       });
@@ -260,8 +250,6 @@ describe('Mat:', () => {
 
     describe('Dot Product:', () => {
       beforeEach(() => {
-        mat1 = new Mat(2, 4);
-        mat1.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
         mat2 = new Mat(2, 4);
         mat2.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
       });
@@ -304,8 +292,6 @@ describe('Mat:', () => {
 
     describe('Elementwise Multiplication:', () => {
       beforeEach(() => {
-        mat1 = new Mat(2, 4);
-        mat1.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
         mat2 = new Mat(2, 4);
         mat2.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
       });
