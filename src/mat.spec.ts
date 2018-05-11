@@ -148,7 +148,29 @@ describe('Mat:', () => {
       });
   
       describe('Rectified Linear Units (ReLU)', () => {
-        
+
+        beforeEach(() => {
+          // Mat with some negative values
+          mat1.setFrom([1, -4, 6, 10, 2, -7, 5, 3]);
+        });
+
+        it('given a matrix >> relu >> should return new instance of matrix-object (reference)', () => {
+          actual = sut.relu(mat1);
+
+          expectOperationHasReturnedNewInstance();
+        });
+
+        it('given a matrix with dimensions (2,4) >> relu >> should return matrix with dimensions (2,4)', () => {
+          actual = sut.relu(mat1);
+
+          expectOperationHasReturnedMatrixWithDimensions(2, 4);
+        });
+
+        it('given a matrix with dimensions (2,4) >> relu >> should return matrix with dimensions (2,4)', () => {
+          actual = sut.relu(mat1);
+
+          expectMonadicOperationHasReturnedMatrixWithContent([1, 0, 6, 10, 2, 0, 5, 3]);
+        });
       });
 
       const expectMonadicOperationHasReturnedMatrixWithContent = (content: Array<number>) => {
