@@ -140,15 +140,15 @@ export class LSTM extends RNNModel {
       // input gate
       const h0 = graph.mul(this.model.hidden.input.Wx[i], inputVector);
       const h1 = graph.mul(this.model.hidden.input.Wh[i], hiddenPrev);
-      const inputGate = graph.sigmoid(graph.add(graph.add(h0, h1), this.model.hidden.input.bh[i]));
+      const inputGate = graph.sig(graph.add(graph.add(h0, h1), this.model.hidden.input.bh[i]));
       // forget gate
       const h2 = graph.mul(this.model.hidden.forget.Wx[i], inputVector);
       const h3 = graph.mul(this.model.hidden.forget.Wh[i], hiddenPrev);
-      const forgetGate = graph.sigmoid(graph.add(graph.add(h2, h3), this.model.hidden.forget.bh[i]));
+      const forgetGate = graph.sig(graph.add(graph.add(h2, h3), this.model.hidden.forget.bh[i]));
       // output gate
       const h4 = graph.mul(this.model.hidden.output.Wx[i], inputVector);
       const h5 = graph.mul(this.model.hidden.output.Wh[i], hiddenPrev);
-      const outputGate = graph.sigmoid(graph.add(graph.add(h4, h5), this.model.hidden.output.bh[i]));
+      const outputGate = graph.sig(graph.add(graph.add(h4, h5), this.model.hidden.output.bh[i]));
       // write operation on cells
       const h6 = graph.mul(this.model.hidden.cell.Wx[i], inputVector);
       const h7 = graph.mul(this.model.hidden.cell.Wh[i], hiddenPrev);

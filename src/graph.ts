@@ -26,19 +26,19 @@ export class Graph {
   /**
    * Non-destructively pluck a row of m with rowIndex
    * @param m 
-   * @param ix 
+   * @param rowIndex 
    */
-  public rowPluck(m: Mat, ix: number): Mat {
-    const out = Mat.rowPluck(m, ix);
-    this.addRowPluckToBackprop(m, ix, out);
+  public rowPluck(m: Mat, rowIndex: number): Mat {
+    const out = Mat.rowPluck(m, rowIndex);
+    this.addRowPluckToBackprop(m, rowIndex, out);
     return out;
   }
 
-  private addRowPluckToBackprop(m: Mat, ix: number, out: Mat) {
+  private addRowPluckToBackprop(m: Mat, rowIndex: number, out: Mat) {
     if (this.needsBackprop) {
       const backward = () => {
         for (let i = 0; i < m.cols; i++) {
-          m.dw[m.cols * ix + i] += out.dw[i];
+          m.dw[m.cols * rowIndex + i] += out.dw[i];
         }
       };
       this.backprop.push(backward);
@@ -72,7 +72,7 @@ export class Graph {
    * Non-destructive elementwise sigmoid
    * @param m 
    */
-  public sigmoid(m: Mat): Mat {
+  public sig(m: Mat): Mat {
     const out = Mat.sig(m);
     this.addSigmoidToBackprop(m, out);
     return out;
