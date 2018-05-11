@@ -3,7 +3,7 @@ import { Mat } from '.';
 export class Graph {
   private needsBackprop: boolean;
 
-  public readonly backprop: Array<Function>;
+  private readonly backpropagationStack: Array<Function>;
 
   constructor(needsBackprop: boolean = true) {
     this.needsBackprop = needsBackprop;
@@ -11,15 +11,15 @@ export class Graph {
     // this will store a list of functions that perform backprop,
     // in their forward pass order. So in backprop we will go
     // backwards and evoke each one
-    this.backprop = new Array<Function>();
+    this.backpropagationStack = new Array<Function>();
   }
 
   /**
    * Backpropagation
    */
   public backward(): void {
-    for (let i = this.backprop.length - 1; i >= 0; i--) {
-      this.backprop[i]();
+    for (let i = this.backpropagationStack.length - 1; i >= 0; i--) {
+      this.backpropagationStack[i]();
     }
   }
 
@@ -41,7 +41,7 @@ export class Graph {
           m.dw[m.cols * rowIndex + i] += out.dw[i];
         }
       };
-      this.backprop.push(backward);
+      this.backpropagationStack.push(backward);
     }
   }
 
@@ -64,7 +64,7 @@ export class Graph {
           m.dw[i] += (1.0 - mwi * mwi) * out.dw[i];
         }
       };
-      this.backprop.push(backward);
+      this.backpropagationStack.push(backward);
     }
   }
 
@@ -87,7 +87,7 @@ export class Graph {
           m.dw[i] += mwi * (1.0 - mwi) * out.dw[i];
         }
       };
-      this.backprop.push(backward);
+      this.backpropagationStack.push(backward);
     }
   }
 
@@ -108,7 +108,7 @@ export class Graph {
           m.dw[i] += m.w[i] > 0 ? out.dw[i] : 0.0;
         }
       };
-      this.backprop.push(backward);
+      this.backpropagationStack.push(backward);
     }
   }
   /**
@@ -135,7 +135,7 @@ export class Graph {
           }
         }
       };
-      this.backprop.push(backward);
+      this.backpropagationStack.push(backward);
     }
   }
 
@@ -158,7 +158,7 @@ export class Graph {
           m2.dw[i] += out.dw[i];
         }
       };
-      this.backprop.push(backward);
+      this.backpropagationStack.push(backward);
     }
   }
 
@@ -181,7 +181,7 @@ export class Graph {
           m2.dw[i] += m1.w[i] * out.dw[0];
         }
       };
-      this.backprop.push(backward);
+      this.backpropagationStack.push(backward);
     }
   }
 
@@ -204,7 +204,7 @@ export class Graph {
           m2.dw[i] += m1.w[i] * out.dw[i];
         }
       };
-      this.backprop.push(backward);
+      this.backpropagationStack.push(backward);
     }
   }
 }
