@@ -4,6 +4,9 @@
 [![js-google-style](https://img.shields.io/badge/code%20style-google-blue.svg)](https://google.github.io/styleguide/jsguide.html)
 [![dependency-free](https://img.shields.io/badge/dependencies-none-brightgreen.svg)]()
 
+[docs-graph]: https://github.com/mvrahden/recurrent-js/docs/graph.md
+[docs-mat]: https://github.com/mvrahden/recurrent-js/docs/mat.md
+
 **The recurrent-js library** &ndash; Amazingly simple to build and train various neural networks. The library is an object-oriented neural network approach (baked with [Typescript](https://github.com/Microsoft/TypeScript)), containing stateless and stateful neural network architectures. It is a redesigned and extended version of _Andrej Karpathy's_ RecurrentJS library that implements the following:
 
 * Vanilla Feedforward Neural Network (Net)
@@ -21,9 +24,9 @@ Currently exposed Classes:
 
 * Utility Classes:
   * **Utils** - Collection of Utility functions.
-  * **Mat** - Matrix Class with matrix operations for the neural networks.
+  * **[Mat](docs-mat)** - Matrix Class with matrix operations for the neural networks.
   * **RandMat** - `Mat` initialized with random values.
-  * **Graph** - Graph memorizing the sequences of matrix operations for backpropagation.
+  * **[Graph](docs-graph)** - Graph memorizing the sequences of matrix operations for backpropagation.
   * **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
   <!-- * **FNNModel** - Generalized Class containing the Weights (and `Graph`) for stateless `FNN`-models
     * such as `DNN` or `BNN`.
@@ -118,14 +121,17 @@ decision.dw[1] = /* some value e.g. 0.5 */;
 
 /*
 4. After injecting the loss value:
-since graph is keeping a reference of `decision`, it can now perform the backpropagation and therefore adjust the decisions gradient.
+since graph is keeping a reference of `decision`, it can now perform the backpropagation and therefore calculate a new decision gradient.
 */
 graph.backward();
 
 /*
-5. OPTIONAL:
-The loss manipulated gradient has now been propagated back into the network.
-In addition you could also marginally discount all existing weights with a gradient on a global scale (meaning: throughout the whole net) as follows:
+5. After determining a new decision gradient:
+The gradient determined with the loss value has now been calculated.
+To propagate the slope of the new gradient back into the network and therefore adjust the actual decision gradient, the weights need to be updated accordingly.
+With the injected `alpha`-value you can control the degree of the weight update.
+The underlying formula is as follows: 
+w[i] = w[i] - (dw[i] * alpha)
 */
 net.update(0.01);
 
