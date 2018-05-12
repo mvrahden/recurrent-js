@@ -24,9 +24,9 @@ Currently exposed Classes:
 
 * Utility Classes:
   * **Utils** - Collection of Utility functions.
-  * **[Mat](docs-mat)** - Matrix Class with matrix operations for the neural networks.
+  * **[Mat][docs-mat]** - Matrix Class with matrix operations for the neural networks.
   * **RandMat** - `Mat` initialized with random values.
-  * **[Graph](docs-graph)** - Graph memorizing the sequences of matrix operations for backpropagation.
+  * **[Graph][docs-graph]** - Graph memorizing the sequences of matrix operations for backpropagation.
   * **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
   <!-- * **FNNModel** - Generalized Class containing the Weights (and `Graph`) for stateless `FNN`-models
     * such as `DNN` or `BNN`.
