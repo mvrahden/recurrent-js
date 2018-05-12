@@ -1,7 +1,6 @@
 import { Graph, Mat } from '.';
 
 /**
- * TEST MAT method call
  * TEST GRAPH derivative functions --> Outsource to Mat??
  */
 
