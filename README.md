@@ -4,8 +4,8 @@
 [![js-google-style](https://img.shields.io/badge/code%20style-google-blue.svg)](https://google.github.io/styleguide/jsguide.html)
 [![dependency-free](https://img.shields.io/badge/dependencies-none-brightgreen.svg)]()
 
-[docs-graph]: https://github.com/mvrahden/recurrent-js/docs/graph.md
-[docs-mat]: https://github.com/mvrahden/recurrent-js/docs/mat.md
+[docs-graph]: https://github.com/mvrahden/recurrent-js/blob/master/docs/graph.md
+[docs-mat]: https://github.com/mvrahden/recurrent-js/blob/master/docs/mat.md
 
 **The recurrent-js library** &ndash; Amazingly simple to build and train various neural networks. The library is an object-oriented neural network approach (baked with [Typescript](https://github.com/Microsoft/TypeScript)), containing stateless and stateful neural network architectures. It is a redesigned and extended version of _Andrej Karpathy's_ RecurrentJS library that implements the following:
 
