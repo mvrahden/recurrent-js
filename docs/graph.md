@@ -18,7 +18,7 @@ The following sections further describe the `Graph` class and its usage.
     * `mul(mat1: Mat, mat2: Mat): Mat`
     * `dot(mat1: Mat, mat2: Mat): Mat`
     * `eltmul(mat1: Mat, mat2: Mat): Mat`
-* `backward(): void`: Calls the Backpropagation Stack in LIFO order of Matrix Operation Derivatives.
+* `backward(): void`: Calls the Backpropagation Stack in reverse (LIFO) order of Matrix Operation Derivatives.
 
 ## Usage
 
