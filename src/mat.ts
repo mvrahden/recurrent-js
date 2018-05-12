@@ -5,7 +5,7 @@ export class Mat extends Assertable {
   
   public readonly rows: number;
   public readonly cols: number;
-  private readonly length: number;  // length of 1d-representaion of Mat
+  private readonly _length: number;  // length of 1d-representaion of Mat
 
   public readonly w: Array<number> | Float64Array;
   public readonly dw: Array<number> | Float64Array;
@@ -19,9 +19,9 @@ export class Mat extends Assertable {
     super();
     this.rows = rows;
     this.cols = cols;
-    this.length = rows * cols;
-    this.w = Utils.zeros(this.length);
-    this.dw = Utils.zeros(this.length);
+    this._length = rows * cols;
+    this.w = Utils.zeros(this._length);
+    this.dw = Utils.zeros(this._length);
   }
 
   /**
@@ -30,7 +30,7 @@ export class Mat extends Assertable {
    * @param col
    * @returns the value of given row and column
    */
-  get(row: number, col: number): number {
+  public get(row: number, col: number): number {
     const ix = this.getIndexBy(row, col);
     Mat.assert(ix >= 0 && ix < this.w.length, '[class:Mat] get: index out of bounds.');
     return this.w[ix];
@@ -42,7 +42,7 @@ export class Mat extends Assertable {
    * @param col 
    * @param v 
    */
-  set(row: number, col: number, v: number): void {
+  public set(row: number, col: number, v: number): void {
     const ix = this.getIndexBy(row, col);
     Mat.assert(ix >= 0 && ix < this.w.length, '[class:Mat] set: index out of bounds.');
     this.w[ix] = v;
@@ -67,9 +67,14 @@ export class Mat extends Assertable {
     }
   }
 
-  public setColumn(m: Mat, i: number): void {
+  /**
+   * Overrides the values from the column of the matrix
+   * @param m 
+   * @param colIndex 
+   */
+  public setColumn(m: Mat, colIndex: number): void {
     for (let q = 0; q < m.w.length; q++) {
-      this.w[(this.cols * q) + i] = m.w[q];
+      this.w[(this.cols * q) + colIndex] = m.w[q];
     }
   }
 
@@ -78,7 +83,7 @@ export class Mat extends Assertable {
    * @param alpha discount factor
    */
   public update(alpha: number): void {
-    for (let i = 0; i < this.length; i++) {
+    for (let i = 0; i < this._length; i++) {
       if (this.dw[i] !== 0) {
         this.w[i] += - alpha * this.dw[i];
         this.dw[i] = 0;
@@ -86,11 +91,11 @@ export class Mat extends Assertable {
     }
   }
 
-  public static toJSON(m: Mat | any): {} {
-    const json = {};
-    json['rows'] = m.rows || m.n;
-    json['cols'] = m.cols || m.d;
-    json['w'] = m.w;
+  public static toJSON(m: Mat | any): {rows, cols, w} {
+    const json = {rows: 0, cols: 0, w: []};
+    json.rows = m.rows || m.n;
+    json.cols = m.cols || m.d;
+    json.w = m.w;
     return json;
   }
 
@@ -98,8 +103,8 @@ export class Mat extends Assertable {
     const rows = json.rows || json.n;
     const cols = json.cols || json.d;
     const mat = new Mat(rows, cols);
-    for (let i = 0; i < mat.length; i++) {
-      mat.w[i] = json.w[i]; // copy over weights
+    for (let i = 0; i < mat._length; i++) {
+      mat.w[i] = json.w[i];
     }
     return mat;
   }

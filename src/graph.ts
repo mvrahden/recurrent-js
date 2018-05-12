@@ -1,12 +1,16 @@
 import { Mat } from '.';
 
 export class Graph {
-  private needsBackprop: boolean;
+  private needsBackpropagation: boolean;
 
   private readonly backpropagationStack: Array<Function>;
 
-  constructor(needsBackprop: boolean = true) {
-    this.needsBackprop = needsBackprop;
+  /**
+   * Initializes a Graph for Matrix Operation sequencing.
+   * @param needsBackpropagation defaults to `true`
+   */
+  constructor(needsBackpropagation: boolean = true) {
+    this.needsBackpropagation = needsBackpropagation;
 
     // this will store a list of functions that perform backprop,
     // in their forward pass order. So in backprop we will go
@@ -35,7 +39,7 @@ export class Graph {
   }
 
   private addRowPluckToBackprop(m: Mat, rowIndex: number, out: Mat) {
-    if (this.needsBackprop) {
+    if (this.needsBackpropagation) {
       const backward = () => {
         for (let i = 0; i < m.cols; i++) {
           m.dw[m.cols * rowIndex + i] += out.dw[i];
@@ -56,7 +60,7 @@ export class Graph {
   }
 
   private addTanhToBackprop(m: Mat, out: Mat) {
-    if (this.needsBackprop) {
+    if (this.needsBackpropagation) {
       const backward = () => {
         for (let i = 0; i < m.w.length; i++) {
           // grad for z = tanh(x) is (1 - z^2)
@@ -79,7 +83,7 @@ export class Graph {
   }
 
   private addSigmoidToBackprop(m: Mat, out: Mat) {
-    if (this.needsBackprop) {
+    if (this.needsBackpropagation) {
       const backward = () => {
         for (let i = 0; i < m.w.length; i++) {
           // grad for z = tanh(x) is (1 - z^2)
@@ -102,7 +106,7 @@ export class Graph {
   }
 
   private addReluToBackprop(m: Mat, out: Mat) {
-    if (this.needsBackprop) {
+    if (this.needsBackpropagation) {
       const backward = () => {
         for (let i = 0; i < m.w.length; i++) {
           m.dw[i] += m.w[i] > 0 ? out.dw[i] : 0.0;
@@ -123,7 +127,7 @@ export class Graph {
   }
 
   private addMultiplyToBackprop(m1: Mat, m2: Mat, out: Mat) {
-    if (this.needsBackprop) {
+    if (this.needsBackpropagation) {
       const backward = () => {
         for (let i = 0; i < m1.rows; i++) {
           for (let j = 0; j < m2.cols; j++) {
@@ -151,7 +155,7 @@ export class Graph {
   }
 
   private addAdditionToBackprop(m1: Mat, m2: Mat, out: Mat) {
-    if (this.needsBackprop) {
+    if (this.needsBackpropagation) {
       const backward = () => {
         for (let i = 0; i < m1.w.length; i++) {
           m1.dw[i] += out.dw[i];
@@ -174,7 +178,7 @@ export class Graph {
   }
 
   private addDotToBackprop(m1: Mat, m2: Mat, out: Mat) {
-    if (this.needsBackprop) {
+    if (this.needsBackpropagation) {
       const backward = () => {
         for (let i = 0; i < m1.w.length; i++) {
           m1.dw[i] += m2.w[i] * out.dw[0];
@@ -197,7 +201,7 @@ export class Graph {
   }
 
   private addEltmulToBackprop(m1: Mat, m2: Mat, out: Mat) {
-    if (this.needsBackprop) {
+    if (this.needsBackpropagation) {
       const backward = () => {
         for (let i = 0; i < m1.w.length; i++) {
           m1.dw[i] += m2.w[i] * out.dw[i];

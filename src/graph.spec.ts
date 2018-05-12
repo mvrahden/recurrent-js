@@ -5,7 +5,7 @@ import { Graph, Mat } from '.';
  * TEST GRAPH derivative functions --> Outsource to Mat??
  */
 
-describe('Graph:', () => {
+describe('Graph Operations:', () => {
   let sut: Graph;
   let mat1: Mat;
 
@@ -90,7 +90,6 @@ describe('Graph:', () => {
         expect(spy).toHaveBeenCalledWith(mat1, mat2);
       }
     });
-  
   });
   
   describe('Backpropagation Stack:', () => {
@@ -98,8 +97,9 @@ describe('Graph:', () => {
     describe('Without Backpropagation:', () => {
 
       beforeEach(() => {
+        sut = new Graph(false); // create a Graph without backpropagation
+
         // Turn Graph Property into Test Double through Method-Patching
-        sut = new Graph(false);
         spyOn(sut['backpropagationStack'], 'push');
       });
 

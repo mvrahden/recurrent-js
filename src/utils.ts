@@ -66,17 +66,17 @@ export class Utils extends Assertable {
    * @param w Array of Numbers
    * @returns Index of Argmax Operation
    */
-  public static maxi(w: Array<number> | Float64Array): number {
-    let maxv = w[0];
-    let maxix = 0;
+  public static maxIndex(w: Array<number> | Float64Array): number {
+    let maxValue = w[0];
+    let maxIndex = 0;
     for (let i = 1; i < w.length; i++) {
       const v = w[i];
-      if (v > maxv) {
-        maxix = i;
-        maxv = v;
+      if (v > maxValue) {
+        maxIndex = i;
+        maxValue = v;
       }
     }
-    return maxix;
+    return maxIndex;
   }
 
   /**
