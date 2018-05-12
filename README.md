@@ -21,19 +21,19 @@ Currently exposed Classes:
 
 * Utility Classes:
   * **Utils** - Collection of Utility functions.
-  * **Graph** - Graph holding matrix operation sequences for backpropagation.
-  * **Mat** - Sophisticated matrix structure for Weights in Networks.
-  * **RandMat** - `Mat` populated with random gaussian distributed values.
+  * **Mat** - Matrix Class with matrix operations for the neural networks.
+  * **RandMat** - `Mat` initialized with random values.
+  * **Graph** - Graph memorizing the sequences of matrix operations for backpropagation.
   * **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
   <!-- * **FNNModel** - Generalized Class containing the Weights (and `Graph`) for stateless `FNN`-models
     * such as `DNN` or `BNN`.
   * **RNNModel** - Generalized Class containing the Weights (and `Graph`) for stateful `RNN`-models
     * such as `RNN` or `LSTM`. -->
-  * **InnerState** - Standardized `Interface` for parameter injection in forward-pass of stateful networks holding the previous state.
+  * **InnerState** - Standardized `Interface` for stateful networks memorizing the previous state of activations.
 
 * Neural Network Classes:
   * stateless:
-    * **Net** - Simple Neural Network.
+    * **Net** - Vanilla Feedforward Neural Network.
     * **DNN** - Deep Feedforward Neural Network.
     * **BNN** - Deep Bayesian Neural Network.
   * stateful:
