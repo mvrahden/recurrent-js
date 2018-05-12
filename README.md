@@ -57,39 +57,39 @@ For TypeScript development it also contains Map-files and Declaration-files.
 
 ### How to import?
 
-These classes can be imported from this `npm` module, e.g.:
+The aforementioned classes can be imported from this `npm` module, e.g.:
 ```typescript
 import { NetOpts, DNN } from 'recurrent-js';
 ```
 
 For JavaScript usage `require` classes from this `npm` module as follows:
 ```javascript
-// NetOpts is a interface (Typescript only), but it gives clues about the required Object-keys
+// NetOpts is an interface (Typescript only), but it gives clues about the required Object-properties (keys)
 const DNN = require('recurrent-js').DNN;
 ```
 
 ### How to train?
 
-Training of neural networks is achieved by iteratively reinforcing wanted activation behavior or by suppressing the unwanted activation paths through adjusting the slopes of activation paths.
-The training is achieved via an expression `Graph`, that holds the sequences of matrix operations being done during the forward-pass.
-The results of the Matrix operations are contained in a `Mat`-Object, which contains the resulting values (`w`) and their automatically differentiated counterparts (`dw`).
-By manipulating a derivative value of the resulting output-`Mat`, the `Graph`-object can then be used to propagate that gradient modification back into the neural network, via a gradient descent approach.
-The so called backpropagation will then lead to supporting wanted neural net activity and suppressing unwanted activation behavior.
-Backpropagation can be achieved as follows:
+Training of neural networks is achieved by iteratively reinforcing wanted activation behavior or by suppressing the unwanted activation paths through adjusting the slopes of these activation paths.
+The training is achieved via an expression `Graph`, that memorizes the sequence of matrix operations being executed during the forward-pass.
+The results of the Matrix operations are contained in `Mat`-objects, which contains the resulting values (`w`).
+By manipulating a derivative value of the resulting output-`Mat`, the `Graph`-object can then be used to calculate the resulting gradient and propagate that modified gradient back into the memorized order of matrix operations.
+The so called backpropagation will then lead to supporting wanted neural network activity and suppressing unwanted activation behavior.
+The described backpropagation can be achieved as follows:
 
 ```typescript
 import { Graph, DNN, Mat } from 'recurrent-js';
 
-// define network structure
+/* define network structure configuration */
 const netOpts = {
   inputSize: 3,
   hiddenUnits: [ 6, 2, 6 ],
   outputSize: 4
 };
 
-// instantiate network
+/* instantiate network */
 const net = new DNN(netOpts);
-// instantiate a graph with backprop-ability
+/* instantiate a graph with backprop-ability */
 const graph = new Graph(true);
 
 /*
