@@ -4,8 +4,14 @@
 [![js-google-style](https://img.shields.io/badge/code%20style-google-blue.svg)](https://google.github.io/styleguide/jsguide.html)
 [![dependency-free](https://img.shields.io/badge/dependencies-none-brightgreen.svg)]()
 
-[docs-graph]: https://github.com/mvrahden/recurrent-js/blob/master/docs/graph.md
+[docs-utils]: https://github.com/mvrahden/recurrent-js/blob/master/docs/utils.md
 [docs-mat]: https://github.com/mvrahden/recurrent-js/blob/master/docs/mat.md
+[docs-graph]: https://github.com/mvrahden/recurrent-js/blob/master/docs/graph.md
+[docs-net]: https://github.com/mvrahden/recurrent-js/blob/master/docs/fnn/net.md
+[docs-dnn]: https://github.com/mvrahden/recurrent-js/blob/master/docs/fnn/dnn.md
+[docs-bnn]: https://github.com/mvrahden/recurrent-js/blob/master/docs/fnn/bnn.md
+[docs-rnn]: https://github.com/mvrahden/recurrent-js/blob/master/docs/rnn/rnn.md
+[docs-lstm]: https://github.com/mvrahden/recurrent-js/blob/master/docs/rnn/lstm.md
 
 **The recurrent-js library** &ndash; Amazingly simple to build and train various neural networks. The library is an object-oriented neural network approach (baked with [Typescript](https://github.com/Microsoft/TypeScript)), containing stateless and stateful neural network architectures. It is a redesigned and extended version of _Andrej Karpathy's_ RecurrentJS library that implements the following:
 
@@ -18,30 +24,31 @@
 
 ## For Production Use
 
-### What does the Library offer?
+### What does the Library has to offer?
 
-Currently exposed Classes:
+The following sections show the currently exposed Classes and Interfaces:
 
-* Utility Classes:
-  * **Utils** - Collection of Utility functions.
-  * **[Mat][docs-mat]** - Matrix Class with matrix operations for the neural networks.
-  * **RandMat** - `Mat` initialized with random values.
-  * **[Graph][docs-graph]** - Graph memorizing the sequences of matrix operations for backpropagation.
-  * **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
-  <!-- * **FNNModel** - Generalized Class containing the Weights (and `Graph`) for stateless `FNN`-models
-    * such as `DNN` or `BNN`.
-  * **RNNModel** - Generalized Class containing the Weights (and `Graph`) for stateful `RNN`-models
-    * such as `RNN` or `LSTM`. -->
-  * **InnerState** - Standardized `Interface` for stateful networks memorizing the previous state of activations.
+#### Utility Classes:
 
-* Neural Network Classes:
-  * stateless:
-    * **Net** - Vanilla Feedforward Neural Network.
-    * **DNN** - Deep Feedforward Neural Network.
-    * **BNN** - Deep Bayesian Neural Network.
-  * stateful:
-    * **RNN** - Recurrent Neural Network.
-    * **LSTM** - Long Short Term Memory Network.
+* **[Utils][docs-utils]** - Collection of Utility functions.
+* **[Mat][docs-mat]** - Matrix Class with matrix operations for the neural networks.
+* **RandMat** - A convenient subclass of `Mat`, that is automatically populated with random values when it's being initialized.
+* **[Graph][docs-graph]** - Graph memorizing the sequences of matrix operations for backpropagation.
+* **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
+<!-- * **FNNModel** - Generalized Class containing the Weights (and `Graph`) for stateless `FNN`-models
+  * such as `DNN` or `BNN`.
+* **RNNModel** - Generalized Class containing the Weights (and `Graph`) for stateful `RNN`-models
+  * such as `RNN` or `LSTM`. -->
+* **InnerState** - Standardized `Interface` for stateful networks memorizing the previous state of activations.
+
+#### Neural Network Classes:
+* stateless:
+  * **[Net][docs-net]** - Vanilla Feedforward Neural Network.
+  * **[DNN][docs-dnn]** - Deep Feedforward Neural Network.
+  * **[BNN][docs-bnn]** - Deep Bayesian Neural Network.
+* stateful:
+  * **[RNN][docs-rnn]** - Recurrent Neural Network.
+  * **[LSTM][docs-lstm]** - Long Short Term Memory Network.
 
 ### How to install as dependency
 
