@@ -32,7 +32,7 @@ The following sections show the currently exposed Classes and Interfaces:
 
 * **[Utils][docs-utils]** - Collection of Utility functions.
 * **[Mat][docs-mat]** - Matrix Class with matrix operations for the neural networks.
-* **RandMat** - A convenient subclass of `Mat`, that is automatically populated with random values when it's being initialized.
+* **RandMat** - A convenient subclass of `Mat`. `RandMat` objects are automatically populated with random values on their creation.
 * **[Graph][docs-graph]** - Graph memorizing the sequences of matrix operations for backpropagation.
 * **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
 <!-- * **FNNModel** - Generalized Class containing the Weights (and `Graph`) for stateless `FNN`-models
