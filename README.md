@@ -96,11 +96,15 @@ const netOpts = {
 
 /* instantiate network */
 const net = new DNN(netOpts);
-/* instantiate a graph with backprop-ability */
+
+
+/* 
+1. Instantiate a graph with the ability to perform backpropagation
+*/
 const graph = new Graph(true);
 
 /*
-1. Before forward pass:
+2. Before forward pass:
 Create a single row of type `Mat`, which holds an observation.
 We will refer to this as the state.
 Dimensions of state are according to the configuration of the net (rows = inputSize = 3, cols = 1).
@@ -110,14 +114,14 @@ const state = new Mat(3, 1);
 state.setFrom(observation);
 
 /*
-2. Decision making:
+3. Decision making:
 Forward pass with observed state of type `Mat` and graph.
 The resulting decision is of type `Mat` and is holding multiple output values (here: 4).
 */
 const decision = net.forward(state, graph);
 
 /* 
-3. After forward pass:
+4. After forward pass:
 Compute the decision errors.
 We refer to this as the loss value(s).
 Inject that loss value into the derivative of your targeted value.
@@ -127,13 +131,13 @@ NOTE: You can also apply multiple loss values, to the respective array fields.
 decision.dw[1] = /* some value e.g. 0.5 */;
 
 /*
-4. After injecting the loss value:
+5. After injecting the loss value:
 since graph is keeping a reference of `decision`, it can now perform the backpropagation and therefore calculate a new decision gradient.
 */
 graph.backward();
 
 /*
-5. After determining a new decision gradient:
+6. After determining a new decision gradient:
 The gradient determined with the loss value has now been calculated.
 To propagate the slope of the new gradient back into the network and therefore adjust the actual decision gradient, the weights need to be updated accordingly.
 With the injected `alpha`-value you can control the degree of the weight update.
@@ -142,7 +146,7 @@ w[i] = w[i] - (dw[i] * alpha)
 */
 net.update(0.01);
 
-/* REPEAT numbers 1 to 5 till the loss value(s) reach a certain threshold */
+/* REPEAT numbers 1 to 6 till the loss value(s) reach a certain threshold */
 ```
 
 The training is somehow identical for `Net`, `DNN`, `BNN`, `RNN`, `LSTM`.
