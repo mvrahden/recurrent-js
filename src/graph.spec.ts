@@ -5,6 +5,7 @@ import { Graph, Mat } from '.';
  */
 
 describe('Graph Operations:', () => {
+
   let sut: Graph;
   let mat1: Mat;
 
@@ -54,6 +55,7 @@ describe('Graph Operations:', () => {
     });
 
     describe('Dual Matrix Operations:', () => {
+
       let mat2: Mat;
 
       beforeEach(() => {
@@ -123,6 +125,7 @@ describe('Graph Operations:', () => {
       });
       
       describe('Dual Matrix Operations:', () => {
+
         let mat2: Mat;
 
         beforeEach(() => {
@@ -189,6 +192,7 @@ describe('Graph Operations:', () => {
       });
       
       describe('Dual Matrix Operations:', () => {
+        
         let mat2: Mat;
 
         beforeEach(() => {

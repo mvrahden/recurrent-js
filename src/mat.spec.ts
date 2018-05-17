@@ -1,6 +1,7 @@
 import { Mat, Utils } from '.';
 
 describe('Mat:', () => {
+
   let sut = Mat;
   let actual: Mat;
   let expected: Mat;
@@ -12,7 +13,9 @@ describe('Mat:', () => {
   });
 
   describe('Single Matrix Operations:', ()  => {
+
     describe('Row Pluck:', () => {
+
       let rowIndex: number;
 
       beforeEach(() => {
@@ -56,11 +59,13 @@ describe('Mat:', () => {
     });
 
     describe('Gauss noise-addition:', () => {
+
       let std: Mat;
 
       beforeEach(() => {
         std = new Mat(2, 4);
         std.setFrom([0.1, 0.2, 0.02, 0.5, 1, 0.01, 0, 1]);
+        spyOn(Utils, 'randn').and.callFake((mu: number, std: number) => { return mu + std; });
       });
 
       it('given a matrix >> gauss >> should return new instance of matrix-object (reference)', () => {
@@ -84,8 +89,6 @@ describe('Mat:', () => {
       });
 
       it('given a matrix >> gauss >> should return matrix with expected content', () => {
-        patchUtilsRandn();
-
         actual = sut.gauss(mat1, std);
 
         expected = new Mat(2, 4);
@@ -99,15 +102,12 @@ describe('Mat:', () => {
           expect(actual.w[i]).toBe(expected.w[i] + std[i]);
         }
       }
-
-      const patchUtilsRandn = (): void => {
-        Utils.randn = (mu: number, std: number) => { return mu + std; };
-      }
     });
 
     describe('Monadic Operations', () => {
 
       describe('Hyperbolic Tangens', () => {
+
         it('given a matrix >> tanh >> should return new instance of matrix-object (reference)', () => {
           actual = sut.tanh(mat1);
 
@@ -128,6 +128,7 @@ describe('Mat:', () => {
       });
   
       describe('Sigmoid', () => {
+
         it('given a matrix >> sig >> should return new instance of matrix-object (reference)', () => {
           actual = sut.sig(mat1);
 
@@ -184,9 +185,11 @@ describe('Mat:', () => {
   });
 
   describe('Dual Matrix Operations:', ()  => {
+
     let mat2: Mat;
 
     describe('Multiplication:', () => {
+
       beforeEach(() => {
         mat2 = new Mat(4, 3);
         mat2.setFrom([1, 4, 6, 2, 7, 5, 9, 0, 11, 3, 1, 0]);
@@ -229,6 +232,7 @@ describe('Mat:', () => {
     });
 
     describe('Addition:', () => {
+
       beforeEach(() => {
         mat2 = new Mat(2, 4);
         mat2.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
@@ -271,6 +275,7 @@ describe('Mat:', () => {
     });
 
     describe('Dot Product:', () => {
+
       beforeEach(() => {
         mat2 = new Mat(2, 4);
         mat2.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
@@ -313,6 +318,7 @@ describe('Mat:', () => {
     });
 
     describe('Elementwise Multiplication:', () => {
+      
       beforeEach(() => {
         mat2 = new Mat(2, 4);
         mat2.setFrom([1, 4, 6, 10, 2, 7, 5, 3]);
