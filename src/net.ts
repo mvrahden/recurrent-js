@@ -1,13 +1,13 @@
 import { Mat, RandMat, Graph, NetOpts } from '.';
 
 export class Net {
-  public W1: Mat | null = null;
-  public b1: Mat | null = null;
-  public W2: Mat | null = null;
-  public b2: Mat | null = null;
+  public W1: Mat;
+  public b1: Mat;
+  public W2: Mat;
+  public b2: Mat;
 
   /**
-   * Generates a Neural Net instance from a pretrained Neural Net JSON.
+   * Generates a Neural Net instance from a pre-trained Neural Net JSON.
    * @param {{W1, b1, W2, b2}} opt Specs of the Neural Net.
    */
   constructor(opt: { W1, b1, W2, b2 });
@@ -30,7 +30,7 @@ export class Net {
     return Net.has(opt, ['W1', 'b1', 'W2', 'b2']);
   }
 
-  private isFreshInstanceCall(opt: { inputSize: number; hiddenUnits: number; outputSize: number; mu?: number; std?: number; }) {
+  private isFreshInstanceCall(opt: { inputSize: number, hiddenUnits: number, outputSize: number, mu?: number, std?: number }) {
     return Net.has(opt, ['inputSize', 'hiddenUnits', 'outputSize']);
   }
 
@@ -41,7 +41,7 @@ export class Net {
     this.b2 = Mat.fromJSON(opt['b2']);
   }
 
-  private initializeAsFreshInstance(opt: { inputSize: number; hiddenUnits: number; outputSize: number; mu?: number; std?: number; }) {
+  private initializeAsFreshInstance(opt: { inputSize: number, hiddenUnits: number, outputSize: number, mu?: number, std?: number }) {
     const mu = opt['mu'] ? opt['mu'] : 0;
     const std = opt['std'] ? opt['std'] : 0.01;
     this.W1 = new RandMat(opt['hiddenUnits'], opt['inputSize'], mu, std);
@@ -71,7 +71,7 @@ export class Net {
   }
 
   /**
-   * Forward pass for a single tick of Neural Network
+   * Compute forward pass of Neural Network
    * @param state 1D column vector with observations
    * @param graph optional: inject Graph to append Operations
    * @returns output of type `Mat`
