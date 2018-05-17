@@ -4,10 +4,10 @@
 export abstract class Assertable {
   /**
    * Asserts a condition and throws Error if not assertion fails
-   * @param condition 
-   * @param message 
+   * @param {boolean} condition 
+   * @param {string} message 
    */
-  protected static assert(condition, message = '') {
+  protected static assert(condition: boolean, message: string = '') {
     // from http://stackoverflow.com/questions/15313418/javascript-assert
     if (!condition) {
       message = message || "Assertion failed";
