@@ -22,7 +22,7 @@ export abstract class FNNModel extends Assertable {
   constructor(opt: any) {
     super();
 
-    const needsBackpropagation = opt && opt.needsBackprop ? opt.needsBackprop : true;
+    const needsBackpropagation = opt && opt.needsBackpropagation ? opt.needsBackpropagation : true;
     this.graph = new Graph(needsBackpropagation);
     
     if (FNNModel.isFromJSON(opt)) {
