@@ -1,4 +1,4 @@
-import { Graph, Mat, RandMat, InnerState } from './..';
+import { Graph, Mat, RandMat, InnerState, NetOpts } from './..';
 import { Assertable } from './../utils/assertable';
 
 export abstract class RNNModel extends Assertable {
@@ -11,7 +11,7 @@ export abstract class RNNModel extends Assertable {
   protected readonly graph: Graph;
 
   /**
-   * Generates a Neural Net instance from a pretrained Neural Net JSON.
+   * Generates a Neural Net instance from a pre-trained Neural Net JSON.
    * @param {{ hidden: any, decoder: { Wh: Mat, b: Mat } }} opt Specs of the Neural Net.
    */
   constructor(opt: { hidden: any, decoder: { Wh: Mat, b: Mat } });
@@ -19,13 +19,13 @@ export abstract class RNNModel extends Assertable {
    * Generates a Neural Net with given specs.
    * @param {{inputSize: number, hiddenSize: Array<number>, outputSize: number, needsBackprop: boolean = true, mu: number = 0, std: number = 0.01}} opt Specs of the Neural Net.
    */
-  constructor(opt: { inputSize: number, hiddenUnits: Array<number>, outputSize: number, needsBackprop?: boolean, mu?: number, std?: number });
+  constructor(opt: NetOpts);
   constructor(opt: any) {
     super();
-    const needsBackprop = opt && opt.needsBackprop ? opt.needsBackprop : true;
+    const needsBackpropagation = opt && opt.needsBackpropagation ? opt.needsBackpropagation : true;
 
     this.model = this.initializeNetworkModel();
-    this.graph = new Graph(needsBackprop);
+    this.graph = new Graph(needsBackpropagation);
 
     if (this.isFromJSON(opt)) {
       this.initializeModelFromJSONObject(opt);

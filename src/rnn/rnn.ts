@@ -3,7 +3,7 @@ import { RNNModel } from './rnn-model';
 
 export class RNN extends RNNModel {
   /**
-   * Generates a Neural Net instance from a pretrained Neural Net JSON.
+   * Generates a Neural Net instance from a pre-trained Neural Net JSON.
    * @param {{ hidden: { Wh, Wx, bh }, decoder: { Wh, b } }} opt Specs of the Neural Net.
    */
   constructor(opt: { hidden: { Wh, Wx, bh }, decoder: { Wh, b } });
@@ -23,9 +23,9 @@ export class RNN extends RNNModel {
   }
 
   protected initializeHiddenLayerFromJSON(opt: { hidden: { Wh: Mat[], Wx: Mat[], bh: Mat[] }, decoder: { Wh: Mat, b: Mat } }): void {
-    RNNModel.assert(!Array.isArray(opt['hidden']['Wh']), 'Wrong JSON Format to recreat Hidden Layer.');
-    RNNModel.assert(!Array.isArray(opt['hidden']['Wx']), 'Wrong JSON Format to recreat Hidden Layer.');
-    RNNModel.assert(!Array.isArray(opt['hidden']['bh']), 'Wrong JSON Format to recreat Hidden Layer.');
+    RNNModel.assert(!Array.isArray(opt['hidden']['Wh']), 'Wrong JSON Format to recreate Hidden Layer.');
+    RNNModel.assert(!Array.isArray(opt['hidden']['Wx']), 'Wrong JSON Format to recreate Hidden Layer.');
+    RNNModel.assert(!Array.isArray(opt['hidden']['bh']), 'Wrong JSON Format to recreate Hidden Layer.');
     for (let i = 0; i < opt.hidden.Wh.length; i++) {
       this.model.hidden.Wx[i] = Mat.fromJSON(opt.hidden.Wx[i]);
       this.model.hidden.Wh[i] = Mat.fromJSON(opt.hidden.Wh[i]);
