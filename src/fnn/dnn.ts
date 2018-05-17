@@ -4,7 +4,7 @@ import { FNNModel } from './fnn-model';
 export class DNN extends FNNModel {
 
   /**
-   * Generates a Neural Net instance from a pretrained Neural Net JSON.
+   * Generates a Neural Net instance from a pre-trained Neural Net JSON.
    * @param {{ hidden: { Wh, bh }, decoder: { Wh, b } }} opt Specs of the Neural Net.
    */
   constructor(opt: { hidden: { Wh, bh }, decoder: { Wh, b } });
@@ -18,7 +18,7 @@ export class DNN extends FNNModel {
   }
 
   /**
-   * Forward pass for a single tick of Neural Network
+   * Compute forward pass of Neural Network
    * @param state 1D column vector with observations
    * @param graph optional: inject Graph to append Operations
    * @returns Output of type `Mat`
