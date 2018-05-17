@@ -4,7 +4,7 @@ import { Graph } from './graph';
 import { InnerState } from './utils/inner-state';
 import { LSTM } from './rnn/lstm';
 import { Mat } from './mat';
-import { MatOps } from './mat-opts';
+import { MatOps } from './mat-ops';
 import { Net } from './net';
 import { NetOpts } from './utils/net-opts';
 import { Utils } from './utils';
