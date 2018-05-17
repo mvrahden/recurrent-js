@@ -1,8 +1,8 @@
-import { Mat, Utils } from '.';
+import { Mat, MatOps, Utils } from '.';
 
-describe('Mat:', () => {
+describe('MatOps:', () => {
 
-  let sut = Mat;
+  let sut = MatOps;
   let actual: Mat;
   let expected: Mat;
   let mat1: Mat;

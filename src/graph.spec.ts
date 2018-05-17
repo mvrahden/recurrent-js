@@ -1,4 +1,4 @@
-import { Graph, Mat } from '.';
+import { Graph, Mat, MatOps } from '.';
 
 /**
  * TEST GRAPH derivative functions --> Outsource to Mat??
@@ -20,31 +20,31 @@ describe('Graph Operations:', () => {
   describe('Matrix Operation Call:', () => {  
 
     describe('Single Matrix Operations:', () => {
-      it('given a graph and a matrix >> rowPluck >> should have called Mat.rowPluck', () => {
+      it('given a graph and a matrix >> rowPluck >> should have called MatOps.rowPluck', () => {
         const anyIndex = 0;
         sut.rowPluck(mat1, anyIndex);
   
-        expect(Mat.rowPluck).toHaveBeenCalled();
-        expect(Mat.rowPluck).toHaveBeenCalledWith(mat1, 0);
+        expect(MatOps.rowPluck).toHaveBeenCalled();
+        expect(MatOps.rowPluck).toHaveBeenCalledWith(mat1, 0);
       });
       
       describe('Monadic Matrix Operations', () => {
-        it('given a graph and a matrix >> tanh >> should have called Mat.tanh', () => {
+        it('given a graph and a matrix >> tanh >> should have called MatOps.tanh', () => {
           sut.tanh(mat1);
           
-          expectSpyMethodToHaveBeenCalled(Mat.tanh);
+          expectSpyMethodToHaveBeenCalled(MatOps.tanh);
         });
         
-        it('given a graph and a matrix >> sig >> should have called Mat.sig', () => {
+        it('given a graph and a matrix >> sig >> should have called MatOps.sig', () => {
           sut.sig(mat1);
           
-          expectSpyMethodToHaveBeenCalled(Mat.sig);
+          expectSpyMethodToHaveBeenCalled(MatOps.sig);
         });
     
-        it('given a graph and a matrix >> relu >> should have called Mat.relu', () => {
+        it('given a graph and a matrix >> relu >> should have called MatOps.relu', () => {
           sut.relu(mat1);
           
-          expectSpyMethodToHaveBeenCalled(Mat.relu);
+          expectSpyMethodToHaveBeenCalled(MatOps.relu);
         });
     
         const expectSpyMethodToHaveBeenCalled = (spy: Function): void => {
@@ -62,28 +62,28 @@ describe('Graph Operations:', () => {
         mat2 = new Mat(2, 4);
       });
 
-      it('given a graph and 2 matrices >> mul >> should have called Mat.mul', () => {
+      it('given a graph and 2 matrices >> mul >> should have called MatOps.mul', () => {
         sut.mul(mat1, mat2);
   
-        expectSpyMethodToHaveBeenCalled(Mat.mul);
+        expectSpyMethodToHaveBeenCalled(MatOps.mul);
       });
       
-      it('given a graph and 2 matrices >> add >> should have called Mat.add', () => {
+      it('given a graph and 2 matrices >> add >> should have called MatOps.add', () => {
         sut.add(mat1, mat2);
   
-        expectSpyMethodToHaveBeenCalled(Mat.add);
+        expectSpyMethodToHaveBeenCalled(MatOps.add);
       });
       
-      it('given a graph and 2 matrices >> dot >> should have called Mat.dot', () => {
+      it('given a graph and 2 matrices >> dot >> should have called MatOps.dot', () => {
         sut.dot(mat1, mat2);
         
-        expectSpyMethodToHaveBeenCalled(Mat.dot);
+        expectSpyMethodToHaveBeenCalled(MatOps.dot);
       });
       
-      it('given a graph and 2 matrices >> eltmul >> should have called Mat.eltmul', () => {
+      it('given a graph and 2 matrices >> eltmul >> should have called MatOps.eltmul', () => {
         sut.eltmul(mat1, mat2);
         
-        expectSpyMethodToHaveBeenCalled(Mat.eltmul);
+        expectSpyMethodToHaveBeenCalled(MatOps.eltmul);
       });
   
       const expectSpyMethodToHaveBeenCalled = (spy: Function): void => {
@@ -230,14 +230,18 @@ describe('Graph Operations:', () => {
     });
   });
 
+  describe('Backwards Differentiation:', () => {
+
+  });
+
   const initializeMatrixSpyFunctions = (): void => {
-    spyOn(Mat, 'rowPluck');
-    spyOn(Mat, 'tanh');
-    spyOn(Mat, 'sig');
-    spyOn(Mat, 'relu');
-    spyOn(Mat, 'mul');
-    spyOn(Mat, 'add');
-    spyOn(Mat, 'dot');
-    spyOn(Mat, 'eltmul');
+    spyOn(MatOps, 'rowPluck');
+    spyOn(MatOps, 'tanh');
+    spyOn(MatOps, 'sig');
+    spyOn(MatOps, 'relu');
+    spyOn(MatOps, 'mul');
+    spyOn(MatOps, 'add');
+    spyOn(MatOps, 'dot');
+    spyOn(MatOps, 'eltmul');
   };
 });
