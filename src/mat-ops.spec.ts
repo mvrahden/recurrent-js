@@ -39,7 +39,7 @@ describe('MatOps:', () => {
 
         const callFunction = () => { sut.rowPluck(mat1, incompatible); };
 
-        expect(callFunction).toThrowError('[class:Mat] rowPluck: dimensions misaligned');
+        expect(callFunction).toThrowError('[class:MatOps] rowPluck: dimensions misaligned');
       });
 
       it('given a matrix >> rowPluck >> should return matrix with expected content', () => {
@@ -85,7 +85,7 @@ describe('MatOps:', () => {
 
         const callFunction = () => { sut.gauss(mat1, incompatible); };
 
-        expect(callFunction).toThrowError('[class:Mat] gauss: dimensions misaligned');
+        expect(callFunction).toThrowError('[class:MatOps] gauss: dimensions misaligned');
       });
 
       it('given a matrix >> gauss >> should return matrix with expected content', () => {
@@ -212,7 +212,7 @@ describe('MatOps:', () => {
 
         const callFunction = () => { sut.mul(mat1, incompatible); };
 
-        expect(callFunction).toThrowError('[class:Mat] mul: dimensions misaligned');
+        expect(callFunction).toThrowError('[class:MatOps] mul: dimensions misaligned');
       });
   
       it('given two matrices >> multiply >> should return matrix with expected content', () => {
@@ -255,7 +255,7 @@ describe('MatOps:', () => {
 
         const callFunction = () => { sut.add(mat1, incompatible); };
 
-        expect(callFunction).toThrowError('[class:Mat] add: dimensions misaligned');
+        expect(callFunction).toThrowError('[class:MatOps] add: dimensions misaligned');
       });
   
       it('given two matrices >> add >> should return matrix with expected content', () => {
@@ -298,7 +298,7 @@ describe('MatOps:', () => {
 
         const callFunction = () => { sut.dot(mat1, incompatible); };
 
-        expect(callFunction).toThrowError('[class:Mat] dot: dimensions misaligned');
+        expect(callFunction).toThrowError('[class:MatOps] dot: dimensions misaligned');
       });
   
       it('given two matrices >> dot >> should return matrix with expected content', () => {
@@ -341,7 +341,7 @@ describe('MatOps:', () => {
 
         const callFunction = () => { sut.eltmul(mat1, incompatible); };
 
-        expect(callFunction).toThrowError('[class:Mat] eltmul: dimensions misaligned');
+        expect(callFunction).toThrowError('[class:MatOps] eltmul: dimensions misaligned');
       });
   
       it('given two matrices >> eltmul >> should return matrix with expected content', () => {
