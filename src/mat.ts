@@ -73,8 +73,9 @@ export class Mat extends Assertable {
    * @param colIndex 
    */
   public setColumn(m: Mat, colIndex: number): void {
-    for (let q = 0; q < m.w.length; q++) {
-      this.w[(this.cols * q) + colIndex] = m.w[q];
+    Mat.assert(m.w.length === this.rows, '[class:Mat] setColumn: dimensions misaligned.')
+    for (let i = 0; i < m.w.length; i++) {
+      this.w[(this.cols * i) + colIndex] = m.w[i];
     }
   }
 
