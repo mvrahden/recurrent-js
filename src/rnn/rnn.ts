@@ -16,7 +16,7 @@ export class RNN extends RNNModel {
     super(opt);
   }
 
-  protected isFromJSON(opt: any) {
+  protected isFromJSON(opt: any): boolean {
     return RNNModel.has(opt, ['hidden', 'decoder'])
       && RNNModel.has(opt.hidden, ['Wh', 'Wx', 'bh'])
       && RNNModel.has(opt.decoder, ['Wh', 'b']);
@@ -49,12 +49,12 @@ export class RNN extends RNNModel {
 
   protected initializeHiddenLayer(): void {
     let hiddenSize;
-    for (let d = 0; d < this.hiddenUnits.length; d++) {
-      const previousSize = d === 0 ? this.inputSize : this.hiddenUnits[d - 1];
-      hiddenSize = this.hiddenUnits[d];
-      this.model.hidden.Wx[d] = new RandMat(hiddenSize, previousSize, 0, 0.08);
-      this.model.hidden.Wh[d] = new RandMat(hiddenSize, hiddenSize, 0, 0.08);
-      this.model.hidden.bh[d] = new Mat(hiddenSize, 1);
+    for (let i = 0; i < this.hiddenUnits.length; i++) {
+      const previousSize = i === 0 ? this.inputSize : this.hiddenUnits[i - 1];
+      hiddenSize = this.hiddenUnits[i];
+      this.model.hidden.Wx[i] = new RandMat(hiddenSize, previousSize, 0, 0.08);
+      this.model.hidden.Wh[i] = new RandMat(hiddenSize, hiddenSize, 0, 0.08);
+      this.model.hidden.bh[i] = new Mat(hiddenSize, 1);
     }
   }
 
@@ -78,7 +78,7 @@ export class RNN extends RNNModel {
     return { 'hiddenUnits': hiddenActivations, 'output': output };
   }
 
-  private getPreviousHiddenUnits(previousInnerState: InnerState) {
+  private getPreviousHiddenUnits(previousInnerState: InnerState): Mat[] {
     let previousHiddenUnits;
     if (typeof previousInnerState.hiddenUnits === 'undefined') {
       previousHiddenUnits = new Array<Mat>();
@@ -103,5 +103,18 @@ export class RNN extends RNNModel {
       hiddenActivations.push(activation);
     }
     return hiddenActivations;
+  }
+
+  protected updateHiddenUnits(alpha: number): void {
+    for (let i = 0; i < this.hiddenUnits.length; i++) {
+      this.model.hidden.Wx[i].update(alpha);
+      this.model.hidden.Wh[i].update(alpha);
+      this.model.hidden.bh[i].update(alpha);
+    }
+  }
+  
+  protected updateDecoder(alpha: number): void {
+    this.model.decoder.Wh.update(alpha);
+    this.model.decoder.b.update(alpha);
   }
 }

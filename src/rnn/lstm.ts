@@ -197,4 +197,29 @@ export class LSTM extends RNNModel {
   private givenPreviousInnerState(previousInnerState: InnerState) {
     return previousInnerState || typeof previousInnerState.hiddenUnits !== 'undefined';
   }
+
+  protected updateHiddenUnits(alpha: number): void {
+    for (let i = 0; i < this.hiddenUnits.length; i++) {
+      this.model.hidden.input.Wx[i].update(alpha);
+      this.model.hidden.input.Wh[i].update(alpha);
+      this.model.hidden.input.bh[i].update(alpha);
+      
+      this.model.hidden.output.Wx[i].update(alpha);
+      this.model.hidden.output.Wh[i].update(alpha);
+      this.model.hidden.output.bh[i].update(alpha);
+      
+      this.model.hidden.forget.Wx[i].update(alpha);
+      this.model.hidden.forget.Wh[i].update(alpha);
+      this.model.hidden.forget.bh[i].update(alpha);
+
+      this.model.hidden.cell.Wx[i].update(alpha);
+      this.model.hidden.cell.Wh[i].update(alpha);
+      this.model.hidden.cell.bh[i].update(alpha);
+    }
+  }
+
+  protected updateDecoder(alpha: number): void {
+    this.model.decoder.Wh.update(alpha);
+    this.model.decoder.b.update(alpha);
+  }
 }
