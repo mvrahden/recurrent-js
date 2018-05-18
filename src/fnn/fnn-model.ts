@@ -85,17 +85,17 @@ export abstract class FNNModel extends Assertable {
     };
   }
 
-  private initializeHiddenLayer(mu: number, std: number) {
+  private initializeHiddenLayer(mu: number, std: number): void {
     let hiddenSize;
-    for (let d = 0; d < this.hiddenUnits.length; d++) {
-      const previousSize = d === 0 ? this.inputSize : this.hiddenUnits[d - 1];
-      hiddenSize = this.hiddenUnits[d];
-      this.model.hidden.Wh[d] = new RandMat(hiddenSize, previousSize, mu, std);
-      this.model.hidden.bh[d] = new Mat(hiddenSize, 1);
+    for (let i = 0; i < this.hiddenUnits.length; i++) {
+      const previousSize = i === 0 ? this.inputSize : this.hiddenUnits[i - 1];
+      hiddenSize = this.hiddenUnits[i];
+      this.model.hidden.Wh[i] = new RandMat(hiddenSize, previousSize, mu, std);
+      this.model.hidden.bh[i] = new Mat(hiddenSize, 1);
     }
   }
 
-  private initializeDecoder(mu: number, std: number) {
+  private initializeDecoder(mu: number, std: number): void {
     this.model.decoder.Wh = new RandMat(this.outputSize, this.hiddenUnits[this.hiddenUnits.length - 1], mu, std);
     this.model.decoder.b = new Mat(this.outputSize, 1);
   }
@@ -103,20 +103,21 @@ export abstract class FNNModel extends Assertable {
   /**
    * Updates all weights depending on their specific gradients
    * @param alpha discount factor for weight updates
+   * @returns {void}
    */
   public update(alpha: number): void {
     this.updateHiddenUnits(alpha);
     this.updateDecoder(alpha);
   }
 
-  private updateHiddenUnits(alpha: number) {
+  private updateHiddenUnits(alpha: number): void {
     for (let i = 0; i < this.hiddenUnits.length; i++) {
       this.model.hidden.Wh[i].update(alpha);
       this.model.hidden.bh[i].update(alpha);
     }
   }
 
-  private updateDecoder(alpha: number) {
+  private updateDecoder(alpha: number): void {
     this.model.decoder.Wh.update(alpha);
     this.model.decoder.b.update(alpha);
   }
@@ -134,7 +135,7 @@ export abstract class FNNModel extends Assertable {
     return graph.add(weightedInputs, this.model.decoder.b);
   }
 
-  private static has(obj: any, keys: Array<string>) {
+  private static has(obj: any, keys: Array<string>): boolean {
     FNNModel.assert(obj, 'Improper input for DNN.');
     for (const key of keys) {
       if (Object.hasOwnProperty.call(obj, key)) { continue; }

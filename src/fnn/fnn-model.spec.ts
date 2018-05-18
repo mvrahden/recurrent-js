@@ -60,7 +60,7 @@ describe('Feedforward Neural Network Model:', () => {
           let previousLayerSize = inputSize;
           let expectedRows;
           let expectedCols = 1;
-          for (let i = 0; i < sut.model.hidden.Wh.length; i++) {
+          for (let i = 0; i < sut.model.hidden.bh.length; i++) {
             expectedRows = hiddenUnits[i];
             expect(sut.model.hidden.bh[i].rows).toBe(expectedRows);
             expect(sut.model.hidden.bh[i].cols).toBe(expectedCols);
@@ -71,13 +71,13 @@ describe('Feedforward Neural Network Model:', () => {
     
       describe('Decoder Layer:', () => {
 
-        it('fresh instance >> on creation >> model should hold decoder layer containing matrices with expected dimensions', () => {
+        it('fresh instance >> on creation >> model should hold decoder layer containing weight matrix with given dimensions', () => {
           sut = new DNN(config);
 
           expectDecoderWeightMatrixToHaveDimensionsOf(3, 4);
         });
 
-        it('fresh instance >> on creation >> model should hold decoder layer containing matrices with expected dimensions', () => {
+        it('fresh instance >> on creation >> model should hold decoder layer containing bias matrix with given dimensions', () => {
           sut = new DNN(config);
 
           expectDecoderBiasMatrixToHaveDimensionsOf(3, 1);
