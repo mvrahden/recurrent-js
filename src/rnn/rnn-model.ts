@@ -72,7 +72,7 @@ export abstract class RNNModel extends Assertable {
     this.model.decoder.b = new Mat(this.outputSize, 1);
   }
 
-  public abstract forward(state: Mat, previousInnerState: InnerState, graph?: Graph): InnerState;
+  public abstract forward(state: Mat, previousActivationState?: InnerState, graph?: Graph): InnerState;
 
   /**
    * Updates all weights depending on their specific gradients

@@ -112,15 +112,16 @@ export class LSTM extends RNNModel {
   /**
    * Forward pass for a single tick of Neural Network
    * @param state 1D column vector with observations
-   * @param previousInnerState Structure containing hidden representation ['h'] and cell memory ['c'] of type `Mat[]` from previous iteration
+   * @param previousActivationState Structure containing hidden representation ['h'] and cell memory ['c'] of type `Mat[]` from previous iteration
    * @param graph Optional: inject Graph to append Operations
    * @returns Structure containing hidden representation ['h'] and cell memory ['c'] of type `Mat[]` and output ['output'] of type `Mat`
    */
-  public forward(state: Mat, previousInnerState: InnerState, graph?: Graph): InnerState {
+  public forward(state: Mat, previousActivationState?: InnerState, graph?: Graph): InnerState {
+    previousActivationState = previousActivationState ? previousActivationState : null;
     graph = graph ? graph : this.graph;
     
-    const previousCells = this.getPreviousCellActivations(previousInnerState);
-    const previousHiddenUnits = this.getPreviousHiddenUnitActivations(previousInnerState);
+    const previousCells = this.getPreviousCellActivationsFrom(previousActivationState);
+    const previousHiddenUnits = this.getPreviousHiddenUnitActivationsFrom(previousActivationState);
 
     const cells = new Array<Mat>();
     const hiddenUnits = new Array<Mat>();
@@ -129,7 +130,7 @@ export class LSTM extends RNNModel {
     const output = this.computeOutput(hiddenUnits, graph);
 
     // return cell memory, hidden representation and output
-    return { 'hiddenUnits': hiddenUnits, 'cells': cells, 'output': output };
+    return { 'hiddenActivationState': hiddenUnits, 'cells': cells, 'output': output };
   }
 
   private computeHiddenLayer(state: Mat, previousHiddenUnits: Mat[], previousCells: Mat[], hiddenUnits: Mat[], cells: Mat[], graph: Graph) {
@@ -164,38 +165,36 @@ export class LSTM extends RNNModel {
     }
   }
 
-  private getPreviousHiddenUnitActivations(previousInnerState: InnerState): Mat[] {
-    let previousHiddenUnits;
-    if (this.givenPreviousInnerState(previousInnerState)) {
-      previousHiddenUnits = previousInnerState.hiddenUnits;
+  private getPreviousCellActivationsFrom(previousActivationState: InnerState): Mat[] {
+    let previousCellsActivations;
+    if (this.givenPreviousActivationState(previousActivationState)) {
+      previousCellsActivations = previousActivationState.cells;
     }
     else {
-      previousHiddenUnits = new Array<Mat>();
-      // populate
-      for (let d = 0; d < this.hiddenUnits.length; d++) {
-        previousHiddenUnits.push(new Mat(this.hiddenUnits[d], 1));
+      previousCellsActivations = new Array<Mat>();
+      for (let i = 0; i < this.hiddenUnits.length; i++) {
+        previousCellsActivations.push(new Mat(this.hiddenUnits[i], 1));
       }
     }
-    return previousHiddenUnits;
+    return previousCellsActivations;
   }
 
-  private getPreviousCellActivations(previousInnerState: InnerState): Mat[] {
-    let previousCells;
-    if (this.givenPreviousInnerState(previousInnerState)) {
-      previousCells = previousInnerState.cells;
+  private getPreviousHiddenUnitActivationsFrom(previousActivationState: InnerState): Mat[] {
+    let previousHiddenActivations;
+    if (this.givenPreviousActivationState(previousActivationState)) {
+      previousHiddenActivations = previousActivationState.hiddenActivationState;
     }
     else {
-      previousCells = new Array<Mat>();
-      // populate
-      for (let d = 0; d < this.hiddenUnits.length; d++) {
-        previousCells.push(new Mat(this.hiddenUnits[d], 1));
+      previousHiddenActivations = new Array<Mat>();
+      for (let i = 0; i < this.hiddenUnits.length; i++) {
+        previousHiddenActivations.push(new Mat(this.hiddenUnits[i], 1));
       }
     }
-    return previousCells;
+    return previousHiddenActivations;
   }
 
-  private givenPreviousInnerState(previousInnerState: InnerState) {
-    return previousInnerState || typeof previousInnerState.hiddenUnits !== 'undefined';
+  private givenPreviousActivationState(previousInnerState: InnerState) {
+    return previousInnerState && typeof previousInnerState.hiddenActivationState !== 'undefined';
   }
 
   protected updateHiddenUnits(alpha: number): void {

@@ -61,45 +61,49 @@ export class RNN extends RNNModel {
   /**
    * Forward pass for a single tick of Neural Network
    * @param state 1D column vector with observations
-   * @param previousInnerState Structure containing hidden representation ['h'] of type `Mat[]` from previous iteration
+   * @param previousActivationState Structure containing hidden representation ['h'] of type `Mat[]` from previous iteration
    * @param graph optional: inject Graph to append Operations
    * @returns Structure containing hidden representation ['h'] of type `Mat[]` and output ['output'] of type `Mat`
    */
-  forward(state: Mat, previousInnerState: InnerState, graph?: Graph): InnerState {
+  forward(state: Mat, previousActivationState?: InnerState, graph?: Graph): InnerState {
+    previousActivationState = previousActivationState ? previousActivationState : null;
     graph = graph ? graph : this.graph;
 
-    const previousHiddenUnits = this.getPreviousHiddenUnits(previousInnerState);
+    const previousHiddenActivations = this.getPreviousHiddenActivationsFrom(previousActivationState);
 
-    const hiddenActivations = this.computeHiddenActivations(state, previousHiddenUnits, graph);
+    const hiddenActivations = this.computeHiddenActivations(state, previousHiddenActivations, graph);
 
     const output = this.computeOutput(hiddenActivations, graph);
 
     // return hidden representation and output
-    return { 'hiddenUnits': hiddenActivations, 'output': output };
+    return { 'hiddenActivationState': hiddenActivations, 'output': output };
   }
 
-  private getPreviousHiddenUnits(previousInnerState: InnerState): Mat[] {
-    let previousHiddenUnits;
-    if (typeof previousInnerState.hiddenUnits === 'undefined') {
-      previousHiddenUnits = new Array<Mat>();
-      for (let d = 0; d < this.hiddenUnits.length; d++) {
-        previousHiddenUnits.push(new Mat(this.hiddenUnits[d], 1));
+  private getPreviousHiddenActivationsFrom(previousActivationState: InnerState): Mat[] {
+    let previousHiddenActivations;
+    if (this.givenPreviousActivationState(previousActivationState)) {
+      previousHiddenActivations = previousActivationState.hiddenActivationState;
+    } else {
+      previousHiddenActivations = new Array<Mat>();
+      for (let i = 0; i < this.hiddenUnits.length; i++) {
+        previousHiddenActivations.push(new Mat(this.hiddenUnits[i], 1));
       }
     }
-    else {
-      previousHiddenUnits = previousInnerState.hiddenUnits;
-    }
-    return previousHiddenUnits;
+    return previousHiddenActivations;
+  }
+
+  private givenPreviousActivationState(previousActivationState: InnerState) {
+    return previousActivationState && typeof previousActivationState.hiddenActivationState !== 'undefined';
   }
 
   private computeHiddenActivations(state: Mat, previousHiddenUnits: Mat[], graph: Graph): Mat[] {
     const hiddenActivations = new Array<Mat>();
-    for (let d = 0; d < this.hiddenUnits.length; d++) {
-      const inputVector = d === 0 ? state : hiddenActivations[d - 1];
-      const hiddenPrev = previousHiddenUnits[d];
-      const h0 = graph.mul(this.model.hidden.Wx[d], inputVector);
-      const h1 = graph.mul(this.model.hidden.Wh[d], hiddenPrev);
-      const activation = graph.relu(graph.add(graph.add(h0, h1), this.model.hidden.bh[d]));
+    for (let i = 0; i < this.hiddenUnits.length; i++) {
+      const inputVector = i === 0 ? state : hiddenActivations[i - 1];
+      const hiddenPrev = previousHiddenUnits[i];
+      const h0 = graph.mul(this.model.hidden.Wx[i], inputVector);
+      const h1 = graph.mul(this.model.hidden.Wh[i], hiddenPrev);
+      const activation = graph.relu(graph.add(graph.add(h0, h1), this.model.hidden.bh[i]));
       hiddenActivations.push(activation);
     }
     return hiddenActivations;
