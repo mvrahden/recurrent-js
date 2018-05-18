@@ -26,14 +26,16 @@
 
 ### What does the Library has to offer?
 
-The following sections show the currently exposed Classes and Interfaces:
+The following sections provide an overview of the available Classes and Interfaces.
+The class names are linked to more detailed descriptions of the specific classes.
 
 #### Utility Classes:
 
 * **[Utils][docs-utils]** - Collection of Utility functions.
-* **[Mat][docs-mat]** - Matrix Class with matrix operations for the neural networks.
+* **[Mat][docs-mat]** - Matrix Class holding weights and their derivatives for the neural networks.
 * **RandMat** - A convenient subclass of `Mat`. `RandMat` objects are automatically populated with random values on their creation.
-* **[Graph][docs-graph]** - Graph memorizing the sequences of matrix operations for backpropagation.
+* **[MatOps][docs-mat]** - Class with matrix operations and their respective derivative functions.
+* **[Graph][docs-graph]** - Graph memorizing the sequences of matrix operations and matching their the derivative functions for backpropagation.
 * **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
 <!-- * **FNNModel** - Generalized Class containing the Weights (and `Graph`) for stateless `FNN`-models
   * such as `DNN` or `BNN`.
@@ -47,7 +49,7 @@ The following sections show the currently exposed Classes and Interfaces:
   * **[DNN][docs-dnn]** - Deep Feedforward Neural Network.
   * **[BNN][docs-bnn]** - Deep Bayesian Neural Network.
 * stateful:
-  * **[RNN][docs-rnn]** - Recurrent Neural Network.
+  * **[RNN][docs-rnn]** - Deep Recurrent Neural Network.
   * **[LSTM][docs-lstm]** - Long Short Term Memory Network.
 
 ### How to install as dependency
@@ -77,11 +79,11 @@ const DNN = require('recurrent-js').DNN;
 
 ### How to train?
 
-Training of neural networks is achieved by iteratively reinforcing wanted activation behavior or by suppressing the unwanted activation paths through adjusting the slopes of these activation paths.
+Training of neural networks is achieved by iteratively reinforcing wanted neural activations or by suppressing unwanted activation paths through adjusting their respective slopes.
 The training is achieved via an expression `Graph`, that memorizes the sequence of matrix operations being executed during the forward-pass.
-The results of the Matrix operations are contained in `Mat`-objects, which contains the resulting values (`w`).
-By manipulating a derivative value of the resulting output-`Mat`, the `Graph`-object can then be used to calculate the resulting gradient and propagate that modified gradient back into the memorized order of matrix operations.
-The so called backpropagation will then lead to supporting wanted neural network activity and suppressing unwanted activation behavior.
+The results of the Matrix operations are contained in `Mat`-objects, which contain the resulting values (`w`) and their corresponding derivatives (`dw`).
+The `Graph`-object can be used to calculate the resulting gradient and propagate a loss value back into the memorized sequence of matrix operations.
+The update of the weights of the neural connections will then lead to supporting wanted neural network activity and suppressing unwanted activation behavior.
 The described backpropagation can be achieved as follows:
 
 ```typescript
