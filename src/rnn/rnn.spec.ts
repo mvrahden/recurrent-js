@@ -1,4 +1,4 @@
-import { RNN } from "..";
+import { RNN, Mat, NetOpts, Utils } from "..";
 
 describe('Deep Recurrent Neural Network (RNN):', () => {
 
@@ -146,6 +146,58 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
 
       spyOn(sut.model.decoder.Wh, 'update');
       spyOn(sut.model.decoder.b, 'update');
+    };
+  });
+
+  describe('Forward Pass:', () => {
+
+    let netOpts: NetOpts = { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 };
+    let sut: RNN;
+    let input: Mat;
+
+    beforeEach(()=> {
+      patchFillRandn();
+      input = new Mat(2, 1);
+      input.setFrom([1, 0]);
+      sut = new RNN(netOpts);
+    });
+
+    describe('without InnerState:', () => {
+
+      it('given fresh instance with some input vector and no previous inner state >> forward pass >> should return out.output with given dimensions', () => {
+
+        let out = sut.forward(input);
+
+        expect(out.output.rows).toBe(3);
+        expect(out.output.cols).toBe(1);
+      });
+
+      it('given fresh instance with some input vector and no previous inner state >> forward pass >> should return out.hiddenActivationState with given dimensions', () => {
+
+        let out = sut.forward(input);
+
+        expect(out.hiddenActivationState[0].rows).toBe(3);
+        expect(out.hiddenActivationState[0].cols).toBe(1);
+        expect(out.hiddenActivationState[1].rows).toBe(4);
+        expect(out.hiddenActivationState[1].cols).toBe(1);
+      });
+
+      it('given fresh instance with some input vector and no previous inner state >> forward pass >> should return out.output with expected results', () => {
+
+        let out = sut.forward(input);
+
+        expect(out.output.w[0]).toBe(12);
+        expect(out.output.w[1]).toBe(12);
+        expect(out.output.w[2]).toBe(12);
+      });
+    });
+
+    const patchFillRandn = () => {
+      spyOn(Utils, 'fillRandn').and.callFake(fakeFillRandn);
+    };
+
+    const fakeFillRandn = (arr) => {
+      Utils.fillConst(arr, 1);
     };
   });
 });
