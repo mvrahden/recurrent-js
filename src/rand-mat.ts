@@ -4,13 +4,13 @@ export class RandMat extends Mat {
 
   /**
    * 
-   * @param n length of Matrix
-   * @param d depth of Matrix
+   * @param rows length of Matrix
+   * @param cols depth of Matrix
    * @param mu Population mean for initialization
    * @param std Standard deviation for initialization
    */
-  constructor(n: number, d: number, mu: number, std: number) {
-    super(n, d);
+  constructor(rows: number, cols: number, mu: number, std: number) {
+    super(rows, cols);
     Utils.fillRandn(this.w, mu, std);
   }
 }
