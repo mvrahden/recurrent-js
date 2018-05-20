@@ -72,7 +72,7 @@ export abstract class RNNModel extends Assertable {
     this.model.decoder.b = new Mat(this.outputSize, 1);
   }
 
-  public abstract forward(state: Mat, previousActivationState?: InnerState, graph?: Graph): InnerState;
+  public abstract forward(input: Mat, previousActivationState?: InnerState, graph?: Graph): InnerState;
 
   /**
    * Updates all weights depending on their specific gradients
@@ -87,8 +87,9 @@ export abstract class RNNModel extends Assertable {
   protected abstract updateHiddenUnits(alpha: number): void;
   protected abstract updateDecoder(alpha: number): void;
 
-  protected computeOutput(hiddenUnitActivations: Mat[], graph: Graph): Mat {
-    const weightedInputs = graph.mul(this.model.decoder.Wh, hiddenUnitActivations[hiddenUnitActivations.length - 1]);
+  protected computeOutput(hiddenActivations: Mat[], graph: Graph): Mat {
+    const precedingHiddenLayerActivations = hiddenActivations[hiddenActivations.length - 1];
+    const weightedInputs = graph.mul(this.model.decoder.Wh, precedingHiddenLayerActivations);
     return graph.add(weightedInputs, this.model.decoder.b);
   }
 

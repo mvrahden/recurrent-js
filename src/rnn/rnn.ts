@@ -60,18 +60,18 @@ export class RNN extends RNNModel {
 
   /**
    * Forward pass for a single tick of Neural Network
-   * @param state 1D column vector with observations
+   * @param input 1D column vector with observations
    * @param previousActivationState Structure containing hidden representation ['h'] of type `Mat[]` from previous iteration
    * @param graph optional: inject Graph to append Operations
    * @returns Structure containing hidden representation ['h'] of type `Mat[]` and output ['output'] of type `Mat`
    */
-  forward(state: Mat, previousActivationState?: InnerState, graph?: Graph): InnerState {
+  forward(input: Mat, previousActivationState?: InnerState, graph?: Graph): InnerState {
     previousActivationState = previousActivationState ? previousActivationState : null;
     graph = graph ? graph : this.graph;
 
     const previousHiddenActivations = this.getPreviousHiddenActivationsFrom(previousActivationState);
 
-    const hiddenActivations = this.computeHiddenActivations(state, previousHiddenActivations, graph);
+    const hiddenActivations = this.computeHiddenActivations(input, previousHiddenActivations, graph);
 
     const output = this.computeOutput(hiddenActivations, graph);
 
@@ -96,13 +96,13 @@ export class RNN extends RNNModel {
     return previousActivationState && typeof previousActivationState.hiddenActivationState !== 'undefined';
   }
 
-  private computeHiddenActivations(state: Mat, previousHiddenUnits: Mat[], graph: Graph): Mat[] {
+  private computeHiddenActivations(input: Mat, previousHiddenActivations: Mat[], graph: Graph): Mat[] {
     const hiddenActivations = new Array<Mat>();
     for (let i = 0; i < this.hiddenUnits.length; i++) {
-      const inputVector = i === 0 ? state : hiddenActivations[i - 1];
-      const hiddenPrev = previousHiddenUnits[i];
+      const inputVector = i === 0 ? input : hiddenActivations[i - 1];
+      const previousActivations = previousHiddenActivations[i];
       const h0 = graph.mul(this.model.hidden.Wx[i], inputVector);
-      const h1 = graph.mul(this.model.hidden.Wh[i], hiddenPrev);
+      const h1 = graph.mul(this.model.hidden.Wh[i], previousActivations);
       const activation = graph.relu(graph.add(graph.add(h0, h1), this.model.hidden.bh[i]));
       hiddenActivations.push(activation);
     }

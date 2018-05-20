@@ -111,12 +111,12 @@ export class LSTM extends RNNModel {
 
   /**
    * Forward pass for a single tick of Neural Network
-   * @param state 1D column vector with observations
+   * @param input 1D column vector with observations
    * @param previousActivationState Structure containing hidden representation ['h'] and cell memory ['c'] of type `Mat[]` from previous iteration
    * @param graph Optional: inject Graph to append Operations
    * @returns Structure containing hidden representation ['h'] and cell memory ['c'] of type `Mat[]` and output ['output'] of type `Mat`
    */
-  public forward(state: Mat, previousActivationState?: InnerState, graph?: Graph): InnerState {
+  public forward(input: Mat, previousActivationState?: InnerState, graph?: Graph): InnerState {
     previousActivationState = previousActivationState ? previousActivationState : null;
     graph = graph ? graph : this.graph;
     
@@ -125,7 +125,7 @@ export class LSTM extends RNNModel {
 
     const cells = new Array<Mat>();
     const hiddenUnits = new Array<Mat>();
-    this.computeHiddenLayer(state, previousHiddenUnits, previousCells, hiddenUnits, cells, graph);
+    this.computeHiddenLayer(input, previousHiddenUnits, previousCells, hiddenUnits, cells, graph);
 
     const output = this.computeOutput(hiddenUnits, graph);
 

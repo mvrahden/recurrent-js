@@ -19,23 +19,23 @@ describe('Long Short-Term Memory Network (LSTM):', () => {
       describe('Hidden Layer:', () => {
 
         it('fresh instance >> on creation >> model should hold hidden layer containing weight matrices with expected dimensions', () => {
-          expectHiddenWeightMatricesToHaveColsOfSizeOfPreviousLayerAndRowsOfConfiguredLength(2, [3, 4]);
+          expectHiddenWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength(2, [3, 4]);
         });
 
-        it('fresh instance >> on creation >> model should hold hidden layer containing weight matrices for previous activations with expected quadratic dimensions', () => {
-          expectHiddenWeightMatricesForPreviousActivationToHaveQuadraticDimensionsAccordingToHiddenUnits([3, 4]);
+        it('fresh instance >> on creation >> model should hold hidden layer containing weight matrices for preceding activations with expected quadratic dimensions', () => {
+          expectHiddenWeightMatricesForPrecedingActivationToHaveQuadraticDimensionsAccordingToHiddenUnits([3, 4]);
         });
 
         it('fresh instance >> on creation >> model should hold hidden layer containing bias matrices with expected dimensions', () => {
-          expectHiddenBiasMatricesToHaveRowsOfSizeOfPreviousLayerAndColsOfSize1(2, [3, 4]);
+          expectHiddenBiasMatricesToHaveRowsOfSizeOfPrecedingLayerAndColsOfSize1(2, [3, 4]);
         });
 
-        const expectHiddenWeightMatricesToHaveColsOfSizeOfPreviousLayerAndRowsOfConfiguredLength = (inputSize: number, hiddenUnits: Array<number>) => {
-          let previousLayerSize = inputSize;
+        const expectHiddenWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength = (inputSize: number, hiddenUnits: Array<number>) => {
+          let precedingLayerSize = inputSize;
           let expectedRows, expectedCols;
           for (let i = 0; i < config.hiddenUnits.length; i++) {
             expectedRows = hiddenUnits[i];
-            expectedCols = previousLayerSize;
+            expectedCols = precedingLayerSize;
             expect(sut.model.hidden.input.Wx[i].rows).toBe(expectedRows);
             expect(sut.model.hidden.input.Wx[i].cols).toBe(expectedCols);
 
@@ -47,11 +47,11 @@ describe('Long Short-Term Memory Network (LSTM):', () => {
 
             expect(sut.model.hidden.cell.Wx[i].rows).toBe(expectedRows);
             expect(sut.model.hidden.cell.Wx[i].cols).toBe(expectedCols);
-            previousLayerSize = expectedRows;
+            precedingLayerSize = expectedRows;
           }
         };
 
-        const expectHiddenWeightMatricesForPreviousActivationToHaveQuadraticDimensionsAccordingToHiddenUnits = (expected: Array<number>) => {
+        const expectHiddenWeightMatricesForPrecedingActivationToHaveQuadraticDimensionsAccordingToHiddenUnits = (expected: Array<number>) => {
           for (let i = 0; i < config.hiddenUnits.length; i++) {
             expect(sut.model.hidden.input.Wh[i].rows).toBe(expected[i]);
             expect(sut.model.hidden.input.Wh[i].cols).toBe(expected[i]);
@@ -67,8 +67,7 @@ describe('Long Short-Term Memory Network (LSTM):', () => {
           }
         };
 
-        const expectHiddenBiasMatricesToHaveRowsOfSizeOfPreviousLayerAndColsOfSize1 = (inputSize: number, hiddenUnits: Array<number>) => {
-          let previousLayerSize = inputSize;
+        const expectHiddenBiasMatricesToHaveRowsOfSizeOfPrecedingLayerAndColsOfSize1 = (inputSize: number, hiddenUnits: Array<number>) => {
           let expectedRows;
           let expectedCols = 1;
           for (let i = 0; i < config.hiddenUnits.length; i++) {
@@ -84,7 +83,6 @@ describe('Long Short-Term Memory Network (LSTM):', () => {
 
             expect(sut.model.hidden.cell.bh[i].rows).toBe(expectedRows);
             expect(sut.model.hidden.cell.bh[i].cols).toBe(expectedCols);
-            previousLayerSize = expectedRows;
           }
         };
       });

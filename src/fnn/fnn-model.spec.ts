@@ -37,34 +37,32 @@ describe('Feedforward Neural Network Model:', () => {
       describe('Hidden Layer:', () => {
 
         it('fresh instance >> on creation >> model should hold hidden layer containing weight matrices with expected dimensions', () => {
-          expectHiddenWeightMatricesToHaveColsOfSizeOfPreviousLayerAndRowsOfConfiguredLength(2, [3, 4]);
+          expectHiddenWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength(2, [3, 4]);
         });
 
         it('fresh instance >> on creation >> model should hold hidden layer containing bias matrices with expected dimensions', () => {
-          expectHiddenBiasMatricesToHaveRowsOfSizeOfPreviousLayerAndColsOfSize1(2, [3, 4]);
+          expectHiddenBiasMatricesToHaveRowsOfSizeOfPrecedingLayerAndColsOfSize1(2, [3, 4]);
         });
 
-        const expectHiddenWeightMatricesToHaveColsOfSizeOfPreviousLayerAndRowsOfConfiguredLength = (inputSize: number, hiddenUnits: Array<number>) => {
-          let previousLayerSize = inputSize;
+        const expectHiddenWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength = (inputSize: number, hiddenUnits: Array<number>) => {
+          let precedingLayerSize = inputSize;
           let expectedRows, expectedCols;
           for (let i = 0; i < sut.model.hidden.Wh.length; i++) {
             expectedRows = hiddenUnits[i];
-            expectedCols = previousLayerSize;
+            expectedCols = precedingLayerSize;
             expect(sut.model.hidden.Wh[i].rows).toBe(expectedRows);
             expect(sut.model.hidden.Wh[i].cols).toBe(expectedCols);
-            previousLayerSize = expectedRows;
+            precedingLayerSize = expectedRows;
           }
         };
 
-        const expectHiddenBiasMatricesToHaveRowsOfSizeOfPreviousLayerAndColsOfSize1 = (inputSize: number, hiddenUnits: Array<number>) => {
-          let previousLayerSize = inputSize;
+        const expectHiddenBiasMatricesToHaveRowsOfSizeOfPrecedingLayerAndColsOfSize1 = (inputSize: number, hiddenUnits: Array<number>) => {
           let expectedRows;
           let expectedCols = 1;
           for (let i = 0; i < sut.model.hidden.bh.length; i++) {
             expectedRows = hiddenUnits[i];
             expect(sut.model.hidden.bh[i].rows).toBe(expectedRows);
             expect(sut.model.hidden.bh[i].cols).toBe(expectedCols);
-            previousLayerSize = expectedRows;
           }
         };
       });
