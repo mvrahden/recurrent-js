@@ -101,9 +101,9 @@ export class RNN extends RNNModel {
     for (let i = 0; i < this.hiddenUnits.length; i++) {
       const inputVector = i === 0 ? input : hiddenActivations[i - 1];
       const previousActivations = previousHiddenActivations[i];
-      const h0 = graph.mul(this.model.hidden.Wx[i], inputVector);
-      const h1 = graph.mul(this.model.hidden.Wh[i], previousActivations);
-      const activation = graph.relu(graph.add(graph.add(h0, h1), this.model.hidden.bh[i]));
+      const weightedStatelessInputPortion = graph.mul(this.model.hidden.Wx[i], inputVector);
+      const weightedStatefulInputPortion = graph.mul(this.model.hidden.Wh[i], previousActivations);
+      const activation = graph.relu(graph.add(graph.add(weightedStatelessInputPortion, weightedStatefulInputPortion), this.model.hidden.bh[i]));
       hiddenActivations.push(activation);
     }
     return hiddenActivations;
