@@ -80,7 +80,7 @@ export class LSTM extends RNNModel {
       this.model.hidden.cell.bh = Mat.fromJSON(opt.hidden.hb);
     }
   }
-  
+
   private isValid(component: any): any {
     RNNModel.assert(component && !Array.isArray(component['Wx']), 'Wrong JSON Format to recreat Hidden Layer.');
     RNNModel.assert(component && !Array.isArray(component['Wh']), 'Wrong JSON Format to recreat Hidden Layer.');
@@ -119,50 +119,55 @@ export class LSTM extends RNNModel {
   public forward(input: Mat, previousActivationState?: InnerState, graph?: Graph): InnerState {
     previousActivationState = previousActivationState ? previousActivationState : null;
     graph = graph ? graph : this.graph;
-    
-    const previousCells = this.getPreviousCellActivationsFrom(previousActivationState);
-    const previousHiddenUnits = this.getPreviousHiddenUnitActivationsFrom(previousActivationState);
 
-    const cells = new Array<Mat>();
-    const hiddenUnits = new Array<Mat>();
-    this.computeHiddenLayer(input, previousHiddenUnits, previousCells, hiddenUnits, cells, graph);
+    const previousHiddenActivations = { cells: null, units: null };
+    previousHiddenActivations.cells = this.getPreviousCellActivationsFrom(previousActivationState);
+    previousHiddenActivations.units = this.getPreviousHiddenUnitActivationsFrom(previousActivationState);
 
-    const output = this.computeOutput(hiddenUnits, graph);
+    const hiddenActivations: { units, cells } = this.computeHiddenActivations(input, previousHiddenActivations, graph);
+
+    const output = this.computeOutput(hiddenActivations.units, graph);
 
     // return cell memory, hidden representation and output
-    return { 'hiddenActivationState': hiddenUnits, 'cells': cells, 'output': output };
+    return { 'hiddenActivationState': hiddenActivations.units, 'cells': hiddenActivations.cells, 'output': output };
   }
 
-  private computeHiddenLayer(state: Mat, previousHiddenUnits: Mat[], previousCells: Mat[], hiddenUnits: Mat[], cells: Mat[], graph: Graph) {
+  private computeHiddenActivations(state: Mat, previousHiddenActivations: { units: Mat[], cells: Mat[] }, graph: Graph) {
+    const hiddenActivations = { units: [], cells: [] };
     for (let i = 0; i < this.hiddenUnits.length; i++) {
-      const inputVector = (i === 0) ? state : hiddenUnits[i - 1]; // first iteration fill Observations
-      const hiddenPrev = previousHiddenUnits[i];
-      const previousCell = previousCells[i];
+      const inputVector = (i === 0) ? state : hiddenActivations.units[i - 1]; // first iteration fill Observations
+      const previousUnitActivations = previousHiddenActivations.units[i];
+      const previousCellActivations = previousHiddenActivations.cells[i];
       // input gate
-      const h0 = graph.mul(this.model.hidden.input.Wx[i], inputVector);
-      const h1 = graph.mul(this.model.hidden.input.Wh[i], hiddenPrev);
-      const inputGate = graph.sig(graph.add(graph.add(h0, h1), this.model.hidden.input.bh[i]));
+      const weightedStatelessInputPortion1 = graph.mul(this.model.hidden.input.Wx[i], inputVector);
+      const weightedStatefulInputPortion1 = graph.mul(this.model.hidden.input.Wh[i], previousUnitActivations);
+      const summedUpInput1 = graph.add(graph.add(weightedStatelessInputPortion1, weightedStatefulInputPortion1), this.model.hidden.input.bh[i]);
+      const inputGateActivation = graph.sig(summedUpInput1);
       // forget gate
-      const h2 = graph.mul(this.model.hidden.forget.Wx[i], inputVector);
-      const h3 = graph.mul(this.model.hidden.forget.Wh[i], hiddenPrev);
-      const forgetGate = graph.sig(graph.add(graph.add(h2, h3), this.model.hidden.forget.bh[i]));
+      const weightedStatelessInputPortion2 = graph.mul(this.model.hidden.forget.Wx[i], inputVector);
+      const weightedStatefulInputPortion2 = graph.mul(this.model.hidden.forget.Wh[i], previousUnitActivations);
+      const summedUpInput2 = graph.add(graph.add(weightedStatelessInputPortion2, weightedStatefulInputPortion2), this.model.hidden.forget.bh[i]);
+      const forgetGateActivation = graph.sig(summedUpInput2);
       // output gate
-      const h4 = graph.mul(this.model.hidden.output.Wx[i], inputVector);
-      const h5 = graph.mul(this.model.hidden.output.Wh[i], hiddenPrev);
-      const outputGate = graph.sig(graph.add(graph.add(h4, h5), this.model.hidden.output.bh[i]));
+      const weightedStatelessInputPortion3 = graph.mul(this.model.hidden.output.Wx[i], inputVector);
+      const weightedStatefulInputPortion3 = graph.mul(this.model.hidden.output.Wh[i], previousUnitActivations);
+      const summedUpInput3 = graph.add(graph.add(weightedStatelessInputPortion3, weightedStatefulInputPortion3), this.model.hidden.output.bh[i]);
+      const outputGateActivation = graph.sig(summedUpInput3);
       // write operation on cells
-      const h6 = graph.mul(this.model.hidden.cell.Wx[i], inputVector);
-      const h7 = graph.mul(this.model.hidden.cell.Wh[i], hiddenPrev);
-      const cellWrite = graph.tanh(graph.add(graph.add(h6, h7), this.model.hidden.cell.bh[i]));
+      const weightedStatelessInputPortion4 = graph.mul(this.model.hidden.cell.Wx[i], inputVector);
+      const weightedStatefulInputPortion4 = graph.mul(this.model.hidden.cell.Wh[i], previousUnitActivations);
+      const summedUpInput4 = graph.add(graph.add(weightedStatelessInputPortion4, weightedStatefulInputPortion4), this.model.hidden.cell.bh[i]);
+      const cellWriteActivation = graph.tanh(summedUpInput4);
       // compute new cell activation
-      const retainCell = graph.eltmul(forgetGate, previousCell); // what do we keep from cell
-      const writeCell = graph.eltmul(inputGate, cellWrite); // what do we write to cell
+      const retainCell = graph.eltmul(forgetGateActivation, previousCellActivations); // what do we keep from cell
+      const writeCell = graph.eltmul(inputGateActivation, cellWriteActivation); // what do we write to cell
       const cellActivations = graph.add(retainCell, writeCell); // new cell contents
       // compute hidden state as gated, saturated cell activations
-      const activations = graph.eltmul(outputGate, graph.tanh(cellActivations));
-      cells.push(cellActivations);
-      hiddenUnits.push(activations);
+      const activations = graph.eltmul(outputGateActivation, graph.tanh(cellActivations));
+      hiddenActivations.cells.push(cellActivations);
+      hiddenActivations.units.push(activations);
     }
+    return hiddenActivations;
   }
 
   private getPreviousCellActivationsFrom(previousActivationState: InnerState): Mat[] {
@@ -202,11 +207,11 @@ export class LSTM extends RNNModel {
       this.model.hidden.input.Wx[i].update(alpha);
       this.model.hidden.input.Wh[i].update(alpha);
       this.model.hidden.input.bh[i].update(alpha);
-      
+
       this.model.hidden.output.Wx[i].update(alpha);
       this.model.hidden.output.Wh[i].update(alpha);
       this.model.hidden.output.bh[i].update(alpha);
-      
+
       this.model.hidden.forget.Wx[i].update(alpha);
       this.model.hidden.forget.Wh[i].update(alpha);
       this.model.hidden.forget.bh[i].update(alpha);
