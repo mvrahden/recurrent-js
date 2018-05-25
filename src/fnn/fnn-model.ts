@@ -16,14 +16,15 @@ export abstract class FNNModel extends Assertable {
   constructor(opt: { hidden: { Wh, bh }, decoder: { Wh: Mat, b: Mat } });
   /**
    * Generates a Neural Net with given specs.
-   * @param {NetOpts} opt Specs of the Neural Net.
+   * @param {NetOpts} opt Specs of the Neural Net. [defaults to: needsBackprop = false, mu = 0, std = 0.01]
    */
   constructor(opt: NetOpts);
   constructor(opt: any) {
     super();
 
-    const needsBackpropagation = opt && opt.needsBackpropagation ? opt.needsBackpropagation : true;
-    this.graph = new Graph(needsBackpropagation);
+    const needsBackpropagation = opt && opt.needsBackpropagation ? opt.needsBackpropagation : false;
+    this.graph = new Graph();
+    this.graph.setOperationSequenceMemoryTo(true);
     
     if (FNNModel.isFromJSON(opt)) {
       this.initializeModelFromJSONObject(opt);
@@ -128,11 +129,17 @@ export abstract class FNNModel extends Assertable {
    * @param graph optional: inject Graph to append Operations
    * @returns Output of type `Mat`
    */
-  public abstract forward(state: Mat, graph?: Graph): Mat;
+  public forward(state: Mat): Mat {
+    const activations = this.specificForwardpass(state);
+    const output = this.computeOutput(activations);
+    return output;
+  }
 
-  protected computeOutput(hiddenUnitActivations: Mat[], graph: Graph): Mat {
-    const weightedInputs = graph.mul(this.model.decoder.Wh, hiddenUnitActivations[hiddenUnitActivations.length - 1]);
-    return graph.add(weightedInputs, this.model.decoder.b);
+  protected abstract specificForwardpass(state: Mat): Mat[];
+
+  protected computeOutput(hiddenUnitActivations: Mat[]): Mat {
+    const weightedInputs = this.graph.mul(this.model.decoder.Wh, hiddenUnitActivations[hiddenUnitActivations.length - 1]);
+    return this.graph.add(weightedInputs, this.model.decoder.b);
   }
 
   private static has(obj: any, keys: Array<string>): boolean {
