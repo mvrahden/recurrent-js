@@ -6,16 +6,20 @@ export class Graph {
   private readonly backpropagationStack: Array<Function>;
 
   /**
-   * Initializes a Graph for Matrix Operation sequencing.
-   * @param needsBackpropagation defaults to `true`
+   * Initializes a Graph to memorize Matrix Operation Sequences.
    */
-  constructor(needsBackpropagation: boolean = true) {
-    this.needsBackpropagation = needsBackpropagation;
+  constructor() {
+    this.needsBackpropagation = false;
 
-    // this will store a list of functions that perform backprop,
-    // in their forward pass order. So in backprop we will go
-    // backwards and evoke each one
     this.backpropagationStack = new Array<Function>();
+  }
+
+  /**
+   * Switch whether to memorize the operation sequence for Backpropagation (true) or false to ignore it.
+   * @param {boolean} state true or false [defaults to false]
+   */
+  public setOperationSequenceMemoryTo(state: boolean = false) {
+    this.needsBackpropagation = state;
   }
 
   /**
@@ -43,6 +47,16 @@ export class Graph {
       const backward = MatOps.getRowPluckDerivative(m, rowIndex, out);
       this.backpropagationStack.push(backward);
     }
+  }
+
+  /**
+   * Non-destructively pluck a row of m with rowIndex
+   * @param m 
+   * @param rowIndex 
+   */
+  public gauss(m: Mat, std: Mat): Mat {
+    const out = MatOps.gauss(m, std);
+    return out;
   }
 
   /**

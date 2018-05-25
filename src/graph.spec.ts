@@ -13,7 +13,7 @@ describe('Graph Operations:', () => {
     // Turn Matrix into Test Double through Method-Patching
     initializeMatrixSpyFunctions();
 
-    sut = new Graph(true);
+    sut = new Graph();
     mat = new Mat(2, 4);
   });
 
@@ -95,16 +95,31 @@ describe('Graph Operations:', () => {
   
   describe('Backpropagation Stack:', () => {
 
+    beforeEach(() => {
+      sut = new Graph(); // create a Graph without backpropagation
+
+      // Turn Graph Property into Test Double through Method-Patching
+      spyOn(sut['backpropagationStack'], 'push');
+    });
+
     describe('Without Backpropagation:', () => {
 
-      beforeEach(() => {
-        sut = new Graph(false); // create a Graph without backpropagation
-
-        // Turn Graph Property into Test Double through Method-Patching
-        spyOn(sut['backpropagationStack'], 'push');
-      });
-
       describe('Single Matrix Operations:', () => {
+        
+        it('given a graph without backpropagation >> gauss >> should add function on stack', () => {
+          const std = new Mat(2, 4);
+          sut.gauss(mat, std); // Exception to the rule, gauss adds noise but does not change the slope.
+
+          expectOperationNotToBePushedToBackpropagationStack();
+        });
+
+        it('given a graph without backpropagation >> rowPluck >> should add function on stack', () => {
+          const rowIndex = 1;
+          sut.rowPluck(mat, rowIndex);
+
+          expectOperationNotToBePushedToBackpropagationStack();
+        });
+
         it('given a graph without backpropagation >> tanh >> should add function on stack', () => {
           sut.tanh(mat);
 
@@ -157,20 +172,32 @@ describe('Graph Operations:', () => {
         });
       });
 
-      const expectOperationNotToBePushedToBackpropagationStack = () => { 
-        expect(sut['backpropagationStack'].push).not.toHaveBeenCalled();
-      };
     });
 
     describe('With Backpropagation:', () => {
 
       beforeEach(() => {
+        sut = new Graph();
+        sut.setOperationSequenceMemoryTo(true);
         // Turn Graph Property into Test Double through Method-Patching
-        sut = new Graph(true);
         spyOn(sut['backpropagationStack'], 'push');
       });
 
       describe('Single Matrix Operations:', () => {
+
+        it('given a graph without backpropagation >> gauss >> should NOT add function on stack', () => {
+          const std = new Mat(2, 4);
+          sut.gauss(mat, std); // Exception to the rule, gauss adds noise but does not change the slope.
+
+          expectOperationNotToBePushedToBackpropagationStack();
+        });
+
+        it('given a graph without backpropagation >> rowPluck >> should add function on stack', () => {
+          const rowIndex = 1;
+          sut.rowPluck(mat, rowIndex);
+
+          expectOperationToBePushedToBackpropagationStack();
+        });
 
         it('given a graph without backpropagation >> tanh >> should add function on stack', () => {
           sut.tanh(mat);
@@ -224,10 +251,15 @@ describe('Graph Operations:', () => {
         });
       });
 
-      const expectOperationToBePushedToBackpropagationStack = () => { 
-        expect(sut['backpropagationStack'].push).toHaveBeenCalled();
-      };
     });
+
+    const expectOperationToBePushedToBackpropagationStack = () => {
+      expect(sut['backpropagationStack'].push).toHaveBeenCalled();
+    };
+
+    const expectOperationNotToBePushedToBackpropagationStack = () => {
+      expect(sut['backpropagationStack'].push).not.toHaveBeenCalled();
+    };
   });
 
   describe('Backwards Differentiation:', () => {
