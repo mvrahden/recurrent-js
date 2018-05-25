@@ -10,7 +10,7 @@ export class DNN extends FNNModel {
   constructor(opt: { hidden: { Wh, bh }, decoder: { Wh, b } });
   /**
    * Generates a Neural Net with given specs.
-   * @param {NetOpts} opt Specs of the Neural Net. [defaults to: needsBackprop = true, mu = 0, std = 0.01]
+   * @param {NetOpts} opt Specs of the Neural Net. [defaults to: needsBackprop = false, mu = 0, std = 0.01]
    */
   constructor(opt: NetOpts);
   constructor(opt: any) {
@@ -23,20 +23,18 @@ export class DNN extends FNNModel {
    * @param graph optional: inject Graph to append Operations
    * @returns Output of type `Mat`
    */
-  public forward(state: Mat, graph: Graph): Mat {
-    const activations = this.computeHiddenActivations(state, graph);
-
-    const output = this.computeOutput(activations, graph);
-    return output;
+  public specificForwardpass(state: Mat): Mat[] {
+    const activations = this.computeHiddenActivations(state);
+    return activations;
   }
 
-  protected computeHiddenActivations(state: Mat, graph: Graph): Mat[] {
+  protected computeHiddenActivations(state: Mat): Mat[] {
     const hiddenActivations = new Array<Mat>();
     for (let d = 0; d < this.hiddenUnits.length; d++) {
       const inputVector = d === 0 ? state : hiddenActivations[d - 1];
-      const weightedInput = graph.mul(this.model.hidden.Wh[d], inputVector);
-      const biasedWeightedInput = graph.add(weightedInput, this.model.hidden.bh[d]);
-      const activation = graph.tanh(biasedWeightedInput);
+      const weightedInput = this.graph.mul(this.model.hidden.Wh[d], inputVector);
+      const biasedWeightedInput = this.graph.add(weightedInput, this.model.hidden.bh[d]);
+      const activation = this.graph.tanh(biasedWeightedInput);
       hiddenActivations.push(activation);
     }
     return hiddenActivations;
