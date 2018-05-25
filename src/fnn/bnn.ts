@@ -1,4 +1,4 @@
-import { Mat, MatOps, Graph, Utils, NetOpts } from './..';
+import { Mat, Graph, Utils, NetOpts } from './..';
 import { DNN } from './dnn';
 
 export class BNN extends DNN {
@@ -12,7 +12,7 @@ export class BNN extends DNN {
   constructor(opt: { hidden: { Wh, bh }, decoder: { Wh, b } });
   /**
    * Generates a Neural Net with given specs.
-   * @param {NetOpts} opt Specs of the Neural Net.  [defaults to: needsBackprop = true, mu = 0, std = 0.01]
+   * @param {NetOpts} opt Specs of the Neural Net.  [defaults to: needsBackprop = false, mu = 0, std = 0.01]
    */
   constructor(opt: NetOpts);
   constructor(opt: any) {
@@ -40,15 +40,13 @@ export class BNN extends DNN {
    * @param graph optional: inject Graph to append Operations
    * @returns Output of type `Mat`
    */
-  public forward(state: Mat, graph: Graph): Mat {
-    const activations = this.computeHiddenActivations(state, graph);
+  public specificForwardpass(state: Mat): Mat[] {
+    const activations = this.computeHiddenActivations(state);
 
     // Add random normal distributed noise to activations
     for(let i = 0; i < this.hiddenUnits.length; i++) {
-      activations[i] = MatOps.gauss(activations[i], this.hiddenStd[i]);
+      activations[i] = this.graph.gauss(activations[i], this.hiddenStd[i]);
     }
-
-    const output = this.computeOutput(activations, graph);
-    return output;
+    return activations;
   }
 }
