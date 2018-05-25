@@ -1,4 +1,4 @@
-import { LSTM } from "..";
+import { LSTM } from '..';
 
 describe('Long Short-Term Memory Network (LSTM):', () => {
 
