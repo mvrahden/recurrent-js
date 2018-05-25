@@ -24,7 +24,8 @@ export abstract class RNNModel extends Assertable {
     super();
     const needsBackpropagation = opt && opt.needsBackpropagation ? opt.needsBackpropagation : true;
 
-    this.graph = new Graph(needsBackpropagation);
+    this.graph = new Graph();
+    this.graph.setOperationSequenceMemoryTo(true);
 
     if (this.isFromJSON(opt)) {
       this.initializeModelFromJSONObject(opt);

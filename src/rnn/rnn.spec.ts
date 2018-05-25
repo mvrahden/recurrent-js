@@ -35,15 +35,19 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
 
       describe('Hidden Layer:', () => {
 
-        it('fresh instance >> on creation >> model should hold hidden layer containing weight matrices with expected dimensions', () => {
-          expectHiddenWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength(2, [3, 4]);
+        it('fresh instance >> on creation >> model should hold hidden layer containing weight matrices for stateless connections with expected dimensions', () => {
+          expectHiddenStatelessWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength(2, [3, 4]);
+        });
+
+        it('fresh instance >> on creation >> model should hold hidden layer containing weight matrices for stateful connections with expected dimensions', () => {
+          expectHiddenStatefulWeightMatricesToHaveSquaredDimensions(2, [3, 4]);
         });
 
         it('fresh instance >> on creation >> model should hold hidden layer containing bias matrices with expected dimensions', () => {
-          expectHiddenBiasMatricesToHaveRowsOfSizeOfPrecedingLayerAndColsOfSize1(2, [3, 4]);
+          expectHiddenBiasMatricesToBeVectorWithRowsOfSizeOfPrecedingLayer(2, [3, 4]);
         });
 
-        const expectHiddenWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength = (inputSize: number, hiddenUnits: Array<number>) => {
+        const expectHiddenStatelessWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength = (inputSize: number, hiddenUnits: Array<number>) => {
           let precedingLayerSize = inputSize;
           let expectedRows, expectedCols;
           for (let i = 0; i < config.hiddenUnits.length; i++) {
@@ -55,7 +59,16 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
           }
         };
 
-        const expectHiddenBiasMatricesToHaveRowsOfSizeOfPrecedingLayerAndColsOfSize1 = (inputSize: number, hiddenUnits: Array<number>) => {
+        const expectHiddenStatefulWeightMatricesToHaveSquaredDimensions = (inputSize: number, hiddenUnits: Array<number>) => {
+          let expectedRows, expectedCols;
+          for (let i = 0; i < config.hiddenUnits.length; i++) {
+            expectedRows = expectedCols = hiddenUnits[i];
+            expect(sut.model.hidden.Wh[i].rows).toBe(expectedRows);
+            expect(sut.model.hidden.Wh[i].cols).toBe(expectedCols);
+          }
+        };
+
+        const expectHiddenBiasMatricesToBeVectorWithRowsOfSizeOfPrecedingLayer = (inputSize: number, hiddenUnits: Array<number>) => {
           let expectedRows;
           let expectedCols = 1;
           for (let i = 0; i < config.hiddenUnits.length; i++) {
