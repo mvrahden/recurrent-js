@@ -1,4 +1,5 @@
-import { Mat, MatOps } from '.';
+import { Mat } from '.';
+import { MatOps } from './utils/mat-ops';
 
 export class Graph {
   private needsBackpropagation: boolean;

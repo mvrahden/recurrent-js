@@ -1,4 +1,5 @@
-import { Graph, Mat, MatOps } from '.';
+import { Graph, Mat } from '.';
+import { MatOps } from './utils/mat-ops';
 
 /**
  * TEST GRAPH derivative functions --> Outsource to Mat??
