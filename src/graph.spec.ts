@@ -7,14 +7,14 @@ import { Graph, Mat, MatOps } from '.';
 describe('Graph Operations:', () => {
 
   let sut: Graph;
-  let mat1: Mat;
+  let mat: Mat;
 
   beforeEach(() => {
     // Turn Matrix into Test Double through Method-Patching
     initializeMatrixSpyFunctions();
 
     sut = new Graph(true);
-    mat1 = new Mat(2, 4);
+    mat = new Mat(2, 4);
   });
 
   describe('Matrix Operation Call:', () => {  
@@ -22,34 +22,34 @@ describe('Graph Operations:', () => {
     describe('Single Matrix Operations:', () => {
       it('given a graph and a matrix >> rowPluck >> should have called MatOps.rowPluck', () => {
         const anyIndex = 0;
-        sut.rowPluck(mat1, anyIndex);
+        sut.rowPluck(mat, anyIndex);
   
         expect(MatOps.rowPluck).toHaveBeenCalled();
-        expect(MatOps.rowPluck).toHaveBeenCalledWith(mat1, 0);
+        expect(MatOps.rowPluck).toHaveBeenCalledWith(mat, 0);
       });
       
       describe('Monadic Matrix Operations', () => {
         it('given a graph and a matrix >> tanh >> should have called MatOps.tanh', () => {
-          sut.tanh(mat1);
+          sut.tanh(mat);
           
           expectSpyMethodToHaveBeenCalled(MatOps.tanh);
         });
         
         it('given a graph and a matrix >> sig >> should have called MatOps.sig', () => {
-          sut.sig(mat1);
+          sut.sig(mat);
           
           expectSpyMethodToHaveBeenCalled(MatOps.sig);
         });
     
         it('given a graph and a matrix >> relu >> should have called MatOps.relu', () => {
-          sut.relu(mat1);
+          sut.relu(mat);
           
           expectSpyMethodToHaveBeenCalled(MatOps.relu);
         });
     
         const expectSpyMethodToHaveBeenCalled = (spy: Function): void => {
           expect(spy).toHaveBeenCalled();
-          expect(spy).toHaveBeenCalledWith(mat1);
+          expect(spy).toHaveBeenCalledWith(mat);
         }
       });
     });
@@ -63,32 +63,32 @@ describe('Graph Operations:', () => {
       });
 
       it('given a graph and 2 matrices >> mul >> should have called MatOps.mul', () => {
-        sut.mul(mat1, mat2);
+        sut.mul(mat, mat2);
   
         expectSpyMethodToHaveBeenCalled(MatOps.mul);
       });
       
       it('given a graph and 2 matrices >> add >> should have called MatOps.add', () => {
-        sut.add(mat1, mat2);
+        sut.add(mat, mat2);
   
         expectSpyMethodToHaveBeenCalled(MatOps.add);
       });
       
       it('given a graph and 2 matrices >> dot >> should have called MatOps.dot', () => {
-        sut.dot(mat1, mat2);
+        sut.dot(mat, mat2);
         
         expectSpyMethodToHaveBeenCalled(MatOps.dot);
       });
       
       it('given a graph and 2 matrices >> eltmul >> should have called MatOps.eltmul', () => {
-        sut.eltmul(mat1, mat2);
+        sut.eltmul(mat, mat2);
         
         expectSpyMethodToHaveBeenCalled(MatOps.eltmul);
       });
   
       const expectSpyMethodToHaveBeenCalled = (spy: Function): void => {
         expect(spy).toHaveBeenCalled();
-        expect(spy).toHaveBeenCalledWith(mat1, mat2);
+        expect(spy).toHaveBeenCalledWith(mat, mat2);
       }
     });
   });
@@ -106,19 +106,19 @@ describe('Graph Operations:', () => {
 
       describe('Single Matrix Operations:', () => {
         it('given a graph without backpropagation >> tanh >> should add function on stack', () => {
-          sut.tanh(mat1);
+          sut.tanh(mat);
 
           expectOperationNotToBePushedToBackpropagationStack();
         });
 
         it('given a graph without backpropagation >> sig >> should add function on stack', () => {
-          sut.sig(mat1);
+          sut.sig(mat);
 
           expectOperationNotToBePushedToBackpropagationStack();
         });
 
         it('given a graph without backpropagation >> relu >> should add function on stack', () => {
-          sut.relu(mat1);
+          sut.relu(mat);
 
           expectOperationNotToBePushedToBackpropagationStack();
         });
@@ -133,25 +133,25 @@ describe('Graph Operations:', () => {
         });
 
         it('given a graph without backpropagation >> add >> should add function on stack', () => {
-          sut.add(mat1, mat2);
+          sut.add(mat, mat2);
 
           expectOperationNotToBePushedToBackpropagationStack();
         });
 
         it('given a graph without backpropagation >> mul >> should add function on stack', () => {
-          sut.mul(mat1, mat2);
+          sut.mul(mat, mat2);
 
           expectOperationNotToBePushedToBackpropagationStack();
         });
 
         it('given a graph without backpropagation >> dot >> should add function on stack', () => {
-          sut.dot(mat1, mat2);
+          sut.dot(mat, mat2);
 
           expectOperationNotToBePushedToBackpropagationStack();
         });
 
         it('given a graph without backpropagation >> eltmul >> should add function on stack', () => {
-          sut.eltmul(mat1, mat2);
+          sut.eltmul(mat, mat2);
 
           expectOperationNotToBePushedToBackpropagationStack();
         });
@@ -173,19 +173,19 @@ describe('Graph Operations:', () => {
       describe('Single Matrix Operations:', () => {
 
         it('given a graph without backpropagation >> tanh >> should add function on stack', () => {
-          sut.tanh(mat1);
+          sut.tanh(mat);
 
           expectOperationToBePushedToBackpropagationStack();
         });
 
         it('given a graph without backpropagation >> sig >> should add function on stack', () => {
-          sut.sig(mat1);
+          sut.sig(mat);
 
           expectOperationToBePushedToBackpropagationStack();
         });
 
         it('given a graph without backpropagation >> relu >> should add function on stack', () => {
-          sut.relu(mat1);
+          sut.relu(mat);
 
           expectOperationToBePushedToBackpropagationStack();
         });
@@ -200,25 +200,25 @@ describe('Graph Operations:', () => {
         });
 
         it('given a graph without backpropagation >> add >> should add function on stack', () => {
-          sut.add(mat1, mat2);
+          sut.add(mat, mat2);
 
           expectOperationToBePushedToBackpropagationStack();
         });
 
         it('given a graph without backpropagation >> mul >> should add function on stack', () => {
-          sut.mul(mat1, mat2);
+          sut.mul(mat, mat2);
 
           expectOperationToBePushedToBackpropagationStack();
         });
 
         it('given a graph without backpropagation >> dot >> should add function on stack', () => {
-          sut.dot(mat1, mat2);
+          sut.dot(mat, mat2);
 
           expectOperationToBePushedToBackpropagationStack();
         });
 
         it('given a graph without backpropagation >> eltmul >> should add function on stack', () => {
-          sut.eltmul(mat1, mat2);
+          sut.eltmul(mat, mat2);
 
           expectOperationToBePushedToBackpropagationStack();
         });
