@@ -3,14 +3,13 @@ import { DNN, Mat, NetOpts, Utils, Graph } from '..';
 describe('Deep Neural Network (DNN):', () => {
 
   let sut: DNN;
+  const config = {
+    architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 }
+  };
 
   describe('Instantiation:', () => {
 
     describe('Configuration with NetOpts:', () => {
-
-      const config = {
-        architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 }
-      };
 
       beforeEach(() => {
         sut = new DNN(config);
@@ -68,93 +67,53 @@ describe('Deep Neural Network (DNN):', () => {
 
   describe('Backpropagation:', () => {
 
-    const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 }, training: { alpha: 0.01, loss: [1e6, 1e6, 1e6] } };
-
-    describe('Update:', () => {
+    describe('Backward Pass:', () => {
 
       beforeEach(() => {
         sut = new DNN(config);
-
-        spyOnUpdateMethods();
+        patchBackwardSequenceAsSpies();
+      });
+      
+      it('given an instance with forward pass >> backward >> should have called `sut.graph.backward`', () => {
+        sut.backward([0, 1, 0]);
+        
+        expect(sut['graph'].backward).toHaveBeenCalled();
+      });
+      
+      it('given an instance with forward pass >> backward >> should have called `sut.graph.forgetCurrentSequence`', () => {
+        sut.backward([0, 1, 0]);
+        
+        expect(sut['graph'].backward).toHaveBeenCalled();
+      });
+      
+      it('given an instance with forward pass >> backward >> should have called `sut.update`', () => {
+        sut.backward([0, 1, 0]);
+        
+        expect(sut['update']).toHaveBeenCalled();
+      });
+      
+      it('given an instance with forward pass >> backward >> should propagate the prediction quality loss into decoder layer', () => {
+        sut.backward([0, 1, 0]);
+        
+        expect(sut['propagateLossIntoDecoderLayer']).toHaveBeenCalled();
       });
 
-      describe('Hidden Layer:', () => {
-
-        it('fresh instance >> update >> should call update methods of weight and bias matrices of all hidden layer', () => {
-          sut.update(0.01);
-
-          expectUpdateOfLayersMethodsToHaveBeenCalled();
-        });
-
-        it('fresh instance >> update >> should call update methods of weight and bias matrices of all hidden layer with given value', () => {
-          sut.update(0.01);
-
-          expectUpdateOfLayersMethodsToHaveBeenCalledWithValue(0.01);
-        });
-
-        const expectUpdateOfLayersMethodsToHaveBeenCalled = () => {
-          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
-            expect(sut.model.hidden.Wh[i].update).toHaveBeenCalled();
-            expect(sut.model.hidden.bh[i].update).toHaveBeenCalled();
-          }
-        };
-
-        const expectUpdateOfLayersMethodsToHaveBeenCalledWithValue = (value: number) => {
-          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
-            expect(sut.model.hidden.Wh[i].update).toHaveBeenCalledWith(value);
-            expect(sut.model.hidden.bh[i].update).toHaveBeenCalledWith(value);
-          }
-        };
-      });
-
-      describe('Decoder Layer:', () => {
-
-        it('fresh instance >> update >> should call update methods of weight and bias matrices of decoder layer', () => {
-          sut.update(0.01);
-
-          expectUpdateOfLayersMethodsToHaveBeenCalled();
-        });
-
-        it('fresh instance >> update >> should call update methods of weight and bias matrices of decoder layer with given value', () => {
-          sut.update(0.01);
-
-          expectUpdateOfLayersMethodsToHaveBeenCalledWithValue(0.01);
-        });
-
-        const expectUpdateOfLayersMethodsToHaveBeenCalled = () => {
-          expect(sut.model.decoder.Wh.update).toHaveBeenCalled();
-          expect(sut.model.decoder.b.update).toHaveBeenCalled();
-        };
-
-        const expectUpdateOfLayersMethodsToHaveBeenCalledWithValue = (value: number) => {
-          expect(sut.model.decoder.Wh.update).toHaveBeenCalledWith(value);
-          expect(sut.model.decoder.b.update).toHaveBeenCalledWith(value);
-        };
-      });
-
-      const spyOnUpdateMethods = () => {
-        for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
-          spyOn(sut.model.hidden.Wh[i], 'update');
-          spyOn(sut.model.hidden.bh[i], 'update');
-        }
-
-        spyOn(sut.model.decoder.Wh, 'update');
-        spyOn(sut.model.decoder.b, 'update');
+      const patchBackwardSequenceAsSpies = (): void => {
+        spyOn(sut['graph'], 'backward');
+        spyOn(sut as any, 'update');
+        spyOn(sut as any, 'propagateLossIntoDecoderLayer');
       };
     });
-
 
   });
 
   describe('Forward Pass:', () => {
 
-    const netOpts: NetOpts = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
-    let sut: DNN;
     let input: Array<number>;
 
     beforeEach(() => {
       patchFillRandn();
-      sut = new DNN(netOpts);
+      sut = new DNN(config);
       input = [0, 1];
     });
 
@@ -198,4 +157,3 @@ describe('Deep Neural Network (DNN):', () => {
     };
   });
 });
-

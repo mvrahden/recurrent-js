@@ -17,14 +17,21 @@ export class Graph {
 
   /**
    * Switch whether to memorize the operation sequence for Backpropagation (true) or ignore it (false).
-   * @param {boolean} state true or false [defaults to false]
+   * @param {boolean} isMemorizing true or false [defaults to false]
    */
-  public memorizeOperationSequence(state: boolean = false) {
-    this.needsBackpropagation = state;
+  public memorizeOperationSequence(isMemorizing: boolean = false) {
+    this.needsBackpropagation = isMemorizing;
   }
 
   /**
-   * Backpropagation
+   * Clears the memorized sequence of operations
+   */
+  public forgetCurrentSequence(): void {
+    this.backpropagationStack.length = 0; // reset array
+  }
+
+  /**
+   * Executes the memorized sequence of derivative operations in LIFO order
    */
   public backward(): void {
     for (let i = this.backpropagationStack.length - 1; i >= 0; i--) {

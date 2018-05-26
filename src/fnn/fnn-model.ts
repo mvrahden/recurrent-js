@@ -1,14 +1,17 @@
 import { Graph, Mat, RandMat, NetOpts, Utils } from './..';
+import { ANN } from './ann';
 import { Assertable } from './../utils/assertable';
 
-export abstract class FNNModel extends Assertable {
+export abstract class FNNModel extends Assertable implements ANN {
 
   protected architecture: { inputSize: number, hiddenUnits: Array<number>, outputSize: number };
   protected training: { alpha: number, loss: Mat };
 
-  public model: { hidden: { Wh: Mat[], bh: Mat[] }, decoder: { Wh: Mat, b: Mat } } = { hidden: { Wh: [], bh: [] }, decoder: { Wh: null, b: null } };
+  public model: { hidden: { Wh: Array<Mat>, bh: Array<Mat> }, decoder: { Wh: Mat, b: Mat } } = { hidden: { Wh: [], bh: [] }, decoder: { Wh: null, b: null } };
 
   protected graph: Graph;
+  private lastOutput: Mat;
+  private lossClamp: number = 1;
 
   /**
    * Generates a Neural Net instance from a pre-trained Neural Net JSON.
@@ -25,7 +28,6 @@ export abstract class FNNModel extends Assertable {
 
     const needsBackpropagation = opt && opt.needsBackpropagation ? opt.needsBackpropagation : false;
     this.graph = new Graph();
-    this.graph.memorizeOperationSequence(true);
 
     if (FNNModel.isFromJSON(opt)) {
       this.initializeModelFromJSONObject(opt);
@@ -48,7 +50,7 @@ export abstract class FNNModel extends Assertable {
     this.model.decoder.b = Mat.fromJSON(opt['decoder']['b']);
   }
 
-  protected initializeHiddenLayerFromJSON(opt: { hidden: { Wh: Mat[]; bh: Mat[]; }; decoder: { Wh: Mat; b: Mat; }; }): void {
+  protected initializeHiddenLayerFromJSON(opt: { hidden: { Wh: Array<Mat>; bh: Array<Mat>; }; decoder: { Wh: Mat; b: Mat; }; }): void {
     FNNModel.assert(!Array.isArray(opt['hidden']['Wh']), 'Wrong JSON Format to recreate Hidden Layer.');
     for (let i = 0; i < opt.hidden.Wh.length; i++) {
       this.model.hidden.Wh[i] = Mat.fromJSON(opt.hidden.Wh[i]);
@@ -61,8 +63,8 @@ export abstract class FNNModel extends Assertable {
   }
 
   private initializeModelAsFreshInstance(opt: NetOpts) {
-    this.architecture = this.determineArchitecture(opt);
-    this.training = this.determineTraining(opt);
+    this.architecture = this.determineArchitectureProperties(opt);
+    this.training = this.determineTrainingProperties(opt);
 
     const mu = opt['mu'] ? opt['mu'] : 0;
     const std = opt['std'] ? opt['std'] : 0.01;
@@ -72,9 +74,11 @@ export abstract class FNNModel extends Assertable {
     this.initializeHiddenLayer(mu, std);
 
     this.initializeDecoder(mu, std);
+
+    this.lastOutput = new Mat(1, this.architecture.outputSize);
   }
 
-  protected determineArchitecture(opt: NetOpts): { inputSize: number, hiddenUnits: Array<number>, outputSize: number } {
+  protected determineArchitectureProperties(opt: NetOpts): { inputSize: number, hiddenUnits: Array<number>, outputSize: number } {
     const out = { inputSize: null, hiddenUnits: null, outputSize: null };
     out.inputSize = typeof opt.architecture.inputSize === 'number' ? opt.architecture.inputSize : 1;
     out.hiddenUnits = Array.isArray(opt.architecture.hiddenUnits) ? opt.architecture.hiddenUnits : [1];
@@ -82,9 +86,9 @@ export abstract class FNNModel extends Assertable {
     return out;
   }
 
-  protected determineTraining(opt: NetOpts): { alpha: number, loss: Mat } {
+  protected determineTrainingProperties(opt: NetOpts): { alpha: number, loss: Mat } {
     const out = { alpha: null, loss: null };
-    if(!opt.training) {
+    if (!opt.training) {
       // patch `opt`
       opt.training = { alpha: null, loss: null };
     }
@@ -92,7 +96,7 @@ export abstract class FNNModel extends Assertable {
     out.alpha = typeof opt.training.alpha === 'number' ? opt.training.alpha : 0.01;
     out.loss = new Mat(1, this.architecture.outputSize);
 
-    if(Array.isArray(opt.training.loss) && opt.training.loss.length === this.architecture.outputSize) {
+    if (Array.isArray(opt.training.loss) && opt.training.loss.length === this.architecture.outputSize) {
       out.loss.setFrom(opt.training.loss);
     } else if (typeof opt.training.loss === 'number') {
       Utils.fillConst(out.loss.w, opt.training.loss);
@@ -103,7 +107,7 @@ export abstract class FNNModel extends Assertable {
     return out;
   }
 
-  protected initializeFreshNetworkModel(): { hidden: { Wh: Mat[]; bh: Mat[]; }; decoder: { Wh: Mat; b: Mat; }; } {
+  protected initializeFreshNetworkModel(): { hidden: { Wh: Array<Mat>; bh: Array<Mat>; }; decoder: { Wh: Mat; b: Mat; }; } {
     return {
       hidden: {
         Wh: new Array<Mat>(this.architecture.hiddenUnits.length),
@@ -132,25 +136,57 @@ export abstract class FNNModel extends Assertable {
   }
 
   /**
-   * Updates all weights depending on their specific gradients
-   * @param alpha discount factor for weight updates
-   * @returns {void}
+   * Sets the neural network into a trainable state.
+   * Also cleans the memory of forward pass operations, meaning that the last forward pass cannot be used for backpropagation.
+   * @param isTrainable 
    */
-  public update(alpha: number): void {
-    this.updateHiddenUnits(alpha);
-    this.updateDecoder(alpha);
+  public setTrainability(isTrainable: boolean): void {
+    this.graph.forgetCurrentSequence();
+    this.graph.memorizeOperationSequence(isTrainable);
   }
 
-  private updateHiddenUnits(alpha: number): void {
-    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
-      this.model.hidden.Wh[i].update(alpha);
-      this.model.hidden.bh[i].update(alpha);
+  public backward(expectedOutput: Array<number> | Float64Array): void {
+    this.propagateLossIntoDecoderLayer(expectedOutput);
+    this.graph.backward();
+    this.graph.forgetCurrentSequence();
+    this.update();
+  }
+
+  private propagateLossIntoDecoderLayer(expected: Array<number> | Float64Array): void {
+    let loss;
+    for (let i = 0; i < this.lastOutput.w.length; i++) {
+      loss = this.lastOutput.w[i] - expected[i];
+      if (Math.abs(loss) <= this.training.loss.w[i]) {
+        // console.log(expected + ' ['+i+']: ' + loss + ' | ' + this.training.loss.w[i]);
+        continue;
+      }
+      else {
+        this.lastOutput.dw[i] = this.clipLoss(loss);
+      }
     }
   }
 
-  private updateDecoder(alpha: number): void {
-    this.model.decoder.Wh.update(alpha);
-    this.model.decoder.b.update(alpha);
+  private clipLoss(loss: number): number {
+    if (loss > this.lossClamp) return this.lossClamp;
+    else if (loss < -this.lossClamp) return -this.lossClamp;
+    return loss;
+  }
+
+  protected update(): void {
+    this.updateHiddenUnits();
+    this.updateDecoder();
+  }
+
+  private updateHiddenUnits(): void {
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
+      this.model.hidden.Wh[i].update(this.training.alpha);
+      this.model.hidden.bh[i].update(this.training.alpha);
+    }
+  }
+
+  private updateDecoder(): void {
+    this.model.decoder.Wh.update(this.training.alpha);
+    this.model.decoder.b.update(this.training.alpha);
   }
 
   /**
@@ -163,6 +199,7 @@ export abstract class FNNModel extends Assertable {
     const mat = this.transformArrayToMat(input);
     const activations = this.specificForwardpass(mat);
     const outputMat = this.computeOutput(activations);
+    this.lastOutput = outputMat;
     const output = this.transformMatToArray(outputMat);
     return output;
   }
@@ -178,9 +215,9 @@ export abstract class FNNModel extends Assertable {
     return arr;
   }
 
-  protected abstract specificForwardpass(state: Mat): Mat[];
+  protected abstract specificForwardpass(state: Mat): Array<Mat>;
 
-  protected computeOutput(hiddenUnitActivations: Mat[]): Mat {
+  protected computeOutput(hiddenUnitActivations: Array<Mat>): Mat {
     const weightedInputs = this.graph.mul(this.model.decoder.Wh, hiddenUnitActivations[hiddenUnitActivations.length - 1]);
     return this.graph.add(weightedInputs, this.model.decoder.b);
   }

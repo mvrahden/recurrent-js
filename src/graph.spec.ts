@@ -267,6 +267,19 @@ describe('Graph Operations:', () => {
 
   });
 
+  describe('Reset Sequence:', () => {
+
+    it('instance populated with operations in backpropagationStack >> forgetSequence >> should have an empty `backpropagationStack`', () => {
+    sut.add(mat, mat);
+    sut.add(mat, mat);
+    sut.add(mat, mat);
+
+    sut.forgetCurrentSequence();
+
+    expect(sut['backpropagationStack'].length).toBe(0);
+    });
+  });
+
   const initializeMatrixSpyFunctions = (): void => {
     spyOn(MatOps, 'rowPluck');
     spyOn(MatOps, 'tanh');

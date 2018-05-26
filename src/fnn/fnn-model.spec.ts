@@ -149,13 +149,13 @@ describe('Feedforward Neural Network Model:', () => {
       describe('Hidden Layer:', () => {
       
         it('fresh instance >> update >> should call update methods of weight and bias matrices of all hidden layer', () => {
-          sut.update(0.01);
+          sut['update']();
   
           expectUpdateOfLayersMethodsToHaveBeenCalled();
         });
   
         it('fresh instance >> update >> should call update methods of weight and bias matrices of all hidden layer with given value', () => {
-          sut.update(0.01);
+          sut['update']();
   
           expectUpdateOfLayersMethodsToHaveBeenCalledWithValue(0.01);
         });
@@ -178,13 +178,13 @@ describe('Feedforward Neural Network Model:', () => {
       describe('Decoder Layer:', () => {
       
         it('fresh instance >> update >> should call update methods of weight and bias matrices of decoder layer', () => {
-          sut.update(0.01);
+          sut['update']();
           
           expectUpdateOfLayersMethodsToHaveBeenCalled();
         });
         
         it('fresh instance >> update >> should call update methods of weight and bias matrices of decoder layer with given value', () => {
-          sut.update(0.01);
+          sut['update']();
           
           expectUpdateOfLayersMethodsToHaveBeenCalledWithValue(0.01);
         });
