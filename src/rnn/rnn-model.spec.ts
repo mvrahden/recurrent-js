@@ -5,15 +5,14 @@ import { RNN } from '../.';
  * RNN Class fully delegates instantiation to FNNModel Class.
  */
 describe('Recurrent Neural Network Model:', () => {
+
   let sut: RNN;
 
   describe('Instantiation:', () => {
 
     describe('Configuration with NetOpts:', () => {
 
-      const config = {
-        inputSize: 2, hiddenUnits: [3, 4], outputSize: 3
-      };
+      const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
 
       beforeEach(() => {
         sut = new RNN(config);

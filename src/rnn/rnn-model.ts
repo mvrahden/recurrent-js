@@ -3,11 +3,10 @@ import { Assertable } from './../utils/assertable';
 
 export abstract class RNNModel extends Assertable {
 
-  protected inputSize: number;
-  protected hiddenUnits: Array<number>;
-  protected outputSize: number;
+  protected architecture: { inputSize: number, hiddenUnits: Array<number>, outputSize: number };
 
   public model: { hidden: any, decoder: { Wh: Mat, b: Mat } };
+
   protected graph: Graph;
 
   /**
@@ -47,13 +46,12 @@ export abstract class RNNModel extends Assertable {
   protected abstract initializeHiddenLayerFromJSON(opt: { hidden: any, decoder: { Wh: Mat, b: Mat } }): void;
 
   private isFreshInstanceCall(opt: NetOpts): boolean {
-    return RNNModel.has(opt, ['inputSize', 'hiddenUnits', 'outputSize']);
+    return RNNModel.has(opt, ['architecture']) && RNNModel.has(opt.architecture, ['inputSize', 'hiddenUnits', 'outputSize']);
   }
 
   private initializeModelAsFreshInstance(opt: NetOpts): void {
-    this.inputSize = opt.inputSize;
-    this.hiddenUnits = opt.hiddenUnits;
-    this.outputSize = opt.outputSize;
+    this.architecture = opt.architecture;
+    
     const mu = opt['mu'] ? opt['mu'] : 0;
     const std = opt['std'] ? opt['std'] : 0.01;
 
@@ -69,8 +67,8 @@ export abstract class RNNModel extends Assertable {
   protected abstract initializeHiddenLayer(mu: number, std: number): void;
 
   protected initializeDecoder(mu: number, std: number): void {
-    this.model.decoder.Wh = new RandMat(this.outputSize, this.hiddenUnits[this.hiddenUnits.length - 1], mu, std);
-    this.model.decoder.b = new Mat(this.outputSize, 1);
+    this.model.decoder.Wh = new RandMat(this.architecture.outputSize, this.architecture.hiddenUnits[this.architecture.hiddenUnits.length - 1], mu, std);
+    this.model.decoder.b = new Mat(this.architecture.outputSize, 1);
   }
 
   public abstract forward(input: Mat, previousActivationState?: InnerState, graph?: Graph): InnerState;

@@ -1,4 +1,4 @@
-import { DNN, Mat, NetOpts, Utils } from '..';
+import { DNN, Mat, NetOpts, Utils, Graph } from '..';
 
 describe('Deep Neural Network (DNN):', () => {
 
@@ -9,7 +9,7 @@ describe('Deep Neural Network (DNN):', () => {
     describe('Configuration with NetOpts:', () => {
 
       const config = {
-        inputSize: 2, hiddenUnits: [3, 4], outputSize: 3
+        architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 }
       };
 
       beforeEach(() => {
@@ -44,7 +44,7 @@ describe('Deep Neural Network (DNN):', () => {
         const expectHiddenStatelessWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength = (inputSize: number, hiddenUnits: Array<number>) => {
           let precedingLayerSize = inputSize;
           let expectedRows, expectedCols;
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expectedRows = hiddenUnits[i];
             expectedCols = precedingLayerSize;
             expect(sut.model.hidden.Wh[i].rows).toBe(expectedRows);
@@ -55,8 +55,8 @@ describe('Deep Neural Network (DNN):', () => {
 
         const expectHiddenBiasMatricesToHaveRowsOfSizeOfPrecedingLayerAndColsOfSize1 = (inputSize: number, hiddenUnits: Array<number>) => {
           let expectedRows;
-          let expectedCols = 1;
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          const expectedCols = 1;
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expectedRows = hiddenUnits[i];
             expect(sut.model.hidden.bh[i].rows).toBe(expectedRows);
             expect(sut.model.hidden.bh[i].cols).toBe(expectedCols);
@@ -68,15 +68,15 @@ describe('Deep Neural Network (DNN):', () => {
 
   describe('Backpropagation:', () => {
 
-    const config = { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 };
-
-    beforeEach(() => {
-      sut = new DNN(config);
-
-      spyOnUpdateMethods();
-    });
+    const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 }, training: { alpha: 0.01, loss: [1e6, 1e6, 1e6] } };
 
     describe('Update:', () => {
+
+      beforeEach(() => {
+        sut = new DNN(config);
+
+        spyOnUpdateMethods();
+      });
 
       describe('Hidden Layer:', () => {
 
@@ -93,14 +93,14 @@ describe('Deep Neural Network (DNN):', () => {
         });
 
         const expectUpdateOfLayersMethodsToHaveBeenCalled = () => {
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expect(sut.model.hidden.Wh[i].update).toHaveBeenCalled();
             expect(sut.model.hidden.bh[i].update).toHaveBeenCalled();
           }
         };
 
         const expectUpdateOfLayersMethodsToHaveBeenCalledWithValue = (value: number) => {
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expect(sut.model.hidden.Wh[i].update).toHaveBeenCalledWith(value);
             expect(sut.model.hidden.bh[i].update).toHaveBeenCalledWith(value);
           }
@@ -131,68 +131,70 @@ describe('Deep Neural Network (DNN):', () => {
           expect(sut.model.decoder.b.update).toHaveBeenCalledWith(value);
         };
       });
+
+      const spyOnUpdateMethods = () => {
+        for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
+          spyOn(sut.model.hidden.Wh[i], 'update');
+          spyOn(sut.model.hidden.bh[i], 'update');
+        }
+
+        spyOn(sut.model.decoder.Wh, 'update');
+        spyOn(sut.model.decoder.b, 'update');
+      };
     });
 
-    const spyOnUpdateMethods = () => {
-      for (let i = 0; i < config.hiddenUnits.length; i++) {
-        spyOn(sut.model.hidden.Wh[i], 'update');
-        spyOn(sut.model.hidden.bh[i], 'update');
-      }
 
-      spyOn(sut.model.decoder.Wh, 'update');
-      spyOn(sut.model.decoder.b, 'update');
-    };
   });
 
   describe('Forward Pass:', () => {
 
-    let netOpts: NetOpts = { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 };
+    const netOpts: NetOpts = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
     let sut: DNN;
-    let input: Mat;
+    let input: Array<number>;
 
     beforeEach(() => {
       patchFillRandn();
-      input = new Mat(2, 1);
-      input.setFrom([1, 0]);
       sut = new DNN(netOpts);
+      input = [0, 1];
     });
 
-    describe('without InnerState:', () => {
+    it('given fresh network instance and some input vector >> forward pass >> should call activation function as often as number of hidden layer', () => {
+      patchNetworkGraph();
+      sut.forward(input);
 
-      it('given fresh instance with some input vector and no previous inner state >> forward pass >> should return out.output with given dimensions', () => {
+      expect(sut['graph'].relu).toHaveBeenCalledTimes(2);
+    });
 
-        let out = sut.forward(input);
+    it('given fresh network instance and some input vector >> forward pass >> should return output with given dimensions', () => {
+      const output = sut.forward(input);
 
-        expect(out.rows).toBe(3);
-        expect(out.cols).toBe(1);
-      });
+      expect(output.length).toBe(3);
+    });
 
-      // it('given fresh instance with some input vector and no previous inner state >> forward pass >> should return out.hiddenActivationState with given dimensions', () => {
+    it('given fresh network instance and some input vector >> forward pass >> should return Array filled with 12', () => {
+      const output = sut.forward(input);
 
-      //   let out = sut.forward(input);
-
-      //   expect(out.hiddenActivationState[0].rows).toBe(3);
-      //   expect(out.hiddenActivationState[0].cols).toBe(1);
-      //   expect(out.hiddenActivationState[1].rows).toBe(4);
-      //   expect(out.hiddenActivationState[1].cols).toBe(1);
-      // });
-
-      // it('given fresh instance with some input vector and no previous inner state >> forward pass >> should return out.output with expected results', () => {
-
-      //   let out = sut.forward(input);
-
-      //   expect(out.output.w[0]).toBe(12);
-      //   expect(out.output.w[1]).toBe(12);
-      //   expect(out.output.w[2]).toBe(12);
-      // });
+      expect(output[0]).toBe(12);
+      expect(output[1]).toBe(12);
+      expect(output[2]).toBe(12);
     });
 
     const patchFillRandn = () => {
       spyOn(Utils, 'fillRandn').and.callFake(fillConstOnes);
     };
 
+    const patchNetworkGraph = () => {
+      spyOn(sut['graph'], 'relu').and.callFake(fillMatConstOnes);
+    };
+
     const fillConstOnes = (arr) => {
       Utils.fillConst(arr, 1);
+    };
+
+    const fillMatConstOnes = (mat) => {
+      const out = new Mat(mat.rows, 1);
+      fillConstOnes(out.w);
+      return out;
     };
   });
 });

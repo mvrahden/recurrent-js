@@ -11,9 +11,7 @@ describe('Feedforward Neural Network Model:', () => {
     
     describe('Configuration with NetOpts:', () => {
 
-      const config = {
-        inputSize: 2, hiddenUnits: [3, 4], outputSize: 3
-      };
+      const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
 
       beforeEach(() => {
         sut = new DNN(config);
@@ -58,7 +56,7 @@ describe('Feedforward Neural Network Model:', () => {
 
         const expectHiddenBiasMatricesToHaveRowsOfSizeOfPrecedingLayerAndColsOfSize1 = (inputSize: number, hiddenUnits: Array<number>) => {
           let expectedRows;
-          let expectedCols = 1;
+          const expectedCols = 1;
           for (let i = 0; i < sut.model.hidden.bh.length; i++) {
             expectedRows = hiddenUnits[i];
             expect(sut.model.hidden.bh[i].rows).toBe(expectedRows);
@@ -99,9 +97,10 @@ describe('Feedforward Neural Network Model:', () => {
   });
   
   describe('Backpropagation:', () => {
+
+    const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
   
     beforeEach(() => {
-      const config = { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 };
       sut = new DNN(config);
   
       spyOnUpdateMethods();
@@ -113,7 +112,7 @@ describe('Feedforward Neural Network Model:', () => {
 
         it('after forward pass >> backward >> should call graph to execute', () => {
 
-        })
+        });
         
       });
   

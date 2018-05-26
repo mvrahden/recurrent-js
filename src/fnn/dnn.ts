@@ -30,7 +30,7 @@ export class DNN extends FNNModel {
 
   protected computeHiddenActivations(state: Mat): Mat[] {
     const hiddenActivations = new Array<Mat>();
-    for (let d = 0; d < this.hiddenUnits.length; d++) {
+    for (let d = 0; d < this.architecture.hiddenUnits.length; d++) {
       const inputVector = d === 0 ? state : hiddenActivations[d - 1];
       const weightedInput = this.graph.mul(this.model.hidden.Wh[d], inputVector);
       const biasedWeightedInput = this.graph.add(weightedInput, this.model.hidden.bh[d]);

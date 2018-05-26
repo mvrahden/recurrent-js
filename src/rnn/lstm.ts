@@ -20,24 +20,24 @@ export class LSTM extends RNNModel {
     return {
       hidden: {
         input: {
-          Wx: new Array<Mat>(this.hiddenUnits.length),
-          Wh: new Array<Mat>(this.hiddenUnits.length),
-          bh: new Array<Mat>(this.hiddenUnits.length)
+          Wx: new Array<Mat>(this.architecture.hiddenUnits.length),
+          Wh: new Array<Mat>(this.architecture.hiddenUnits.length),
+          bh: new Array<Mat>(this.architecture.hiddenUnits.length)
         },
         forget: {
-          Wx: new Array<Mat>(this.hiddenUnits.length),
-          Wh: new Array<Mat>(this.hiddenUnits.length),
-          bh: new Array<Mat>(this.hiddenUnits.length)
+          Wx: new Array<Mat>(this.architecture.hiddenUnits.length),
+          Wh: new Array<Mat>(this.architecture.hiddenUnits.length),
+          bh: new Array<Mat>(this.architecture.hiddenUnits.length)
         },
         output: {
-          Wx: new Array<Mat>(this.hiddenUnits.length),
-          Wh: new Array<Mat>(this.hiddenUnits.length),
-          bh: new Array<Mat>(this.hiddenUnits.length)
+          Wx: new Array<Mat>(this.architecture.hiddenUnits.length),
+          Wh: new Array<Mat>(this.architecture.hiddenUnits.length),
+          bh: new Array<Mat>(this.architecture.hiddenUnits.length)
         },
         cell: {
-          Wx: new Array<Mat>(this.hiddenUnits.length),
-          Wh: new Array<Mat>(this.hiddenUnits.length),
-          bh: new Array<Mat>(this.hiddenUnits.length)
+          Wx: new Array<Mat>(this.architecture.hiddenUnits.length),
+          Wh: new Array<Mat>(this.architecture.hiddenUnits.length),
+          bh: new Array<Mat>(this.architecture.hiddenUnits.length)
         },
       },
       decoder: {
@@ -88,10 +88,10 @@ export class LSTM extends RNNModel {
   }
 
   protected initializeHiddenLayer() {
-    for (let i = 0; i < this.hiddenUnits.length; i++) {
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
       // loop over hidden depths
-      const prevSize = i === 0 ? this.inputSize : this.hiddenUnits[i - 1];
-      const hiddenSize = this.hiddenUnits[i];
+      const prevSize = i === 0 ? this.architecture.inputSize : this.architecture.hiddenUnits[i - 1];
+      const hiddenSize = this.architecture.hiddenUnits[i];
       // gate parameters
       this.model.hidden.input.Wx[i] = new RandMat(hiddenSize, prevSize, 0, 0.08);
       this.model.hidden.input.Wh[i] = new RandMat(hiddenSize, hiddenSize, 0, 0.08);
@@ -134,7 +134,7 @@ export class LSTM extends RNNModel {
 
   private computeHiddenActivations(state: Mat, previousHiddenActivations: { units: Mat[], cells: Mat[] }, graph: Graph) {
     const hiddenActivations = { units: [], cells: [] };
-    for (let i = 0; i < this.hiddenUnits.length; i++) {
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
       const inputVector = (i === 0) ? state : hiddenActivations.units[i - 1]; // first iteration fill Observations
       const previousUnitActivations = previousHiddenActivations.units[i];
       const previousCellActivations = previousHiddenActivations.cells[i];
@@ -177,8 +177,8 @@ export class LSTM extends RNNModel {
     }
     else {
       previousCellsActivations = new Array<Mat>();
-      for (let i = 0; i < this.hiddenUnits.length; i++) {
-        previousCellsActivations.push(new Mat(this.hiddenUnits[i], 1));
+      for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
+        previousCellsActivations.push(new Mat(this.architecture.hiddenUnits[i], 1));
       }
     }
     return previousCellsActivations;
@@ -191,8 +191,8 @@ export class LSTM extends RNNModel {
     }
     else {
       previousHiddenActivations = new Array<Mat>();
-      for (let i = 0; i < this.hiddenUnits.length; i++) {
-        previousHiddenActivations.push(new Mat(this.hiddenUnits[i], 1));
+      for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
+        previousHiddenActivations.push(new Mat(this.architecture.hiddenUnits[i], 1));
       }
     }
     return previousHiddenActivations;
@@ -203,7 +203,7 @@ export class LSTM extends RNNModel {
   }
 
   protected updateHiddenUnits(alpha: number): void {
-    for (let i = 0; i < this.hiddenUnits.length; i++) {
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
       this.model.hidden.input.Wx[i].update(alpha);
       this.model.hidden.input.Wh[i].update(alpha);
       this.model.hidden.input.bh[i].update(alpha);

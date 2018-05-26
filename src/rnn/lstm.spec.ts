@@ -8,9 +8,7 @@ describe('Long Short-Term Memory Network (LSTM):', () => {
 
     describe('Configuration with NetOpts:', () => {
 
-      const config = {
-        inputSize: 2, hiddenUnits: [3, 4], outputSize: 3
-      };
+      const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
 
       beforeEach(() => {
         sut = new LSTM(config);
@@ -33,7 +31,7 @@ describe('Long Short-Term Memory Network (LSTM):', () => {
         const expectHiddenWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength = (inputSize: number, hiddenUnits: Array<number>) => {
           let precedingLayerSize = inputSize;
           let expectedRows, expectedCols;
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expectedRows = hiddenUnits[i];
             expectedCols = precedingLayerSize;
             expect(sut.model.hidden.input.Wx[i].rows).toBe(expectedRows);
@@ -52,7 +50,7 @@ describe('Long Short-Term Memory Network (LSTM):', () => {
         };
 
         const expectHiddenWeightMatricesForPrecedingActivationToHaveQuadraticDimensionsAccordingToHiddenUnits = (expected: Array<number>) => {
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expect(sut.model.hidden.input.Wh[i].rows).toBe(expected[i]);
             expect(sut.model.hidden.input.Wh[i].cols).toBe(expected[i]);
 
@@ -69,8 +67,8 @@ describe('Long Short-Term Memory Network (LSTM):', () => {
 
         const expectHiddenBiasMatricesToHaveRowsOfSizeOfPrecedingLayerAndColsOfSize1 = (inputSize: number, hiddenUnits: Array<number>) => {
           let expectedRows;
-          let expectedCols = 1;
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          const expectedCols = 1;
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expectedRows = hiddenUnits[i];
             expect(sut.model.hidden.input.bh[i].rows).toBe(expectedRows);
             expect(sut.model.hidden.input.bh[i].cols).toBe(expectedCols);
@@ -90,7 +88,8 @@ describe('Long Short-Term Memory Network (LSTM):', () => {
   });
 
   describe('Backpropagation:', () => {
-    const config = { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 };
+    
+    const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
 
     beforeEach(() => {
       sut = new LSTM(config);
@@ -115,7 +114,7 @@ describe('Long Short-Term Memory Network (LSTM):', () => {
         });
 
         const expectUpdateOfLayersMethodsToHaveBeenCalled = () => {
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expect(sut.model.hidden.input.Wx[i].update).toHaveBeenCalled();
             expect(sut.model.hidden.input.Wh[i].update).toHaveBeenCalled();
             expect(sut.model.hidden.input.bh[i].update).toHaveBeenCalled();
@@ -135,7 +134,7 @@ describe('Long Short-Term Memory Network (LSTM):', () => {
         };
         
         const expectUpdateOfLayersMethodsToHaveBeenCalledWithValue = (value: number) => {
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expect(sut.model.hidden.input.Wx[i].update).toHaveBeenCalledWith(value);
             expect(sut.model.hidden.input.Wh[i].update).toHaveBeenCalledWith(value);
             expect(sut.model.hidden.input.bh[i].update).toHaveBeenCalledWith(value);
@@ -182,7 +181,7 @@ describe('Long Short-Term Memory Network (LSTM):', () => {
     });
 
     const spyOnUpdateMethods = () => {
-      for(let i = 0; i < config.hiddenUnits.length; i++) {
+      for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
         spyOn(sut.model.hidden.input.Wx[i], 'update');
         spyOn(sut.model.hidden.input.Wh[i], 'update');
         spyOn(sut.model.hidden.input.bh[i], 'update');

@@ -8,9 +8,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
 
     describe('Configuration with NetOpts:', () => {
 
-      const config = {
-        inputSize: 2, hiddenUnits: [3, 4], outputSize: 3
-      };
+      const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
 
       beforeEach(() => {
         sut = new RNN(config);
@@ -50,7 +48,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
         const expectHiddenStatelessWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength = (inputSize: number, hiddenUnits: Array<number>) => {
           let precedingLayerSize = inputSize;
           let expectedRows, expectedCols;
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expectedRows = hiddenUnits[i];
             expectedCols = precedingLayerSize;
             expect(sut.model.hidden.Wx[i].rows).toBe(expectedRows);
@@ -61,7 +59,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
 
         const expectHiddenStatefulWeightMatricesToHaveSquaredDimensions = (inputSize: number, hiddenUnits: Array<number>) => {
           let expectedRows, expectedCols;
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expectedRows = expectedCols = hiddenUnits[i];
             expect(sut.model.hidden.Wh[i].rows).toBe(expectedRows);
             expect(sut.model.hidden.Wh[i].cols).toBe(expectedCols);
@@ -71,7 +69,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
         const expectHiddenBiasMatricesToBeVectorWithRowsOfSizeOfPrecedingLayer = (inputSize: number, hiddenUnits: Array<number>) => {
           let expectedRows;
           const expectedCols = 1;
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expectedRows = hiddenUnits[i];
             expect(sut.model.hidden.bh[i].rows).toBe(expectedRows);
             expect(sut.model.hidden.bh[i].cols).toBe(expectedCols);
@@ -83,7 +81,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
 
   describe('Backpropagation:', () => {
 
-    const config = { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 };
+    const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
 
     beforeEach(() => {
       sut = new RNN(config);
@@ -108,7 +106,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
         });
 
         const expectUpdateOfLayersMethodsToHaveBeenCalled = () => {
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expect(sut.model.hidden.Wx[i].update).toHaveBeenCalled();
             expect(sut.model.hidden.Wh[i].update).toHaveBeenCalled();
             expect(sut.model.hidden.bh[i].update).toHaveBeenCalled();
@@ -116,7 +114,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
         };
 
         const expectUpdateOfLayersMethodsToHaveBeenCalledWithValue = (value: number) => {
-          for (let i = 0; i < config.hiddenUnits.length; i++) {
+          for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
             expect(sut.model.hidden.Wx[i].update).toHaveBeenCalledWith(value);
             expect(sut.model.hidden.Wh[i].update).toHaveBeenCalledWith(value);
             expect(sut.model.hidden.bh[i].update).toHaveBeenCalledWith(value);
@@ -151,7 +149,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
     });
 
     const spyOnUpdateMethods = () => {
-      for (let i = 0; i < config.hiddenUnits.length; i++) {
+      for (let i = 0; i < config.architecture.hiddenUnits.length; i++) {
         spyOn(sut.model.hidden.Wx[i], 'update');
         spyOn(sut.model.hidden.Wh[i], 'update');
         spyOn(sut.model.hidden.bh[i], 'update');
@@ -164,7 +162,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
 
   describe('Forward Pass:', () => {
 
-    const netOpts: NetOpts = { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 };
+    const netOpts: NetOpts = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
     let sut: RNN;
     let input: Mat;
 

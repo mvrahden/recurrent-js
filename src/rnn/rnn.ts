@@ -36,9 +36,9 @@ export class RNN extends RNNModel {
   protected initializeNetworkModel(): { hidden: any; decoder: { Wh: Mat; b: Mat; }; } {
     return {
       hidden: {
-        Wx: new Array<Mat>(this.hiddenUnits.length),
-        Wh: new Array<Mat>(this.hiddenUnits.length),
-        bh: new Array<Mat>(this.hiddenUnits.length)
+        Wx: new Array<Mat>(this.architecture.hiddenUnits.length),
+        Wh: new Array<Mat>(this.architecture.hiddenUnits.length),
+        bh: new Array<Mat>(this.architecture.hiddenUnits.length)
       },
       decoder: {
         Wh: null,
@@ -49,9 +49,9 @@ export class RNN extends RNNModel {
 
   protected initializeHiddenLayer(): void {
     let hiddenSize;
-    for (let i = 0; i < this.hiddenUnits.length; i++) {
-      const previousSize = i === 0 ? this.inputSize : this.hiddenUnits[i - 1];
-      hiddenSize = this.hiddenUnits[i];
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
+      const previousSize = i === 0 ? this.architecture.inputSize : this.architecture.hiddenUnits[i - 1];
+      hiddenSize = this.architecture.hiddenUnits[i];
       this.model.hidden.Wx[i] = new RandMat(hiddenSize, previousSize, 0, 0.08);
       this.model.hidden.Wh[i] = new RandMat(hiddenSize, hiddenSize, 0, 0.08);
       this.model.hidden.bh[i] = new Mat(hiddenSize, 1);
@@ -85,8 +85,8 @@ export class RNN extends RNNModel {
       previousHiddenActivations = previousActivationState.hiddenActivationState;
     } else {
       previousHiddenActivations = new Array<Mat>();
-      for (let i = 0; i < this.hiddenUnits.length; i++) {
-        previousHiddenActivations.push(new Mat(this.hiddenUnits[i], 1));
+      for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
+        previousHiddenActivations.push(new Mat(this.architecture.hiddenUnits[i], 1));
       }
     }
     return previousHiddenActivations;
@@ -98,7 +98,7 @@ export class RNN extends RNNModel {
 
   private computeHiddenActivations(input: Mat, previousHiddenActivations: Mat[], graph: Graph): Mat[] {
     const hiddenActivations = new Array<Mat>();
-    for (let i = 0; i < this.hiddenUnits.length; i++) {
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
       const inputVector = i === 0 ? input : hiddenActivations[i - 1];
       const previousActivations = previousHiddenActivations[i];
       const weightedStatelessInputPortion = graph.mul(this.model.hidden.Wx[i], inputVector);
@@ -110,7 +110,7 @@ export class RNN extends RNNModel {
   }
 
   protected updateHiddenUnits(alpha: number): void {
-    for (let i = 0; i < this.hiddenUnits.length; i++) {
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
       this.model.hidden.Wx[i].update(alpha);
       this.model.hidden.Wh[i].update(alpha);
       this.model.hidden.bh[i].update(alpha);

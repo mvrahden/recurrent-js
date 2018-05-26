@@ -17,10 +17,10 @@ export class BNN extends DNN {
   constructor(opt: NetOpts);
   constructor(opt: any) {
     super(opt);
-    this.hiddenStd = new Array<Mat>(this.hiddenUnits.length);
+    this.hiddenStd = new Array<Mat>(this.architecture.hiddenUnits.length);
 
-    for(let i = 0; i < this.hiddenUnits.length; i++) {
-      this.hiddenStd[i] = new Mat(this.hiddenUnits[i], 1);
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
+      this.hiddenStd[i] = new Mat(this.architecture.hiddenUnits[i], 1);
     }
     this.initializeStaticStd();
   }
@@ -29,7 +29,7 @@ export class BNN extends DNN {
    * Assign a STD per hidden Unit per Layer
    */
   private initializeStaticStd() {
-    for (let i = 0; i < this.hiddenUnits.length; i++) {
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
       Utils.fillRand(this.hiddenStd[i].w, 0, 0.3);
     }
   }
@@ -44,7 +44,7 @@ export class BNN extends DNN {
     const activations = this.computeHiddenActivations(state);
 
     // Add random normal distributed noise to activations
-    for(let i = 0; i < this.hiddenUnits.length; i++) {
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
       activations[i] = this.graph.gauss(activations[i], this.hiddenStd[i]);
     }
     return activations;

@@ -2,11 +2,11 @@ import { Graph, Mat, RandMat, NetOpts } from './..';
 import { Assertable } from './../utils/assertable';
 
 export abstract class FNNModel extends Assertable {
-  public inputSize: number;
-  public hiddenUnits: Array<number>;
-  public outputSize: number;
+
+  protected architecture: { inputSize: number, hiddenUnits: Array<number>, outputSize: number };
 
   public model: {hidden: {Wh: Mat[], bh: Mat[]}, decoder: {Wh: Mat, b: Mat}} = {hidden: {Wh:[], bh:[]}, decoder: {Wh: null, b: null}};
+
   protected graph: Graph;
   
   /**
@@ -55,14 +55,13 @@ export abstract class FNNModel extends Assertable {
     }
   }
 
-  private static isFreshInstanceCall(opt: { inputSize: number; hiddenUnits: Array<number>; outputSize: number; mu?: number; std?: number; }) {
-    return FNNModel.has(opt, ['inputSize', 'hiddenUnits', 'outputSize']);
+  private static isFreshInstanceCall(opt: any) {
+    return FNNModel.has(opt, ['architecture']) && FNNModel.has(opt.architecture, ['inputSize', 'hiddenUnits', 'outputSize']);
   }
 
   private initializeModelAsFreshInstance(opt: NetOpts) {
-    this.inputSize = opt.inputSize;
-    this.hiddenUnits = opt.hiddenUnits;
-    this.outputSize = opt.outputSize;
+    this.architecture = opt.architecture;
+
     const mu = opt['mu'] ? opt['mu'] : 0;
     const std = opt['std'] ? opt['std'] : 0.01;
 
@@ -76,8 +75,8 @@ export abstract class FNNModel extends Assertable {
   private initializeFreshNetworkModel(): { hidden: { Wh: Mat[]; bh: Mat[]; }; decoder: { Wh: Mat; b: Mat; }; } {
     return {
       hidden: {
-        Wh: new Array<Mat>(this.hiddenUnits.length),
-        bh: new Array<Mat>(this.hiddenUnits.length)
+        Wh: new Array<Mat>(this.architecture.hiddenUnits.length),
+        bh: new Array<Mat>(this.architecture.hiddenUnits.length)
       },
       decoder: {
         Wh: null,
@@ -88,17 +87,17 @@ export abstract class FNNModel extends Assertable {
 
   private initializeHiddenLayer(mu: number, std: number): void {
     let hiddenSize;
-    for (let i = 0; i < this.hiddenUnits.length; i++) {
-      const previousSize = i === 0 ? this.inputSize : this.hiddenUnits[i - 1];
-      hiddenSize = this.hiddenUnits[i];
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
+      const previousSize = i === 0 ? this.architecture.inputSize : this.architecture.hiddenUnits[i - 1];
+      hiddenSize = this.architecture.hiddenUnits[i];
       this.model.hidden.Wh[i] = new RandMat(hiddenSize, previousSize, mu, std);
       this.model.hidden.bh[i] = new Mat(hiddenSize, 1);
     }
   }
 
   private initializeDecoder(mu: number, std: number): void {
-    this.model.decoder.Wh = new RandMat(this.outputSize, this.hiddenUnits[this.hiddenUnits.length - 1], mu, std);
-    this.model.decoder.b = new Mat(this.outputSize, 1);
+    this.model.decoder.Wh = new RandMat(this.architecture.outputSize, this.architecture.hiddenUnits[this.architecture.hiddenUnits.length - 1], mu, std);
+    this.model.decoder.b = new Mat(this.architecture.outputSize, 1);
   }
 
   /**
@@ -112,7 +111,7 @@ export abstract class FNNModel extends Assertable {
   }
 
   private updateHiddenUnits(alpha: number): void {
-    for (let i = 0; i < this.hiddenUnits.length; i++) {
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
       this.model.hidden.Wh[i].update(alpha);
       this.model.hidden.bh[i].update(alpha);
     }
@@ -138,7 +137,7 @@ export abstract class FNNModel extends Assertable {
   }
 
   private transformArrayToMat(input: Array<number> | Float64Array): Mat {
-    const mat = new Mat(this.inputSize, 1);
+    const mat = new Mat(this.architecture.inputSize, 1);
     mat.setFrom(input);
     return mat;
   }

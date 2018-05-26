@@ -1,8 +1,11 @@
 export interface NetOpts {
-  inputSize: number;
-  hiddenUnits: Array<number>;
-  outputSize: number;
-  needsBackpropagation?: boolean;
-  mu?: number;
-  std?: number;
+  architecture: {
+    inputSize: number,
+    hiddenUnits: Array<number>,
+    outputSize: number
+  };
+  other?: {
+    mu?: number;
+    std?: number;
+  };
 }
