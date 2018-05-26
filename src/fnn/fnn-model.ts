@@ -125,14 +125,27 @@ export abstract class FNNModel extends Assertable {
 
   /**
    * Compute forward pass of Neural Network
-   * @param state 1D column vector with observations
+   * @param input 1D column vector with observations
    * @param graph optional: inject Graph to append Operations
    * @returns Output of type `Mat`
    */
-  public forward(state: Mat): Mat {
-    const activations = this.specificForwardpass(state);
-    const output = this.computeOutput(activations);
+  public forward(input: Array<number> | Float64Array): Array<number> | Float64Array {
+    const mat = this.transformArrayToMat(input);
+    const activations = this.specificForwardpass(mat);
+    const outputMat = this.computeOutput(activations);
+    const output = this.transformMatToArray(outputMat);
     return output;
+  }
+
+  private transformArrayToMat(input: Array<number> | Float64Array): Mat {
+    const mat = new Mat(this.inputSize, 1);
+    mat.setFrom(input);
+    return mat;
+  }
+
+  private transformMatToArray(input: Mat): Array<number> | Float64Array {
+    const arr = input.w.slice(0);
+    return arr;
   }
 
   protected abstract specificForwardpass(state: Mat): Mat[];
