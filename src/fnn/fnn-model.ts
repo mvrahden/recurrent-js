@@ -145,11 +145,11 @@ export abstract class FNNModel extends Assertable implements ANN {
     this.graph.memorizeOperationSequence(isTrainable);
   }
 
-  public backward(expectedOutput: Array<number> | Float64Array): void {
+  public backward(expectedOutput: Array<number> | Float64Array, alpha?: number): void {
     this.propagateLossIntoDecoderLayer(expectedOutput);
     this.graph.backward();
     this.graph.forgetCurrentSequence();
-    this.update();
+    this.update(alpha);
   }
 
   private propagateLossIntoDecoderLayer(expected: Array<number> | Float64Array): void {
@@ -172,21 +172,22 @@ export abstract class FNNModel extends Assertable implements ANN {
     return loss;
   }
 
-  protected update(): void {
-    this.updateHiddenUnits();
-    this.updateDecoder();
+  protected update(alpha?: number): void {
+    alpha = alpha ? alpha : this.training.alpha;
+    this.updateHiddenUnits(alpha);
+    this.updateDecoder(alpha);
   }
 
-  private updateHiddenUnits(): void {
+  private updateHiddenUnits(alpha: number): void {
     for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
-      this.model.hidden.Wh[i].update(this.training.alpha);
-      this.model.hidden.bh[i].update(this.training.alpha);
+      this.model.hidden.Wh[i].update(alpha);
+      this.model.hidden.bh[i].update(alpha);
     }
   }
 
-  private updateDecoder(): void {
-    this.model.decoder.Wh.update(this.training.alpha);
-    this.model.decoder.b.update(this.training.alpha);
+  private updateDecoder(alpha: number): void {
+    this.model.decoder.Wh.update(alpha);
+    this.model.decoder.b.update(alpha);
   }
 
   /**

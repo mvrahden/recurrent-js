@@ -159,6 +159,20 @@ describe('Feedforward Neural Network Model:', () => {
   
           expectUpdateOfLayersMethodsToHaveBeenCalledWithValue(0.01);
         });
+      
+        it('fresh instance >> update with given value >> should call update methods of weight and bias matrices of all hidden layer', () => {
+          const alpha = 0.02;
+          sut['update'](alpha);
+  
+          expectUpdateOfLayersMethodsToHaveBeenCalled();
+        });
+  
+        it('fresh instance >> update with given value >> should call update methods of weight and bias matrices of all hidden layer with given value', () => {
+          const alpha = 0.02;
+          sut['update'](alpha);
+  
+          expectUpdateOfLayersMethodsToHaveBeenCalledWithValue(0.02);
+        });
   
         const expectUpdateOfLayersMethodsToHaveBeenCalled = () => {
           expect(sut.model.hidden.Wh[0].update).toHaveBeenCalled();
