@@ -11,71 +11,94 @@ describe('Feedforward Neural Network Model:', () => {
     
     describe('Configuration with NetOpts:', () => {
 
-      const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
+      describe('Initialization of NetOpts-Properties:', () => {
 
-      beforeEach(() => {
-        sut = new DNN(config);
-      });
+        it('given NetOpts with architecture >> on creation >> should define `sut.architecture` accordingly', () => {
+          const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
 
-      it('fresh instance >> on creation >> should hold model with hidden layer, containing arrays of weight and bias matrices', () => {
-        expect(sut.model).toBeDefined();
-        expect(sut.model.hidden).toBeDefined();
-        expect(sut.model.hidden.Wh).toBeDefined();
-        expect(sut.model.hidden.Wh.length).toBe(2);
-        expect(sut.model.hidden.bh).toBeDefined();
-        expect(sut.model.hidden.bh.length).toBe(2);
-      });
+          sut = new DNN(config);
 
-      it('fresh instance >> on creation >> should hold model with decoder layer, containing weight and bias matrices', () => {
-        expect(sut.model.decoder).toBeDefined();
-        expect(sut.model.decoder.Wh).toBeDefined();
-        expect(sut.model.decoder.b).toBeDefined();
-      });
-    
-      describe('Hidden Layer:', () => {
-
-        it('fresh instance >> on creation >> model should hold hidden layer containing weight matrices with expected dimensions', () => {
-          expectHiddenWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength(2, [3, 4]);
+          expect(sut['architecture']).toBeDefined();
+          expect(sut['architecture'].inputSize).toBe(2);
+          expect(sut['architecture'].hiddenUnits[0]).toBe(3);
+          expect(sut['architecture'].hiddenUnits[1]).toBe(4);
+          expect(sut['architecture'].outputSize).toBe(3);
         });
 
-        it('fresh instance >> on creation >> model should hold hidden layer containing bias matrices with expected dimensions', () => {
-          expectHiddenBiasMatricesToHaveRowsOfSizeOfPrecedingLayerAndColsOfSize1(2, [3, 4]);
+        it('given NetOpts without `training` >> on creation >> should define `sut.training` with default values', () => {
+          const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
+
+          sut = new DNN(config);
+
+          expect(sut['training']).toBeDefined();
+          expect(sut['training'].alpha).toBe(0.01);
+          expect(sut['training'].loss).toBeDefined();
+          expect(sut['training'].loss.rows).toBe(1);
+          expect(sut['training'].loss.cols).toBe(3);
+          expect(sut['training'].loss.w[0]).toBe(1e-6);
+          expect(sut['training'].loss.w[1]).toBe(1e-6);
+          expect(sut['training'].loss.w[2]).toBe(1e-6);
         });
 
-        const expectHiddenWeightMatricesToHaveColsOfSizeOfPrecedingLayerAndRowsOfConfiguredLength = (inputSize: number, hiddenUnits: Array<number>) => {
-          let precedingLayerSize = inputSize;
-          let expectedRows, expectedCols;
-          for (let i = 0; i < sut.model.hidden.Wh.length; i++) {
-            expectedRows = hiddenUnits[i];
-            expectedCols = precedingLayerSize;
-            expect(sut.model.hidden.Wh[i].rows).toBe(expectedRows);
-            expect(sut.model.hidden.Wh[i].cols).toBe(expectedCols);
-            precedingLayerSize = expectedRows;
-          }
-        };
+        it('given NetOpts with `training` >> on creation >> should define `sut.training` with given values', () => {
+          const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 }, training: { loss: 1 } };
 
-        const expectHiddenBiasMatricesToHaveRowsOfSizeOfPrecedingLayerAndColsOfSize1 = (inputSize: number, hiddenUnits: Array<number>) => {
-          let expectedRows;
-          const expectedCols = 1;
-          for (let i = 0; i < sut.model.hidden.bh.length; i++) {
-            expectedRows = hiddenUnits[i];
-            expect(sut.model.hidden.bh[i].rows).toBe(expectedRows);
-            expect(sut.model.hidden.bh[i].cols).toBe(expectedCols);
-          }
-        };
+          sut = new DNN(config);
+
+          expect(sut['training']).toBeDefined();
+          expect(sut['training'].alpha).toBe(0.01);
+          expect(sut['training'].loss).toBeDefined();
+          expect(sut['training'].loss.rows).toBe(1);
+          expect(sut['training'].loss.cols).toBe(3);
+          expect(sut['training'].loss.w[0]).toBe(1);
+          expect(sut['training'].loss.w[1]).toBe(1);
+          expect(sut['training'].loss.w[2]).toBe(1);
+        });
+
+        it('given NetOpts with `training` >> on creation >> should define `sut.training` with given values', () => {
+          const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 }, training: { alpha: 1 } };
+
+          sut = new DNN(config);
+
+          expect(sut['training']).toBeDefined();
+          expect(sut['training'].alpha).toBe(1);
+          expect(sut['training'].loss).toBeDefined();
+          expect(sut['training'].loss.rows).toBe(1);
+          expect(sut['training'].loss.cols).toBe(3);
+          expect(sut['training'].loss.w[0]).toBe(1e-6);
+          expect(sut['training'].loss.w[1]).toBe(1e-6);
+          expect(sut['training'].loss.w[2]).toBe(1e-6);
+        });
+
+        it('given NetOpts with `training` and loss as Array >> on creation >> should define `sut.training` with given values', () => {
+          const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 }, training: { loss: [1, 2, 3] } };
+
+          sut = new DNN(config);
+
+          expect(sut['training']).toBeDefined();
+          expect(sut['training'].alpha).toBe(0.01);
+          expect(sut['training'].loss).toBeDefined();
+          expect(sut['training'].loss.rows).toBe(1);
+          expect(sut['training'].loss.cols).toBe(3);
+          expect(sut['training'].loss.w[0]).toBe(1);
+          expect(sut['training'].loss.w[1]).toBe(2);
+          expect(sut['training'].loss.w[2]).toBe(3);
+        });
       });
     
       describe('Decoder Layer:', () => {
 
-        it('fresh instance >> on creation >> model should hold decoder layer containing weight matrix with given dimensions', () => {
-          sut = new DNN(config);
+        const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 } };
 
+        beforeEach(() => {
+          sut = new DNN(config);
+        });
+
+        it('fresh instance >> on creation >> model should hold decoder layer containing weight matrix with given dimensions', () => {
           expectDecoderWeightMatrixToHaveDimensionsOf(3, 4);
         });
 
         it('fresh instance >> on creation >> model should hold decoder layer containing bias matrix with given dimensions', () => {
-          sut = new DNN(config);
-
           expectDecoderBiasMatrixToHaveDimensionsOf(3, 1);
         });
   

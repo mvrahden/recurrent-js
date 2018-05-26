@@ -1,14 +1,15 @@
-import { Graph, Mat, RandMat, NetOpts } from './..';
+import { Graph, Mat, RandMat, NetOpts, Utils } from './..';
 import { Assertable } from './../utils/assertable';
 
 export abstract class FNNModel extends Assertable {
 
   protected architecture: { inputSize: number, hiddenUnits: Array<number>, outputSize: number };
+  protected training: { alpha: number, loss: Mat };
 
-  public model: {hidden: {Wh: Mat[], bh: Mat[]}, decoder: {Wh: Mat, b: Mat}} = {hidden: {Wh:[], bh:[]}, decoder: {Wh: null, b: null}};
+  public model: { hidden: { Wh: Mat[], bh: Mat[] }, decoder: { Wh: Mat, b: Mat } } = { hidden: { Wh: [], bh: [] }, decoder: { Wh: null, b: null } };
 
   protected graph: Graph;
-  
+
   /**
    * Generates a Neural Net instance from a pre-trained Neural Net JSON.
    * @param {{ hidden: { Wh, bh }, decoder: { Wh: Mat, b: Mat } }} opt Specs of the Neural Net.
@@ -25,7 +26,7 @@ export abstract class FNNModel extends Assertable {
     const needsBackpropagation = opt && opt.needsBackpropagation ? opt.needsBackpropagation : false;
     this.graph = new Graph();
     this.graph.memorizeOperationSequence(true);
-    
+
     if (FNNModel.isFromJSON(opt)) {
       this.initializeModelFromJSONObject(opt);
     } else if (FNNModel.isFreshInstanceCall(opt)) {
@@ -60,7 +61,8 @@ export abstract class FNNModel extends Assertable {
   }
 
   private initializeModelAsFreshInstance(opt: NetOpts) {
-    this.architecture = opt.architecture;
+    this.architecture = this.determineArchitecture(opt);
+    this.training = this.determineTraining(opt);
 
     const mu = opt['mu'] ? opt['mu'] : 0;
     const std = opt['std'] ? opt['std'] : 0.01;
@@ -72,7 +74,36 @@ export abstract class FNNModel extends Assertable {
     this.initializeDecoder(mu, std);
   }
 
-  private initializeFreshNetworkModel(): { hidden: { Wh: Mat[]; bh: Mat[]; }; decoder: { Wh: Mat; b: Mat; }; } {
+  protected determineArchitecture(opt: NetOpts): { inputSize: number, hiddenUnits: Array<number>, outputSize: number } {
+    const out = { inputSize: null, hiddenUnits: null, outputSize: null };
+    out.inputSize = typeof opt.architecture.inputSize === 'number' ? opt.architecture.inputSize : 1;
+    out.hiddenUnits = Array.isArray(opt.architecture.hiddenUnits) ? opt.architecture.hiddenUnits : [1];
+    out.outputSize = typeof opt.architecture.outputSize === 'number' ? opt.architecture.outputSize : 1;
+    return out;
+  }
+
+  protected determineTraining(opt: NetOpts): { alpha: number, loss: Mat } {
+    const out = { alpha: null, loss: null };
+    if(!opt.training) {
+      // patch `opt`
+      opt.training = { alpha: null, loss: null };
+    }
+
+    out.alpha = typeof opt.training.alpha === 'number' ? opt.training.alpha : 0.01;
+    out.loss = new Mat(1, this.architecture.outputSize);
+
+    if(Array.isArray(opt.training.loss) && opt.training.loss.length === this.architecture.outputSize) {
+      out.loss.setFrom(opt.training.loss);
+    } else if (typeof opt.training.loss === 'number') {
+      Utils.fillConst(out.loss.w, opt.training.loss);
+    } else {
+      Utils.fillConst(out.loss.w, 1e-6);
+    }
+
+    return out;
+  }
+
+  protected initializeFreshNetworkModel(): { hidden: { Wh: Mat[]; bh: Mat[]; }; decoder: { Wh: Mat; b: Mat; }; } {
     return {
       hidden: {
         Wh: new Array<Mat>(this.architecture.hiddenUnits.length),
@@ -85,7 +116,7 @@ export abstract class FNNModel extends Assertable {
     };
   }
 
-  private initializeHiddenLayer(mu: number, std: number): void {
+  protected initializeHiddenLayer(mu: number, std: number): void {
     let hiddenSize;
     for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
       const previousSize = i === 0 ? this.architecture.inputSize : this.architecture.hiddenUnits[i - 1];
@@ -95,7 +126,7 @@ export abstract class FNNModel extends Assertable {
     }
   }
 
-  private initializeDecoder(mu: number, std: number): void {
+  protected initializeDecoder(mu: number, std: number): void {
     this.model.decoder.Wh = new RandMat(this.architecture.outputSize, this.architecture.hiddenUnits[this.architecture.hiddenUnits.length - 1], mu, std);
     this.model.decoder.b = new Mat(this.architecture.outputSize, 1);
   }
