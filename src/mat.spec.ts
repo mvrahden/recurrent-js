@@ -1,8 +1,10 @@
-import { Mat, Utils } from ".";
+import { Mat, Utils } from '.';
 
 
 describe('Matrix Object:', () => {
+
   let sut: Mat;
+
   describe('Instantiation:', () => {
 
     beforeEach(() => {
@@ -96,7 +98,7 @@ describe('Matrix Object:', () => {
     };
 
     const expectValueAtGivenPosition = (given: any, expected: number) => {
-      let actual = sut.get(given.row, given.col);
+      const actual = sut.get(given.row, given.col);
       expect(actual).toBe(expected);
     };
 
@@ -113,8 +115,42 @@ describe('Matrix Object:', () => {
     };
   });
 
+  describe('Compare:', () => {
+    
+    beforeEach(() => {
+      sut = new Mat(3, 2);
+      sut.setFrom([0, 1, 2, 3, 4, 5]);
+    });
+
+    it('given two unequally dimensioned matrices >> equals >> should return false', () => {
+      const mat2 = new Mat(2, 3);
+      mat2.setFrom([0, 1, 2, 3, 4, 5]);
+
+      const actual = sut.equals(mat2);
+
+      expect(actual).toBe(false);
+    });
+
+    it('given two unequally populated instances >> equals >> should return false', () => {
+      const mat2 = new Mat(3, 2);
+      mat2.setFrom([0, 0, 0, 0, 0, 0]);
+
+      const actual = sut.equals(mat2);
+      
+      expect(actual).toBe(false);
+    });
+
+    it('given two equally populated instances >> equals >> should return true', () => {
+      const mat2 = new Mat(3, 2);
+      mat2.setFrom([0, 1, 2, 3, 4, 5]);
+
+      const actual = sut.equals(mat2);
+      
+      expect(actual).toBe(true);
+    });
+  });
+
   describe('Backpropagation:', () => {
-    let sut: Mat;
 
     beforeEach(() => {
       sut = new Mat(2, 3);
@@ -122,13 +158,13 @@ describe('Matrix Object:', () => {
       Utils.fillConst(sut.dw, 1);
     });
 
-    it('instance with values and derivative values populated >> update >> should decrease values by with discounted derivatives', () => {
+    it('instance values populated from 1 to 5 and derivative values populated with "ones" >> update >> should decrease values by discounted derivatives', () => {
       sut.update(0.1);
 
       expectValuesToBe([-0.1, 0.9, 1.9, 2.9, 3.9, 4.9]);
     });
 
-    it('instance with values and derivative values populated >> update >> should reset derivative values to zero', () => {
+    it('instance values populated from 1 to 5 and derivative values populated with "ones" >> update >> should reset derivative values to zero', () => {
       sut.update(0.1);
 
       expectDerivativesToBe([0, 0, 0, 0, 0, 0]);
@@ -147,77 +183,80 @@ describe('Matrix Object:', () => {
     };
   });
 
-  describe('JSON:', () => {
+  describe('STATIC:', () => {
 
     const sut = Mat;
-    
-    describe('fromJSON:', () => {
 
-      let actual: Mat;
+    describe('JSON:', () => {
 
-      it('json object >> fromJSON >> should return a matrix with given dimensions', () => {
-        const json = { rows: 2, cols: 3, w: [0, 1, 2, 3, 4, 5] };
-        actual = sut.fromJSON(json);
-  
-        expect(actual.rows).toBe(2);
-        expect(actual.cols).toBe(3);
-      });
-  
-      it('json object >> fromJSON >> should return a matrix with values populated', () => {
-        const json = { rows: 2, cols: 3, w: [0, 1, 2, 3, 4, 5] };
-        actual = sut.fromJSON(json);
-  
-        expectValuesToBe([0, 1, 2, 3, 4, 5]);
-      });
-  
-      it('json object >> fromJSON >> should return a matrix with derivatives populated with zero', () => {
-        const json = { rows: 2, cols: 3, w: [0, 1, 2, 3, 4, 5] };
-        actual = sut.fromJSON(json);
-  
-        expectDerivativesToBe([0, 0, 0, 0, 0, 0]);
-      });
+      describe('fromJSON:', () => {
 
-      const expectValuesToBe = (expected: Array<number>) => {
-        for (let i = 0; i < expected.length; i++) {
-          expect(actual.w[i]).toBe(expected[i]);
-        }
-      };
+        let actual: Mat;
 
-      const expectDerivativesToBe = (expected: Array<number>) => {
-        for (let i = 0; i < expected.length; i++) {
-          expect(actual.dw[i]).toBe(expected[i]);
-        }
-      };
-    });
+        it('json object >> fromJSON >> should return a matrix with given dimensions', () => {
+          const json = { rows: 2, cols: 3, w: [0, 1, 2, 3, 4, 5] };
+          actual = sut.fromJSON(json);
 
-    describe('toJSON:', () => {
+          expect(actual.rows).toBe(2);
+          expect(actual.cols).toBe(3);
+        });
 
-      let m: Mat;
-      let actual: any;
+        it('json object >> fromJSON >> should return a matrix with values populated', () => {
+          const json = { rows: 2, cols: 3, w: [0, 1, 2, 3, 4, 5] };
+          actual = sut.fromJSON(json);
 
-      beforeEach(() => {
-        m = new Mat(2, 3);
-        m.setFrom([0, 1, 2, 2, 1, 0]);
+          expectValuesToBe([0, 1, 2, 3, 4, 5]);
+        });
+
+        it('json object >> fromJSON >> should return a matrix with derivatives populated with zero', () => {
+          const json = { rows: 2, cols: 3, w: [0, 1, 2, 3, 4, 5] };
+          actual = sut.fromJSON(json);
+
+          expectDerivativesToBe([0, 0, 0, 0, 0, 0]);
+        });
+
+        const expectValuesToBe = (expected: Array<number>) => {
+          for (let i = 0; i < expected.length; i++) {
+            expect(actual.w[i]).toBe(expected[i]);
+          }
+        };
+
+        const expectDerivativesToBe = (expected: Array<number>) => {
+          for (let i = 0; i < expected.length; i++) {
+            expect(actual.dw[i]).toBe(expected[i]);
+          }
+        };
       });
 
-      it('matrix populated with [0, 1, 2, 2, 1, 0] >> toJSON >> should return a json object with given rows and cols', () => {
-        actual = sut.toJSON(m);
+      describe('toJSON:', () => {
 
-        expect(actual.rows).toBe(2);
-        expect(actual.cols).toBe(3);
+        let m: Mat;
+        let actual: any;
+
+        beforeEach(() => {
+          m = new Mat(2, 3);
+          m.setFrom([0, 1, 2, 2, 1, 0]);
+        });
+
+        it('matrix populated with [0, 1, 2, 2, 1, 0] >> toJSON >> should return a json object with given rows and cols', () => {
+          actual = sut.toJSON(m);
+
+          expect(actual.rows).toBe(2);
+          expect(actual.cols).toBe(3);
+        });
+
+        it('matrix populated with [0, 1, 2, 2, 1, 0] >> toJSON >> should return a json object with values [w]', () => {
+          actual = sut.toJSON(m);
+
+          expectValuesToBe([0, 1, 2, 2, 1, 0]);
+        });
+
+        const expectValuesToBe = (expected: Array<number>) => {
+          for (let i = 0; i < expected.length; i++) {
+            expect(actual.w[i]).toBe(expected[i]);
+          }
+        };
       });
-
-      it('matrix populated with [0, 1, 2, 2, 1, 0] >> toJSON >> should return a json object with values [w]', () => {
-        actual = sut.toJSON(m);
-
-        expectValuesToBe([0, 1, 2, 2, 1, 0]);
-      });
-
-      const expectValuesToBe = (expected: Array<number>) => {
-        for(let i = 0; i < expected.length; i++) {
-          expect(actual.w[i]).toBe(expected[i]);
-        }
-      };
     });
   });
 });

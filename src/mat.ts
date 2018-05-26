@@ -73,10 +73,29 @@ export class Mat extends Assertable {
    * @param colIndex 
    */
   public setColumn(m: Mat, colIndex: number): void {
-    Mat.assert(m.w.length === this.rows, '[class:Mat] setColumn: dimensions misaligned.')
+    Mat.assert(m.w.length === this.rows, '[class:Mat] setColumn: dimensions misaligned.');
     for (let i = 0; i < m.w.length; i++) {
       this.w[(this.cols * i) + colIndex] = m.w[i];
     }
+  }
+
+  /**
+   * Checks equality of matrices.
+   * The check includes the value equality and a dimensionality check.
+   * Derivatives are not considered.
+   * @param {Mat} m Matrix to be compared with
+   * @returns {boolean} true if equal and false otherwise
+   */
+  public equals(m: Mat): boolean {
+    if(this.rows !== m.rows || this.cols !== m.cols) {
+      return false;
+    }
+    for(let i = 0; i < this._length; i++) {
+      if(this.w[i] !== m.w[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
