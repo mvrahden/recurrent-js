@@ -70,7 +70,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
 
         const expectHiddenBiasMatricesToBeVectorWithRowsOfSizeOfPrecedingLayer = (inputSize: number, hiddenUnits: Array<number>) => {
           let expectedRows;
-          let expectedCols = 1;
+          const expectedCols = 1;
           for (let i = 0; i < config.hiddenUnits.length; i++) {
             expectedRows = hiddenUnits[i];
             expect(sut.model.hidden.bh[i].rows).toBe(expectedRows);
@@ -164,7 +164,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
 
   describe('Forward Pass:', () => {
 
-    let netOpts: NetOpts = { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 };
+    const netOpts: NetOpts = { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 };
     let sut: RNN;
     let input: Mat;
 
@@ -175,11 +175,11 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
       sut = new RNN(netOpts);
     });
 
-    describe('without InnerState:', () => {
+    describe('Stateless:', () => {
 
       it('given fresh instance with some input vector and no previous inner state >> forward pass >> should return out.output with given dimensions', () => {
 
-        let out = sut.forward(input);
+        const out = sut.forward(input);
 
         expect(out.output.rows).toBe(3);
         expect(out.output.cols).toBe(1);
@@ -187,7 +187,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
 
       it('given fresh instance with some input vector and no previous inner state >> forward pass >> should return out.hiddenActivationState with given dimensions', () => {
 
-        let out = sut.forward(input);
+        const out = sut.forward(input);
 
         expect(out.hiddenActivationState[0].rows).toBe(3);
         expect(out.hiddenActivationState[0].cols).toBe(1);
@@ -197,7 +197,7 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
 
       it('given fresh instance with some input vector and no previous inner state >> forward pass >> should return out.output with expected results', () => {
 
-        let out = sut.forward(input);
+        const out = sut.forward(input);
 
         expect(out.output.w[0]).toBe(12);
         expect(out.output.w[1]).toBe(12);
@@ -214,4 +214,3 @@ describe('Deep Recurrent Neural Network (RNN):', () => {
     };
   });
 });
-
