@@ -24,7 +24,7 @@ export abstract class FNNModel extends Assertable {
 
     const needsBackpropagation = opt && opt.needsBackpropagation ? opt.needsBackpropagation : false;
     this.graph = new Graph();
-    this.graph.setOperationSequenceMemoryTo(true);
+    this.graph.memorizeOperationSequence(true);
     
     if (FNNModel.isFromJSON(opt)) {
       this.initializeModelFromJSONObject(opt);

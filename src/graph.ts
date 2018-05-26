@@ -16,10 +16,10 @@ export class Graph {
   }
 
   /**
-   * Switch whether to memorize the operation sequence for Backpropagation (true) or false to ignore it.
+   * Switch whether to memorize the operation sequence for Backpropagation (true) or ignore it (false).
    * @param {boolean} state true or false [defaults to false]
    */
-  public setOperationSequenceMemoryTo(state: boolean = false) {
+  public memorizeOperationSequence(state: boolean = false) {
     this.needsBackpropagation = state;
   }
 
