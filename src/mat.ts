@@ -105,7 +105,7 @@ export class Mat extends Assertable {
   public update(alpha: number): void {
     for (let i = 0; i < this._length; i++) {
       if (this.dw[i] !== 0) {
-        this.w[i] += - alpha * this.dw[i];
+        this.w[i] = this.w[i] - alpha * this.dw[i];
         this.dw[i] = 0;
       }
     }
