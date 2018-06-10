@@ -6,7 +6,8 @@ export interface NetOpts {
   };
   training?: {
     alpha?: number,
-    loss?: Array<number> | number
+    lossClamp?: number,
+    loss?: number
   };
   other?: {
     mu?: number;

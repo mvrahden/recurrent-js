@@ -33,11 +33,6 @@ describe('Feedforward Neural Network Model:', () => {
           expect(sut['training']).toBeDefined();
           expect(sut['training'].alpha).toBe(0.01);
           expect(sut['training'].loss).toBeDefined();
-          expect(sut['training'].loss.rows).toBe(1);
-          expect(sut['training'].loss.cols).toBe(3);
-          expect(sut['training'].loss.w[0]).toBe(1e-6);
-          expect(sut['training'].loss.w[1]).toBe(1e-6);
-          expect(sut['training'].loss.w[2]).toBe(1e-6);
         });
 
         it('given NetOpts with `training` >> on creation >> should define `sut.training` with given values', () => {
@@ -48,11 +43,7 @@ describe('Feedforward Neural Network Model:', () => {
           expect(sut['training']).toBeDefined();
           expect(sut['training'].alpha).toBe(0.01);
           expect(sut['training'].loss).toBeDefined();
-          expect(sut['training'].loss.rows).toBe(1);
-          expect(sut['training'].loss.cols).toBe(3);
-          expect(sut['training'].loss.w[0]).toBe(1);
-          expect(sut['training'].loss.w[1]).toBe(1);
-          expect(sut['training'].loss.w[2]).toBe(1);
+          expect(sut['training'].loss).toBe(1);
         });
 
         it('given NetOpts with `training` >> on creation >> should define `sut.training` with given values', () => {
@@ -63,27 +54,9 @@ describe('Feedforward Neural Network Model:', () => {
           expect(sut['training']).toBeDefined();
           expect(sut['training'].alpha).toBe(1);
           expect(sut['training'].loss).toBeDefined();
-          expect(sut['training'].loss.rows).toBe(1);
-          expect(sut['training'].loss.cols).toBe(3);
-          expect(sut['training'].loss.w[0]).toBe(1e-6);
-          expect(sut['training'].loss.w[1]).toBe(1e-6);
-          expect(sut['training'].loss.w[2]).toBe(1e-6);
+          expect(sut['training'].loss).toBe(1e-6);
         });
 
-        it('given NetOpts with `training` and loss as Array >> on creation >> should define `sut.training` with given values', () => {
-          const config = { architecture: { inputSize: 2, hiddenUnits: [3, 4], outputSize: 3 }, training: { loss: [1, 2, 3] } };
-
-          sut = new DNN(config);
-
-          expect(sut['training']).toBeDefined();
-          expect(sut['training'].alpha).toBe(0.01);
-          expect(sut['training'].loss).toBeDefined();
-          expect(sut['training'].loss.rows).toBe(1);
-          expect(sut['training'].loss.cols).toBe(3);
-          expect(sut['training'].loss.w[0]).toBe(1);
-          expect(sut['training'].loss.w[1]).toBe(2);
-          expect(sut['training'].loss.w[2]).toBe(3);
-        });
       });
     
       describe('Decoder Layer:', () => {
@@ -149,27 +122,27 @@ describe('Feedforward Neural Network Model:', () => {
       describe('Hidden Layer:', () => {
       
         it('fresh instance >> update >> should call update methods of weight and bias matrices of all hidden layer', () => {
-          sut['update']();
+          sut['updateWeights']();
   
           expectUpdateOfLayersMethodsToHaveBeenCalled();
         });
   
         it('fresh instance >> update >> should call update methods of weight and bias matrices of all hidden layer with given value', () => {
-          sut['update']();
+          sut['updateWeights']();
   
           expectUpdateOfLayersMethodsToHaveBeenCalledWithValue(0.01);
         });
       
         it('fresh instance >> update with given value >> should call update methods of weight and bias matrices of all hidden layer', () => {
           const alpha = 0.02;
-          sut['update'](alpha);
+          sut['updateWeights'](alpha);
   
           expectUpdateOfLayersMethodsToHaveBeenCalled();
         });
   
         it('fresh instance >> update with given value >> should call update methods of weight and bias matrices of all hidden layer with given value', () => {
           const alpha = 0.02;
-          sut['update'](alpha);
+          sut['updateWeights'](alpha);
   
           expectUpdateOfLayersMethodsToHaveBeenCalledWithValue(0.02);
         });
@@ -192,13 +165,13 @@ describe('Feedforward Neural Network Model:', () => {
       describe('Decoder Layer:', () => {
       
         it('fresh instance >> update >> should call update methods of weight and bias matrices of decoder layer', () => {
-          sut['update']();
+          sut['updateWeights']();
           
           expectUpdateOfLayersMethodsToHaveBeenCalled();
         });
         
         it('fresh instance >> update >> should call update methods of weight and bias matrices of decoder layer with given value', () => {
-          sut['update']();
+          sut['updateWeights']();
           
           expectUpdateOfLayersMethodsToHaveBeenCalledWithValue(0.01);
         });

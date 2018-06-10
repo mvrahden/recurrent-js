@@ -67,43 +67,74 @@ describe('Deep Neural Network (DNN):', () => {
 
   describe('Backpropagation:', () => {
 
+    beforeEach(() => {
+      sut = new DNN(config);
+    });
+
+    it('given an fresh instance with having trainability set >> backward >> should throw an error', () => {
+      let act = () => { sut.backward([]); };
+      expect(act).toThrowError(/Trainability is not enabled/);
+    });
+
+
     describe('Backward Pass:', () => {
 
       beforeEach(() => {
-        sut = new DNN(config);
-        patchBackwardSequenceAsSpies();
-      });
-      
-      it('given an instance with forward pass >> backward >> should have called `sut.graph.backward`', () => {
-        sut.backward([0, 1, 0]);
-        
-        expect(sut['graph'].backward).toHaveBeenCalled();
-      });
-      
-      it('given an instance with forward pass >> backward >> should have called `sut.graph.forgetCurrentSequence`', () => {
-        sut.backward([0, 1, 0]);
-        
-        expect(sut['graph'].backward).toHaveBeenCalled();
-      });
-      
-      it('given an instance with forward pass >> backward >> should have called `sut.update`', () => {
-        sut.backward([0, 1, 0]);
-        
-        expect(sut['update']).toHaveBeenCalled();
-      });
-      
-      it('given an instance with forward pass >> backward >> should propagate the prediction quality loss into decoder layer', () => {
-        sut.backward([0, 1, 0]);
-        
-        expect(sut['propagateLossIntoDecoderLayer']).toHaveBeenCalled();
+        sut.setTrainability(true);
       });
 
-      const patchBackwardSequenceAsSpies = (): void => {
-        spyOn(sut['graph'], 'backward');
-        spyOn(sut as any, 'update');
-        spyOn(sut as any, 'propagateLossIntoDecoderLayer');
-      };
+      it('given an instance without forward pass >> backward >> should throw error ', () => {
+        let act = () => { sut.backward([]); };
+        expect(act).toThrowError(/forward()/);
+      });
+
+      describe('With Forward Pass:', () => {
+
+        beforeEach(() => {
+          let someInput = [1, 0];
+          sut.forward(someInput);
+          patchBackwardSequenceAsSpies();
+        });
+
+        it('given an instance with forward pass >> backward >> should have c', () => {
+          sut.backward([0, 1, 0]);
+
+          expect(sut['graph'].backward).toHaveBeenCalled();
+        });
+
+        it('given an instance with forward pass >> backward >> should have called `sut.graph.backward`', () => {
+          sut.backward([0, 1, 0]);
+
+          expect(sut['graph'].backward).toHaveBeenCalled();
+        });
+
+        it('given an instance with forward pass >> backward >> should have called `sut.graph.forgetCurrentSequence`', () => {
+          sut.backward([0, 1, 0]);
+
+          expect(sut['graph'].forgetCurrentSequence).toHaveBeenCalled();
+        });
+
+        it('given an instance with forward pass >> backward >> should have called `sut.update`', () => {
+          sut.backward([0, 1, 0]);
+
+          expect(sut['updateWeights']).toHaveBeenCalled();
+        });
+
+        it('given an instance with forward pass >> backward >> should propagate the prediction quality loss into decoder layer', () => {
+          sut.backward([0, 1, 0]);
+
+          expect(sut['propagateLossIntoDecoderLayer']).toHaveBeenCalled();
+        });
+      });
     });
+
+    const patchBackwardSequenceAsSpies = (): void => {
+      spyOn(sut['graph'], 'backward');
+      spyOn(sut['graph'], 'forgetCurrentSequence');
+      // TypeScript workaround for private methods
+      spyOn(sut, 'updateWeights' as any);
+      spyOn(sut, 'propagateLossIntoDecoderLayer' as any);
+    };
 
   });
 
@@ -118,10 +149,10 @@ describe('Deep Neural Network (DNN):', () => {
     });
 
     it('given fresh network instance and some input vector >> forward pass >> should call activation function as often as number of hidden layer', () => {
-      patchNetworkGraph();
+      patchNetworkGraphAsSpy();
       sut.forward(input);
 
-      expect(sut['graph'].relu).toHaveBeenCalledTimes(2);
+      expect(sut['graph'].tanh).toHaveBeenCalledTimes(2);
     });
 
     it('given fresh network instance and some input vector >> forward pass >> should return output with given dimensions', () => {
@@ -130,20 +161,20 @@ describe('Deep Neural Network (DNN):', () => {
       expect(output.length).toBe(3);
     });
 
-    it('given fresh network instance and some input vector >> forward pass >> should return Array filled with 12', () => {
+    it('given fresh network instance and some input vector >> forward pass >> should return Array filled with a value close to 3.91795', () => {
       const output = sut.forward(input);
 
-      expect(output[0]).toBe(12);
-      expect(output[1]).toBe(12);
-      expect(output[2]).toBe(12);
+      expect(output[0]).toBeCloseTo(3.91795);
+      expect(output[1]).toBeCloseTo(3.91795);
+      expect(output[2]).toBeCloseTo(3.91795);
     });
 
     const patchFillRandn = () => {
       spyOn(Utils, 'fillRandn').and.callFake(fillConstOnes);
     };
 
-    const patchNetworkGraph = () => {
-      spyOn(sut['graph'], 'relu').and.callFake(fillMatConstOnes);
+    const patchNetworkGraphAsSpy = () => {
+      spyOn(sut['graph'], 'tanh').and.callFake(fillMatConstOnes);
     };
 
     const fillConstOnes = (arr) => {

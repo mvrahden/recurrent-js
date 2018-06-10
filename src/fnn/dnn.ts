@@ -34,7 +34,7 @@ export class DNN extends FNNModel {
       const inputVector = d === 0 ? state : hiddenActivations[d - 1];
       const weightedInput = this.graph.mul(this.model.hidden.Wh[d], inputVector);
       const biasedWeightedInput = this.graph.add(weightedInput, this.model.hidden.bh[d]);
-      const activation = this.graph.relu(biasedWeightedInput);
+      const activation = this.graph.tanh(biasedWeightedInput);
       hiddenActivations.push(activation);
     }
     return hiddenActivations;

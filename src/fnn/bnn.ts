@@ -3,7 +3,7 @@ import { DNN } from './dnn';
 
 export class BNN extends DNN {
 
-  private readonly hiddenStd: Array<Mat>;
+  private hiddenStd: Array<Mat>;
 
   /**
    * Generates a Neural Net instance from a pre-trained Neural Net JSON.
@@ -17,20 +17,25 @@ export class BNN extends DNN {
   constructor(opt: NetOpts);
   constructor(opt: any) {
     super(opt);
-    this.hiddenStd = new Array<Mat>(this.architecture.hiddenUnits.length);
+  }
 
-    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
-      this.hiddenStd[i] = new Mat(this.architecture.hiddenUnits[i], 1);
-    }
-    this.initializeStaticStd();
+  protected initializeModelAsFreshInstance(opt: NetOpts) {
+    super.initializeModelAsFreshInstance(opt);
+    this.initializeHiddenLayerStds(opt);
   }
 
   /**
    * Assign a STD per hidden Unit per Layer
    */
-  private initializeStaticStd() {
+  private initializeHiddenLayerStds(opt: NetOpts) {
+    this.hiddenStd = new Array<Mat>(this.architecture.hiddenUnits.length);
+
     for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
-      Utils.fillRand(this.hiddenStd[i].w, 0, 0.3);
+      this.hiddenStd[i] = new Mat(this.architecture.hiddenUnits[i], 1);
+    }
+
+    for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
+      Utils.fillRandn(this.hiddenStd[i].w, 0, 0.001);
     }
   }
 
