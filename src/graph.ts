@@ -52,7 +52,7 @@ export class Graph {
 
   private addRowPluckToBackpropagationStack(m: Mat, rowIndex: number, out: Mat) {
     if (this.needsBackpropagation) {
-      const backward = MatOps.getRowPluckDerivative(m, rowIndex, out);
+      const backward = MatOps.getRowPluckBackprop(m, rowIndex, out);
       this.backpropagationStack.push(backward);
     }
   }
@@ -79,7 +79,7 @@ export class Graph {
 
   private addTanhToBackpropagationStack(m: Mat, out: Mat) {
     if (this.needsBackpropagation) {
-      const backward = MatOps.getTanhDerivative(m, out);
+      const backward = MatOps.getTanhBackprop(m, out);
       this.backpropagationStack.push(backward);
     }
   }
@@ -96,7 +96,7 @@ export class Graph {
 
   private addSigmoidToBackpropagationStack(m: Mat, out: Mat) {
     if (this.needsBackpropagation) {
-      const backward = MatOps.getSigmoidDerivative(m, out);
+      const backward = MatOps.getSigmoidBackprop(m, out);
       this.backpropagationStack.push(backward);
     }
   }
@@ -113,7 +113,7 @@ export class Graph {
 
   private addReluToBackpropagationStack(m: Mat, out: Mat) {
     if (this.needsBackpropagation) {
-      const backward = MatOps.getReluDerivative(m, out);
+      const backward = MatOps.getReluBackprop(m, out);
       this.backpropagationStack.push(backward);
     }
   }
@@ -131,7 +131,7 @@ export class Graph {
 
   private addMultiplyToBackpropagationStack(m1: Mat, m2: Mat, out: Mat) {
     if (this.needsBackpropagation) {
-      const backward = MatOps.getMulDerivative(m1, m2, out);
+      const backward = MatOps.getMulBackprop(m1, m2, out);
       this.backpropagationStack.push(backward);
     }
   }
@@ -149,7 +149,7 @@ export class Graph {
 
   private addAdditionToBackpropagationStack(m1: Mat, m2: Mat, out: Mat) {
     if (this.needsBackpropagation) {
-      const backward = MatOps.getAddDerivative(m1, m2, out);
+      const backward = MatOps.getAddBackprop(m1, m2, out);
       this.backpropagationStack.push(backward);
     }
   }
@@ -167,7 +167,7 @@ export class Graph {
 
   private addDotToBackpropagationStack(m1: Mat, m2: Mat, out: Mat) {
     if (this.needsBackpropagation) {
-      const backward = MatOps.getDotDerivative(m1, m2, out);
+      const backward = MatOps.getDotBackprop(m1, m2, out);
       this.backpropagationStack.push(backward);
     }
   }
@@ -185,7 +185,7 @@ export class Graph {
 
   private addEltmulToBackpropagationStack(m1: Mat, m2: Mat, out: Mat) {
     if (this.needsBackpropagation) {
-      const backward = MatOps.getEltmulDerivative(m1, m2, out);
+      const backward = MatOps.getEltmulBackprop(m1, m2, out);
       this.backpropagationStack.push(backward);
     }
   }

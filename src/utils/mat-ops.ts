@@ -18,7 +18,7 @@ export class MatOps extends Assertable {
     return out;
   }
 
-  public static getRowPluckDerivative(m: Mat, rowIndex: number, out: Mat): Function {
+  public static getRowPluckBackprop(m: Mat, rowIndex: number, out: Mat): Function {
     return () => {
       for (let i = 0; i < m.cols; i++) {
         m.dw[m.cols * rowIndex + i] += out.dw[i];
@@ -54,7 +54,7 @@ export class MatOps extends Assertable {
     return out;
   }
 
-  public static getTanhDerivative(m: Mat, out: Mat): Function {
+  public static getTanhBackprop(m: Mat, out: Mat): Function {
     return () => {
       for (let i = 0; i < m.w.length; i++) {
         // grad for z = tanh(x) is (1 - z^2)
@@ -82,7 +82,7 @@ export class MatOps extends Assertable {
     return 1.0 / (1 + Math.exp(-x));
   }
 
-  public static getSigmoidDerivative(m: Mat, out: Mat): Function {
+  public static getSigmoidBackprop(m: Mat, out: Mat): Function {
     return () => {
       for (let i = 0; i < m.w.length; i++) {
         // grad for z = tanh(x) is (1 - z^2)
@@ -104,7 +104,7 @@ export class MatOps extends Assertable {
     return out;
   }
 
-  public static getReluDerivative(m: Mat, out: Mat): Function {
+  public static getReluBackprop(m: Mat, out: Mat): Function {
     return () => {
       for (let i = 0; i < m.w.length; i++) {
         m.dw[i] += m.w[i] > 0 ? out.dw[i] : 0.0;
@@ -126,7 +126,7 @@ export class MatOps extends Assertable {
     return out;
   }
 
-  public static getAddDerivative(m1: Mat, m2: Mat, out: Mat): Function {
+  public static getAddBackprop(m1: Mat, m2: Mat, out: Mat): Function {
     return () => {
       for (let i = 0; i < m1.w.length; i++) {
         m1.dw[i] += out.dw[i];
@@ -156,7 +156,7 @@ export class MatOps extends Assertable {
     return out;
   }
 
-  public static getMulDerivative(m1: Mat, m2: Mat, out: Mat): Function {
+  public static getMulBackprop(m1: Mat, m2: Mat, out: Mat): Function {
     return () => {
       for (let i = 0; i < m1.rows; i++) {
         for (let j = 0; j < m2.cols; j++) {
@@ -187,7 +187,7 @@ export class MatOps extends Assertable {
     return out;
   }
 
-  public static getDotDerivative(m1: Mat, m2: Mat, out: Mat): Function {
+  public static getDotBackprop(m1: Mat, m2: Mat, out: Mat): Function {
     return () => {
       for (let i = 0; i < m1.w.length; i++) {
         m1.dw[i] += m2.w[i] * out.dw[0];
@@ -211,7 +211,7 @@ export class MatOps extends Assertable {
     return out;
   }
 
-  public static getEltmulDerivative(m1: Mat, m2: Mat, out: Mat): Function {
+  public static getEltmulBackprop(m1: Mat, m2: Mat, out: Mat): Function {
     return () => {
       for (let i = 0; i < m1.w.length; i++) {
         m1.dw[i] += m2.w[i] * out.dw[i];
