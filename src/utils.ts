@@ -1,27 +1,28 @@
 import { Mat } from '.';
 
 export class Utils {
-
   /**
-   * Returns a random floating point number between `min` and `max`
+   * Returns a random floating point number of a uniform distribution between `min` and `max`
    * @param {number} min lower bound
    * @param {number} max upper bound
+   * @returns {number} random float value
    */
   public static randf(min: number, max: number): number {
     return Math.random() * (max - min) + min;
   }
 
   /**
-   * Returns a random integer number between `min` and `max`
+   * Returns a random integer number of a uniform distribution between [`min`, `max`)
    * @param {number} min lower bound
    * @param {number} max upper bound
+   * @returns {number} random integer value
    */
   public static randi(min: number, max: number): number {
     return Math.floor(Utils.randf(min, max));
   }
 
   /**
-   * Returns a random sample number from a normal distributed set
+   * Returns a sample of a normal distribution
    * @param {number} mu mean
    * @param {number} std standard deviation
    * @returns {number} random value
@@ -30,23 +31,162 @@ export class Utils {
     return mu + Utils.gaussRandom() * std;
   }
 
-  // TODO: Static could lead to unwanted behavior in parallel processes
-  private static returnV = false;
-  private static vVal = 0.0;
+  /**
+   * Returns a random sample number from a normal distributed set
+   * @param {number} min lower bound
+   * @param {number} max upper bound
+   * @param {number} skew factor of skewness; < 1 shifts to the right; > 1 shifts to the left
+   * @returns {number} random value
+   */
+  public static skewedRandn(min: number, max: number, skew: number): number {
+    let sample = Utils.box_muller();
+    sample = Math.pow(sample, skew);
+    sample *= max - min;
+    sample += min;
+    return sample;
+  }
 
+
+  /**
+   * Gaussian-distributed sample from a normal distributed set.
+   */
   private static gaussRandom(): number {
-    if (Utils.returnV) {
-      Utils.returnV = false;
-      return Utils.vVal;
+    return (Utils.box_muller() - 0.5) * 10;
+  }
+
+  /**
+   * Box-Muller Transform, to transform uniform random values into standard gaussian distributed random values.
+   * @returns random value between of interval (0,1)
+   */
+  private static box_muller(): number {
+    // Based on:
+    // https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
+    // and
+    // https://stackoverflow.com/questions/25582882/javascript-math-random-normal-distribution-gaussian-bell-curve
+    let z0 = 0, u1 = 0, u2 = 0;
+    do {
+      u1 = u2 = 0;
+      // Convert interval from [0,1) to (0,1)
+      do { u1 = Math.random(); } while (u1 === 0);
+      do { u2 = Math.random(); } while (u2 === 0);
+      z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+      z0 = z0 / 10.0 + 0.5;
+    } while (z0 > 1 || z0 < 0); // resample c
+    return z0;
+  }
+
+  /**
+   * Calculates the sum of a given set
+   * @param arr randomly populated array of numbers
+   */
+  public static sum(arr: Array<number> | Float64Array): number {
+    let sum = 0;
+    for (let i = 0; i < arr.length; i++) {
+      sum += arr[i];
     }
-    const u = 2 * Math.random() - 1;
-    const v = 2 * Math.random() - 1;
-    const rsq = u * u + v * v;
-    if (rsq === 0 || rsq >= 1) { return Utils.gaussRandom(); }
-    const c = Math.sqrt(-2 * Math.log(rsq) / rsq);
-    Utils.vVal = v * c; // cache this
-    Utils.returnV = true;
-    return u * c;
+    return sum;
+  }
+
+  /**
+   * Calculates the mean of a given set
+   * @param arr set of values
+   */
+  public static mean(arr: Array<number> | Float64Array): number {
+    // mean of [3, 5, 4, 4, 1, 1, 2, 3] is 2.875
+    let count = arr.length;
+    let sum = Utils.sum(arr);
+    return sum / count;
+  }
+
+  /**
+   * Calculates the median of a given set
+   * @param arr set of values
+   */
+  public static median(arr: Array<number>): number {
+    // median of [3, 5, 4, 4, 1, 1, 2, 3] = 3
+    let median = 0;
+    let count = arr.length;
+    arr.sort();
+    if (count % 2 === 0) { // is even
+      // average of two middle numbers
+      median = (arr[count / 2 - 1] + arr[count / 2]) / 2;
+    } else { // is odd
+      // middle number only
+      median = arr[(count - 1) / 2];
+    }
+    return median;
+  }
+
+  /**
+   * Calculates the standard deviation of a given set
+   * @param arr set of values
+   * @param precision the floating point precision for grouping results, e.g. 1e3 [defaults to 1e6]
+   */
+  public static mode(arr: Array<number>, precision?: number): Array<number> {
+    // as result can be bimodal or multimodal,
+    // the returned result is provided as an array
+    // mode of [3, 5, 4, 4, 1, 1, 2, 3] = [1, 3, 4]
+    precision = precision ? precision : 1e6;
+    let modes = [],
+      count = [],
+      number,
+      maxCount = 0;
+    // populate array with number counts
+    for (let i = 0; i < arr.length; i++) {
+      number = Math.round(arr[i] * precision) / precision;
+      count[number] = (count[number] || 0) + 1; // initialize or increment for number
+      if (count[number] > maxCount) {
+        maxCount = count[number]; // memorize count value of max index
+      }
+    }
+    // memorize numbers equal with maxCount
+    for (let i in count) {
+      if (count.hasOwnProperty(i)) {
+        if (count[i] === maxCount) {
+          modes.push(Number(i));
+        }
+      }
+    }
+    return modes;
+  }
+
+  /**
+   * Calculates the population variance (uncorrected), the sample variance (unbiased) or biased variance of a given set
+   * @param arr set of values
+   * @param normalization defaults to sample variance ('unbiased')
+   */
+  public static var(arr: Array<number>, normalization?: 'uncorrected' | 'biased' | 'unbiased'): number {
+    normalization = normalization ? normalization : 'unbiased';
+    let count = arr.length;
+
+    // calculate the variance
+    let mean = Utils.mean(arr);
+    let sum = 0;
+    let diff = 0;
+    for (let i = 0; i < arr.length; i++) {
+      diff = arr[i] - mean;
+      sum += diff * diff;
+    }
+
+    switch (normalization) {
+      case 'uncorrected':
+        return sum / count;
+
+      case 'biased':
+        return sum / (count + 1);
+
+      case 'unbiased':
+        return (count == 1) ? 0 : sum / (count - 1);
+    }
+  }
+
+  /**
+   * Calculates the standard deviation of a given set
+   * @param arr set of values
+   * @param normalization defaults to sample variance ('unbiased')
+   */
+  public static std = (arr: Array<number>, normalization?: 'uncorrected' | 'biased' | 'unbiased'): number => {
+    return Math.sqrt(Utils.var(arr, normalization));
   }
 
   /**
@@ -61,7 +201,7 @@ export class Utils {
   }
 
   /**
-   * Fills the given array with pseudo-random values between `min` and `max`.
+   * Fills the given array with uniformly distributed random values between `min` and `max`.
    * @param arr Array to be filled
    * @param min lower bound
    * @param max upper bound
@@ -142,7 +282,7 @@ export class Utils {
       c += arr[i];
       if (c >= r) { return i; }
     }
-    
+
     return 0;
   }
 
