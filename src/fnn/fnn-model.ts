@@ -71,7 +71,7 @@ export abstract class FNNModel extends Assertable implements ANN {
     this.training = this.determineTrainingProperties(opt);
 
     const mu = opt['mu'] ? opt['mu'] : 0;
-    const std = opt['std'] ? opt['std'] : 0.08;
+    const std = opt['std'] ? opt['std'] : 0.1;
 
     this.model = this.initializeFreshNetworkModel();
 
