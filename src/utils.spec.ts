@@ -25,12 +25,12 @@ describe('Utils:', () => {
           expect(actual.min).toBeLessThan(-3.5, 'Min');
           expect(actual.max).toBeGreaterThan(3.5, 'Max');
           expect(actual.max).toBeLessThan(5, 'Max');
+          expect(actual.mean).toBeGreaterThan(-0.1, 'Mean');
+          expect(actual.mean).toBeLessThan(0.1, 'Mean');
           expect(actual.std).toBeGreaterThan(0.9, 'Std');
           expect(actual.std).toBeLessThan(1.1, 'Std');
           expect(actual.var).toBeGreaterThan(0.9, 'Var');
           expect(actual.var).toBeLessThan(1.1, 'Var');
-          expect(actual.mean).toBeGreaterThan(-0.1, 'Mean');
-          expect(actual.mean).toBeLessThan(0.1, 'Mean');
         });
 
         it('Unpatched random number generator >> box_muller (private function) >> should comply to given statistical restrictions', () => {
@@ -46,12 +46,12 @@ describe('Utils:', () => {
           expect(actual.min).toBeLessThan(0.12, 'Min');
           expect(actual.max).toBeGreaterThan(0.87, 'Max');
           expect(actual.max).toBeLessThan(1, 'Max');
+          expect(actual.mean).toBeGreaterThan(0.49, 'Mean');
+          expect(actual.mean).toBeLessThan(0.51, 'Mean');
           expect(actual.std).toBeGreaterThan(0.09, 'Std');
           expect(actual.std).toBeLessThan(0.11, 'Std');
           expect(actual.var).toBeGreaterThan(0.009, 'Var');
           expect(actual.var).toBeLessThan(0.011, 'Var');
-          expect(actual.mean).toBeGreaterThan(0.49, 'Mean');
-          expect(actual.mean).toBeLessThan(0.51, 'Mean');
         });
       });
 
@@ -59,7 +59,7 @@ describe('Utils:', () => {
 
         let actual = { min: null, max: null, std: null, var: null, mean: null };
 
-        it('fresh instance >> randn >> should comply to given statistical restrictions', () => {
+        it('no arrangement >> randn >> should comply to given statistical restrictions', () => {
           let actualSamples = [];
 
           for (let i = 0; i < 100000; i++) {
@@ -71,15 +71,15 @@ describe('Utils:', () => {
           expect(actual.min).toBeLessThan(-3.5, 'Min');
           expect(actual.max).toBeGreaterThan(3.5, 'Max');
           expect(actual.max).toBeLessThan(5, 'Max');
+          expect(actual.mean).toBeGreaterThan(-0.1, 'Mean');
+          expect(actual.mean).toBeLessThan(0.1, 'Mean');
           expect(actual.std).toBeGreaterThan(0.9, 'Std');
           expect(actual.std).toBeLessThan(1.1, 'Std');
           expect(actual.var).toBeGreaterThan(0.9, 'Var');
           expect(actual.var).toBeLessThan(1.1, 'Var');
-          expect(actual.mean).toBeGreaterThan(-0.1, 'Mean');
-          expect(actual.mean).toBeLessThan(0.1, 'Mean');
         });
 
-        it('fresh instance >> randf >> should comply to given statistical restrictions', () => {
+        it('no arrangement >> randf >> should comply to given statistical restrictions', () => {
           let actualSamples = [];
 
           for (let i = 0; i < 100000; i++) {
@@ -95,7 +95,7 @@ describe('Utils:', () => {
           expect(actual.mean).toBeLessThan(50.3, 'Mean');
         });
 
-        it('fresh instance >> randi >> should comply to given statistical restrictions', () => {
+        it('no arrangement >> randi >> should comply to given statistical restrictions', () => {
           let actualSamples = [];
 
           for (let i = 0; i < 100000; i++) {
@@ -111,7 +111,7 @@ describe('Utils:', () => {
           expect(actual.mean).toBeLessThan(51, 'Mean');
         });
 
-        it('Unpatched random number generator >> skewedRandn >> should comply to given statistical restrictions', () => {
+        it('no arrangement >> skewedRandn (skewness factor 1) >> should comply to given statistical restrictions', () => {
           let actualSamples = [];
 
           for (let i = 0; i < 100000; i++) {
