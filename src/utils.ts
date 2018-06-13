@@ -38,14 +38,12 @@ export class Utils {
    * @param {number} skew factor of skewness; < 1 shifts to the right; > 1 shifts to the left
    * @returns {number} random value
    */
-  public static skewedRandn(min: number, max: number, skew: number): number {
+  public static skewedRandn(mu: number, std: number, skew: number): number {
     let sample = Utils.box_muller();
     sample = Math.pow(sample, skew);
-    sample *= max - min;
-    sample += min;
-    return sample;
+    sample = (sample - 0.5) * 10;
+    return mu + sample * std;
   }
-
 
   /**
    * Gaussian-distributed sample from a normal distributed set.

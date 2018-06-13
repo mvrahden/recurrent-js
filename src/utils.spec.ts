@@ -115,20 +115,66 @@ describe('Utils:', () => {
           let actualSamples = [];
 
           for (let i = 0; i < 100000; i++) {
-            actualSamples.push(sut.skewedRandn(0, 10, 5));
+            actualSamples.push(sut.skewedRandn(0, 1, 1));
           }
           actual = determineBasicStatistics(actualSamples);
 
-          expect(actual.min).toBeGreaterThan(0, 'Min');
-          expect(actual.min).toBeLessThan(0.1, 'Min');
-          expect(actual.max).toBeGreaterThan(5, 'Max');
-          expect(actual.max).toBeLessThan(10, 'Max');
-          expect(actual.std).toBeGreaterThan(0.42, 'Std');
-          expect(actual.std).toBeLessThan(0.47, 'Std');
-          expect(actual.var).toBeGreaterThan(0.11, 'Var');
-          expect(actual.var).toBeLessThan(0.25, 'Var');
-          expect(actual.mean).toBeGreaterThan(0.4, 'Mean');
-          expect(actual.mean).toBeLessThan(0.5, 'Mean');
+          expect(actual.min).toBeGreaterThan(-5, 'Min');
+          expect(actual.min).toBeLessThan(-3.5, 'Min');
+          expect(actual.max).toBeGreaterThan(3.5, 'Max');
+          expect(actual.max).toBeLessThan(5, 'Max');
+          expect(actual.mean).toBeGreaterThan(-0.05, 'Mean');
+          expect(actual.mean).toBeLessThan(0.05, 'Mean');
+          expect(actual.std).toBeGreaterThan(0.9, 'Std');
+          expect(actual.std).toBeLessThan(1.1, 'Std');
+          expect(actual.var).toBeGreaterThan(0.9, 'Var');
+          expect(actual.var).toBeLessThan(1.1, 'Var');
+        });
+
+        xit('no arrangement >> skewedRandn (skewness factor 0.5 & 2) >> should be provide a mirrored distributional picture', () => {
+          /*
+           * skewness should not interfere with `std` & `var`
+           * ==> `std` & `var` should be ~1
+           * current implementation distorts the distribution when shifting to positive side.
+           * TODO: Algorithm needs a revision.
+           */
+
+          // skewness factor 0.5
+          let actualSamples = [];
+
+          for (let i = 0; i < 100000; i++) {
+            actualSamples.push(sut.skewedRandn(0, 1, 0.5));
+          }
+          actual = determineBasicStatistics(actualSamples);
+
+          expect(actual.min).toBeGreaterThan(-5, '[skewness factor 0.5] Min');
+          expect(actual.min).toBeLessThan(1.5, '[skewness factor 0.5] Min');
+          expect(actual.max).toBeGreaterThan(3.5, '[skewness factor 0.5] Max');
+          expect(actual.max).toBeLessThan(5, '[skewness factor 0.5] Max');
+          expect(actual.mean).toBeGreaterThan(1.9, '[skewness factor 0.5] Mean');
+          expect(actual.mean).toBeLessThan(2.1, '[skewness factor 0.5] Mean');
+          expect(actual.std).toBeGreaterThan(0.7, '[skewness factor 0.5] Std');
+          expect(actual.std).toBeLessThan(0.8, '[skewness factor 0.5] Std');
+          expect(actual.var).toBeGreaterThan(0.45, '[skewness factor 0.5] Var');
+          expect(actual.var).toBeLessThan(0.55, '[skewness factor 0.5] Var');
+
+          actualSamples = [];
+
+          for (let i = 0; i < 100000; i++) {
+            actualSamples.push(sut.skewedRandn(0, 1, 2));
+          }
+          actual = determineBasicStatistics(actualSamples);
+
+          expect(actual.min).toBeGreaterThanOrEqual(-5, '[skewness factor 2] Min');
+          expect(actual.min).toBeLessThan(-3.5, '[skewness factor 2] Min');
+          expect(actual.max).toBeGreaterThan(1.5, '[skewness factor 2] Max');
+          expect(actual.max).toBeLessThan(5, '[skewness factor 2] Max');
+          expect(actual.mean).toBeGreaterThan(-2.45, '[skewness factor 2] Mean');
+          expect(actual.mean).toBeLessThan(-2.35, '[skewness factor 2] Mean');
+          expect(actual.std).toBeGreaterThan(0.9, '[skewness factor 2] Std');
+          expect(actual.std).toBeLessThan(1.1, '[skewness factor 2] Std');
+          expect(actual.var).toBeGreaterThan(0.9, '[skewness factor 2] Var');
+          expect(actual.var).toBeLessThan(1.1, '[skewness factor 2] Var');
         });
       });
 
