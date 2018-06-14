@@ -1,4 +1,4 @@
-import { RNN, Mat, NetOpts, Utils } from "..";
+import { RNN, Mat, NetOpts, Utils } from '..';
 
 describe('Deep Recurrent Neural Network (RNN):', () => {
 
