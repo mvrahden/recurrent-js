@@ -30,14 +30,14 @@ describe('Examples with Neural Networks:', () => {
 
     describe('Deep Feedforward Neural Network (DNN):', () => {
 
-      it('given fresh instance >> perform iterative training routine >> should output exact expected results after 15.000 iterations', () => {
+      it('given fresh instance >> perform iterative training routine >> should output exact expected results after 12.000 iterations', () => {
         // for(let j = 0; j < 10000; j++) {
         const trainingIterations = 12000;
 
         sut = new DNN(config);
 
         // Output container
-        let actualOutputsForSample = []
+        const actualOutputsForSample = [];
 
         // Get Output of the untrained network
         for (let i = 0; i < trainingData.samples.length; i++) {
@@ -54,13 +54,13 @@ describe('Examples with Neural Networks:', () => {
         const losses = [];
         const performTrainingRoutineForSample = (i: number): number => {
           sut.forward(trainingData.getInputForSample(i));
-          let actualLoss = sut.backward(trainingData.getExpectedOutputForSample(i));
+          const actualLoss = sut.backward(trainingData.getExpectedOutputForSample(i));
           return actualLoss;
         };
 
         // Start Training
         for (let i = 0; i < trainingIterations; i++) {
-          let ix = getRandomIndex();
+          const ix = getRandomIndex();
           // perform training routine for sample and gather squared loss
           losses[i] = performTrainingRoutineForSample(ix);
         }
@@ -86,7 +86,7 @@ describe('Examples with Neural Networks:', () => {
         sut = new DNN(config);
 
         // Output container
-        let actualOutputsForSample = []
+        const actualOutputsForSample = [];
 
         // Get Output of the untrained network
         for (let i = 0; i < trainingData.samples.length; i++) {
@@ -103,13 +103,13 @@ describe('Examples with Neural Networks:', () => {
         const losses = [];
         const performTrainingRoutineForSample = (i: number, alpha: number): number => {
           sut.forward(trainingData.getInputForSample(i));
-          let actualLoss = sut.backward(trainingData.getExpectedOutputForSample(i), alpha);
+          const actualLoss = sut.backward(trainingData.getExpectedOutputForSample(i), alpha);
           return actualLoss;
         };
 
         // Start Training
         for (let i = 0; i < trainingIterations; i++) {
-          let ix = getRandomIndex();
+          const ix = getRandomIndex();
           // perform training routine for sample and gather squared loss
           const alpha = getRandomAlpha(alphaMin, alphaMax);
           losses[i] = performTrainingRoutineForSample(ix, alpha);
@@ -130,13 +130,13 @@ describe('Examples with Neural Networks:', () => {
 
     describe('Deep Bayesian Feedforward Neural Network (BNN):', () => {
 
-      it('given fresh instance >> perform iterative training routine >> should output a good approximation of expected results after 10.000 iterations (squared error < 1)', () => {
+      it('given fresh instance >> perform iterative training routine >> should output a small squared loss after 10.000 iterations (squared error < 1)', () => {
         // for (let j = 0; j < 10000; j++) {
         const trainingIterations = 10000;
 
         sut = new BNN(config);
         // Output container
-        let actualOutputsForSample = []
+        const actualOutputsForSample = [];
 
         // Get Output of the untrained network
         for (let i = 0; i < trainingData.samples.length; i++) {
@@ -153,13 +153,13 @@ describe('Examples with Neural Networks:', () => {
         const losses = [];
         const performTrainingRoutineForSample = (i: number): number => {
           sut.forward(trainingData.getInputForSample(i));
-          let actualLoss = sut.backward(trainingData.getExpectedOutputForSample(i));
+          const actualLoss = sut.backward(trainingData.getExpectedOutputForSample(i));
           return actualLoss;
         };
 
         // Start Training
         for (let i = 0; i < trainingIterations; i++) {
-          let ix = getRandomIndex();
+          const ix = getRandomIndex();
           // perform training routine for sample and gather squared loss
           losses[i] = performTrainingRoutineForSample(ix);
         }
@@ -176,8 +176,8 @@ describe('Examples with Neural Networks:', () => {
       // }
       });
 
-      it('given fresh instance >> perform iterative training routine with varying alpha >> should output a good approximation of expected results after 6.000 iterations (squared error < 1)', () => {
-        // for (let j = 0; j < 10000; j++) {
+      fit('given fresh instance >> perform iterative training routine with varying alpha >> should output a good approximation of expected results after 6.000 iterations (squared error < 1)', () => {
+        for (let j = 0; j < 1000; j++) {
         const trainingIterations = 6000;
         const alphaMin = 0.001;
         const alphaMax = 0.1;
@@ -185,7 +185,7 @@ describe('Examples with Neural Networks:', () => {
         sut = new BNN(config);
 
         // Output container
-        const actualOutputsForSample = []
+        const actualOutputsForSample = [];
 
         // Get Output of the untrained network
         for (let i = 0; i < trainingData.samples.length; i++) {
@@ -202,7 +202,7 @@ describe('Examples with Neural Networks:', () => {
         const losses = [];
         const performTrainingRoutineForSample = (i: number, alpha: number): number => {
           sut.forward(trainingData.getInputForSample(i));
-          let actualLoss = sut.backward(trainingData.getExpectedOutputForSample(i), alpha);
+          const actualLoss = sut.backward(trainingData.getExpectedOutputForSample(i), alpha);
           return actualLoss;
         };
 
@@ -222,8 +222,8 @@ describe('Examples with Neural Networks:', () => {
         // Expect trained output to be close to the expected results (with a high precision of 1e-11 resp. 10)
         // expectOutputOfTrainedNetworkToBeCloseToExpectedOutputs(actualOutputsForSample, 1);
         // Expect squared error to be near 0
-        expect(losses[trainingIterations - 1]).toBeCloseTo(0, 0);
-      // }
+        expect(losses[trainingIterations - 1]).toBeLessThan(0.5, actualOutputsForSample);
+      }
       });
 
       const patchFillRandn = () => {
@@ -252,8 +252,8 @@ describe('Examples with Neural Networks:', () => {
         const expected = trainingData.getExpectedOutputForSample(trainingSample);
         for (let dataPoint = 0; dataPoint < expected.length; dataPoint++) {
           const errorMessage = '[trained] Actual output for Sample ' + trainingSample + ' at position ' + dataPoint + ' was not close to ' + expected[dataPoint];
-          if (precision) expect(actual[dataPoint]).toBeCloseTo(expected[dataPoint], precision, errorMessage);
-          else expect(actual[dataPoint]).toBeCloseTo(expected[dataPoint], errorMessage);
+          if (precision) { expect(actual[dataPoint]).toBeCloseTo(expected[dataPoint], precision, errorMessage); }
+          else { expect(actual[dataPoint]).toBeCloseTo(expected[dataPoint], errorMessage); }
         }
       }
     };
