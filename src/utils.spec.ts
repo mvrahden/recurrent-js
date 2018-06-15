@@ -306,7 +306,7 @@ describe('Utils:', () => {
         expect(actual).toBe(3);
       });
 
-      it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> var >> should return 2.125 an thus default to `unbiased` form', () => {
+      it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> var (unbiased) >> should return 2.125', () => {
         const input = [3, 5, 4, 4, 1, 1, 2, 3];
 
         const actual = sut.var(input, 'unbiased');
@@ -319,7 +319,31 @@ describe('Utils:', () => {
 
         const actual = sut.var(input);
 
+        expect(actual).toBe(2.125);
+      });
+
+      it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> var (uncorrected) >> should return 1.859375', () => {
+        const input = [3, 5, 4, 4, 1, 1, 2, 3];
+
+        const actual = sut.var(input, 'uncorrected');
+
         expect(actual).toBe(1.859375);
+      });
+
+      it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> var (biased) >> should return 1.6527777777777777', () => {
+        const input = [3, 5, 4, 4, 1, 1, 2, 3];
+
+        const actual = sut.var(input, 'biased');
+
+        expect(actual).toBe(1.6527777777777777);
+      });
+
+      it('some Array [3] with one element >> var (unbiased) >> should return 0 (as fallback)', () => {
+        const input = [3];
+
+        const actual = sut.var(input, 'unbiased');
+
+        expect(actual).toBe(0);
       });
 
       it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> std >> should return 1.45722 and thus default to `unbiased` form', () => {
