@@ -176,8 +176,8 @@ describe('Examples with Neural Networks:', () => {
       // }
       });
 
-      fit('given fresh instance >> perform iterative training routine with varying alpha >> should output a good approximation of expected results after 6.000 iterations (squared error < 1)', () => {
-        for (let j = 0; j < 1000; j++) {
+      it('given fresh instance >> perform iterative training routine with varying alpha >> should output a good approximation of expected results after 6.000 iterations (squared error < 1)', () => {
+        // for (let j = 0; j < 10000; j++) {
         const trainingIterations = 6000;
         const alphaMin = 0.001;
         const alphaMax = 0.1;
@@ -222,8 +222,8 @@ describe('Examples with Neural Networks:', () => {
         // Expect trained output to be close to the expected results (with a high precision of 1e-11 resp. 10)
         // expectOutputOfTrainedNetworkToBeCloseToExpectedOutputs(actualOutputsForSample, 1);
         // Expect squared error to be near 0
-        expect(losses[trainingIterations - 1]).toBeLessThan(0.5, actualOutputsForSample);
-      }
+        expect(losses[trainingIterations - 1]).toBeCloseTo(0, 0);
+      // }
       });
 
       const patchFillRandn = () => {
