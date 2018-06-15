@@ -3,7 +3,7 @@ import { MatOps } from './mat-ops';
 
 describe('MatOps:', () => {
 
-  let sut = MatOps;
+  const sut = MatOps;
   let actual: Mat;
   let expected: Mat;
   let mat1: Mat;
@@ -56,7 +56,7 @@ describe('MatOps:', () => {
         for (let i = 0; i < actual.w.length; i++) {
           expect(actual.w[i]).toBe(expected.w[i]);
         }
-      }
+      };
     });
 
     describe('Gauss noise-addition:', () => {
@@ -102,7 +102,7 @@ describe('MatOps:', () => {
         for (let i = 0; i < actual.w.length; i++) {
           expect(actual.w[i]).toBe(expected.w[i] + std[i]);
         }
-      }
+      };
     });
 
     describe('Monadic Operations', () => {
@@ -181,7 +181,7 @@ describe('MatOps:', () => {
         for (let i = 0; i < actual.w.length; i++) {
           expect(actual.w[i]).toBeCloseTo(expected.w[i], 5);
         }
-      }
+      };
     });
   });
 
@@ -229,7 +229,7 @@ describe('MatOps:', () => {
         for (let i = 0; i < actual.w.length; i++) {
           expect(actual.w[i]).toBe(expected.w[i]);
         }
-      }
+      };
     });
 
     describe('Addition:', () => {
@@ -272,7 +272,7 @@ describe('MatOps:', () => {
         for (let i = 0; i < actual.w.length; i++) {
           expect(actual.w[i]).toBe(expected.w[i]);
         }
-      }
+      };
     });
 
     describe('Dot Product:', () => {
@@ -315,7 +315,7 @@ describe('MatOps:', () => {
         for (let i = 0; i < actual.w.length; i++) {
           expect(actual.w[i]).toBe(expected.w[i]);
         }
-      }
+      };
     });
 
     describe('Elementwise Multiplication:', () => {
@@ -358,24 +358,24 @@ describe('MatOps:', () => {
         for (let i = 0; i < actual.w.length; i++) {
           expect(actual.w[i]).toBe(expected.w[i]);
         }
-      }
+      };
     });
 
     const expectDualMatrixOperationHasReturnedNewInstance = (): void => {
       expectOperationHasReturnedNewInstance();
       expect(actual === mat2).toBe(false);
-    }
+    };
   });
 
   const expectOperationHasReturnedNewInstance = (): void => {
     expect(actual === mat1).toBe(false);
-  }
+  };
 
   const expectOperationHasReturnedMatrixWithDimensions = (rows: number, cols: number): void => {
     expected = new Mat(rows, cols);
 
     expect(actual.rows).toBe(expected.rows);
     expect(actual.cols).toBe(expected.cols);
-  }
+  };
 });
 

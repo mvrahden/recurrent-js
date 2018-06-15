@@ -51,7 +51,7 @@ describe('Graph Operations:', () => {
         const expectSpyMethodToHaveBeenCalled = (spy: Function): void => {
           expect(spy).toHaveBeenCalled();
           expect(spy).toHaveBeenCalledWith(mat);
-        }
+        };
       });
     });
 
@@ -90,7 +90,7 @@ describe('Graph Operations:', () => {
       const expectSpyMethodToHaveBeenCalled = (spy: Function): void => {
         expect(spy).toHaveBeenCalled();
         expect(spy).toHaveBeenCalledWith(mat, mat2);
-      }
+      };
     });
   });
   

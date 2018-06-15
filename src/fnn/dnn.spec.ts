@@ -72,7 +72,7 @@ describe('Deep Neural Network (DNN):', () => {
     });
 
     it('given an fresh instance with having trainability set >> backward >> should throw an error', () => {
-      let act = () => { sut.backward([]); };
+      const act = () => { sut.backward([]); };
       expect(act).toThrowError(/Trainability is not enabled/);
     });
 
@@ -84,14 +84,14 @@ describe('Deep Neural Network (DNN):', () => {
       });
 
       it('given an instance without forward pass >> backward >> should throw error ', () => {
-        let act = () => { sut.backward([]); };
+        const act = () => { sut.backward([]); };
         expect(act).toThrowError(/forward()/);
       });
 
       describe('With Forward Pass:', () => {
 
         beforeEach(() => {
-          let someInput = [1, 0];
+          const someInput = [1, 0];
           sut.forward(someInput);
           patchBackwardSequenceAsSpies();
         });

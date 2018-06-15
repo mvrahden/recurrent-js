@@ -160,7 +160,7 @@ export abstract class FNNModel extends Assertable implements ANN {
     this.propagateLossIntoDecoderLayer(expectedOutput);
     this.backwardGraph();
     this.updateWeights(alpha);
-    let lossSum = this.calculateLossSumByForwardPass(expectedOutput);
+    const lossSum = this.calculateLossSumByForwardPass(expectedOutput);
     this.cleanUp();
     return lossSum * lossSum;
   }
@@ -194,7 +194,7 @@ export abstract class FNNModel extends Assertable implements ANN {
 
   private calculateLossSumByForwardPass(expected: Array<number> | Float64Array): number {
     let loss, lossSum = 0;
-    let out = this.forward(this.previousInput);
+    const out = this.forward(this.previousInput);
     for (let i = 0; i < this.architecture.outputSize; i++) {
       loss = out[i] - expected[i];
       lossSum += loss;
@@ -203,8 +203,8 @@ export abstract class FNNModel extends Assertable implements ANN {
   }
 
   private clipLoss(loss: number): number {
-    if (loss > this.training.lossClamp) return this.training.lossClamp;
-    else if (loss < -this.training.lossClamp) return -this.training.lossClamp;
+    if (loss > this.training.lossClamp) { return this.training.lossClamp; }
+    else if (loss < -this.training.lossClamp) { return -this.training.lossClamp; }
     return loss;
   }
 

@@ -91,8 +91,8 @@ export class Utils {
    */
   public static mean(arr: Array<number> | Float64Array): number {
     // mean of [3, 5, 4, 4, 1, 1, 2, 3] is 2.875
-    let count = arr.length;
-    let sum = Utils.sum(arr);
+    const count = arr.length;
+    const sum = Utils.sum(arr);
     return sum / count;
   }
 
@@ -103,7 +103,7 @@ export class Utils {
   public static median(arr: Array<number>): number {
     // median of [3, 5, 4, 4, 1, 1, 2, 3] = 3
     let median = 0;
-    let count = arr.length;
+    const count = arr.length;
     arr.sort();
     if (count % 2 === 0) { // is even
       // average of two middle numbers
@@ -125,20 +125,20 @@ export class Utils {
     // the returned result is provided as an array
     // mode of [3, 5, 4, 4, 1, 1, 2, 3] = [1, 3, 4]
     precision = precision ? precision : 1e6;
-    let modes = [],
-      count = [],
-      number,
-      maxCount = 0;
+    const modes = [];
+    const count = [];
+    let num = 0;
+    let maxCount = 0;
     // populate array with number counts
     for (let i = 0; i < arr.length; i++) {
-      number = Math.round(arr[i] * precision) / precision;
-      count[number] = (count[number] || 0) + 1; // initialize or increment for number
-      if (count[number] > maxCount) {
-        maxCount = count[number]; // memorize count value of max index
+      num = Math.round(arr[i] * precision) / precision;
+      count[num] = (count[num] || 0) + 1; // initialize or increment for number
+      if (count[num] > maxCount) {
+        maxCount = count[num]; // memorize count value of max index
       }
     }
     // memorize numbers equal with maxCount
-    for (let i in count) {
+    for (const i in count) {
       if (count.hasOwnProperty(i)) {
         if (count[i] === maxCount) {
           modes.push(Number(i));
@@ -155,10 +155,10 @@ export class Utils {
    */
   public static var(arr: Array<number>, normalization?: 'uncorrected' | 'biased' | 'unbiased'): number {
     normalization = normalization ? normalization : 'unbiased';
-    let count = arr.length;
+    const count = arr.length;
 
     // calculate the variance
-    let mean = Utils.mean(arr);
+    const mean = Utils.mean(arr);
     let sum = 0;
     let diff = 0;
     for (let i = 0; i < arr.length; i++) {
@@ -174,7 +174,10 @@ export class Utils {
         return sum / (count + 1);
 
       case 'unbiased':
-        return (count == 1) ? 0 : sum / (count - 1);
+        return (count === 1) ? 0 : sum / (count - 1);
+
+      default:
+        return ;
     }
   }
 

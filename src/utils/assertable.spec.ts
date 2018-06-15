@@ -16,4 +16,4 @@ describe('Assertable', () => {
 
     expect(actual).toThrowError(/Expect to throw\./);
   });
-})
+});

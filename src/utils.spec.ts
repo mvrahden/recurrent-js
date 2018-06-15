@@ -13,7 +13,7 @@ describe('Utils:', () => {
         let actual = { min: null, max: null, std: null, var: null, mean: null };
 
         it('Unpatched random number generator >> 100000 iterations of gaussRandom (private function) >> should comply to given statistical restrictions', () => {
-          let actualSamples = [];
+          const actualSamples = [];
 
           for (let i = 0; i < 100000; i++) {
             actualSamples.push(sut['gaussRandom']());
@@ -34,7 +34,7 @@ describe('Utils:', () => {
         });
 
         it('Unpatched random number generator >> box_muller (private function) >> should comply to given statistical restrictions', () => {
-          let actualSamples = [];
+          const actualSamples = [];
 
           for (let i = 0; i < 100000; i++) {
             actualSamples.push(sut['box_muller']());
@@ -60,7 +60,7 @@ describe('Utils:', () => {
         let actual = { min: null, max: null, std: null, var: null, mean: null };
 
         it('no arrangement >> randn >> should comply to given statistical restrictions', () => {
-          let actualSamples = [];
+          const actualSamples = [];
 
           for (let i = 0; i < 100000; i++) {
             actualSamples.push(sut.randn(0, 1));
@@ -80,7 +80,7 @@ describe('Utils:', () => {
         });
 
         it('no arrangement >> randf >> should comply to given statistical restrictions', () => {
-          let actualSamples = [];
+          const actualSamples = [];
 
           for (let i = 0; i < 100000; i++) {
             actualSamples.push(sut.randf(0, 100));
@@ -96,7 +96,7 @@ describe('Utils:', () => {
         });
 
         it('no arrangement >> randi >> should comply to given statistical restrictions', () => {
-          let actualSamples = [];
+          const actualSamples = [];
 
           for (let i = 0; i < 100000; i++) {
             actualSamples.push(sut.randi(0, 100));
@@ -112,7 +112,7 @@ describe('Utils:', () => {
         });
 
         it('no arrangement >> skewedRandn (skewness factor 1) >> should comply to given statistical restrictions', () => {
-          let actualSamples = [];
+          const actualSamples = [];
 
           for (let i = 0; i < 100000; i++) {
             actualSamples.push(sut.skewedRandn(0, 1, 1));
@@ -205,21 +205,20 @@ describe('Utils:', () => {
       });
 
       const determineBasicStatistics = (sample: Array<number>): { min, max, std, var, mean } => {
-        let out = { min: null, max: null, std: null, var: null, mean: null };
+        const out = { min: null, max: null, std: null, var: null, mean: null };
         // RANGE: MIN & MAX
-        out.min = Number.POSITIVE_INFINITY, out.max = Number.NEGATIVE_INFINITY;
+        out.min = Number.POSITIVE_INFINITY;
+        out.max = Number.NEGATIVE_INFINITY;
         for (let i = 0; i < sample.length; i++) {
-          if (sample[i] > out.max)
-            out.max = sample[i];
-          if (sample[i] < out.min)
-            out.min = sample[i];
+          if (sample[i] > out.max) { out.max = sample[i]; }
+          if (sample[i] < out.min) { out.min = sample[i]; }
         }
         // MEAN, MEDIAN & MODE
         out.std = Utils.std(sample);
         out.var = Utils.var(sample);
         out.mean = Utils.mean(sample);
         return out;
-      }
+      };
     });
 
     describe('Array Filler:', () => {
@@ -278,23 +277,23 @@ describe('Utils:', () => {
       it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> sum >> should return 23', () => {
         const input = [3, 5, 4, 4, 1, 1, 2, 3];
 
-        let actual = sut.sum(input);
+        const actual = sut.sum(input);
 
-        expect(actual).toBe(23)
+        expect(actual).toBe(23);
       });
 
       it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> mean >> should return 2.875', () => {
         const input = [3, 5, 4, 4, 1, 1, 2, 3];
 
-        let actual = sut.mean(input);
+        const actual = sut.mean(input);
 
-        expect(actual).toBe(2.875)
+        expect(actual).toBe(2.875);
       });
 
       it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> median >> should return 3', () => {
         const evenInput = [3, 5, 4, 4, 1, 1, 2, 3];
 
-        let actual = sut.median(evenInput);
+        const actual = sut.median(evenInput);
 
         expect(actual).toBe(3);
       });
@@ -302,7 +301,7 @@ describe('Utils:', () => {
       it('some Array [3, 5, 4, 4, 1, 1, 2, 3, 9] >> median >> should return 3', () => {
         const oddInput = [3, 5, 4, 4, 1, 1, 2, 3, 9];
 
-        let actual = sut.median(oddInput);
+        const actual = sut.median(oddInput);
 
         expect(actual).toBe(3);
       });
@@ -310,15 +309,15 @@ describe('Utils:', () => {
       it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> var >> should return 2.125 an thus default to `unbiased` form', () => {
         const input = [3, 5, 4, 4, 1, 1, 2, 3];
 
-        let actual = sut.var(input);
+        const actual = sut.var(input, 'unbiased');
 
         expect(actual).toBe(2.125);
       });
 
-      it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> var >> should return 1.859375', () => {
+      it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> var >> should return 2.125 and thus default to `unbiased` form', () => {
         const input = [3, 5, 4, 4, 1, 1, 2, 3];
 
-        let actual = sut.var(input, 'uncorrected');
+        const actual = sut.var(input);
 
         expect(actual).toBe(1.859375);
       });
@@ -326,7 +325,7 @@ describe('Utils:', () => {
       it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> std >> should return 1.45722 and thus default to `unbiased` form', () => {
         const input = [3, 5, 4, 4, 1, 1, 2, 3];
 
-        let actual = sut.std(input);
+        const actual = sut.std(input);
 
         expect(actual).toBeCloseTo(1.45722);
       });
@@ -334,7 +333,7 @@ describe('Utils:', () => {
       it('some Array [3, 5, 4, 4, 1, 1, 2, 3] >> mode >> should return [1, 3, 4]', () => {
         const input = [3, 5, 4, 4, 1, 1, 2, 3];
 
-        let actual = sut.mode(input);
+        const actual = sut.mode(input);
 
         expect(actual).toEqual([1, 3, 4]);
       });
