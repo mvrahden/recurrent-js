@@ -49,7 +49,7 @@ The class names are linked to more detailed descriptions of the specific classes
 
 #### Neural Network Classes:
 * stateless:
-  * **[Net][docs-net]** - Vanilla Feedforward Neural Network.
+  * **[Net][docs-net]** - shallow Vanilla Feedforward Neural Network (1 hidden layer).
   * **[DNN][docs-dnn]** - Deep Feedforward Neural Network.
   * **[BNN][docs-bnn]** - Deep Bayesian Neural Network.
 * stateful (*Still old API!*):
