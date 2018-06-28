@@ -35,11 +35,11 @@ The class names are linked to more detailed descriptions of the specific classes
 
 #### Utility Classes:
 
-* **[Utils][docs-utils]** - Collection of Utility functions.
+* **[Utils][docs-utils]** - Collection of Utility functions: Array creation & manipulation, Statistical evaluation methods etc.
 * **[Mat][docs-mat]** - Matrix Class holding weights and their derivatives for the neural networks.
 * **RandMat** - A convenient subclass of `Mat`. `RandMat` objects are automatically populated with random values on their creation.
-* **[MatOps][docs-mat]** - Class with matrix operations and their respective derivative functions.
-* **[Graph][docs-graph]** - Graph memorizing the sequences of matrix operations and matching their the derivative functions for backpropagation.
+* **[MatOps][docs-mat]** - Class with matrix operations (add, multiply, sigmoid etc.) and their respective derivative functions.
+* **[Graph][docs-graph]** - Graph memorizing the sequences of matrix operations and matching their respective derivative functions for backpropagation.
 * **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
 <!-- * **FNNModel** - Generalized Class containing the Weights (and `Graph`) for stateless `FNN`-models
   * such as `DNN` or `BNN`.
@@ -52,7 +52,7 @@ The class names are linked to more detailed descriptions of the specific classes
   * **[Net][docs-net]** - Vanilla Feedforward Neural Network.
   * **[DNN][docs-dnn]** - Deep Feedforward Neural Network.
   * **[BNN][docs-bnn]** - Deep Bayesian Neural Network.
-* stateful:
+* stateful (*Still old API!*):
   * **[RNN][docs-rnn]** - Deep Recurrent Neural Network.
   * **[LSTM][docs-lstm]** - Long Short Term Memory Network.
 
