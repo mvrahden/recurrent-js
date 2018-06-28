@@ -22,7 +22,7 @@ export class Net {
     } else if (this.isFreshInstanceCall(opt)) {
       this.initializeAsFreshInstance(opt);
     } else {
-      this.initializeAsFreshInstance({inputSize: 1, hiddenUnits: 1, outputSize: 1 });
+      this.initializeAsFreshInstance({ architecture: { inputSize: 1, hiddenUnits: [1], outputSize: 1 } });
     }
   }
 
@@ -30,8 +30,8 @@ export class Net {
     return Net.has(opt, ['W1', 'b1', 'W2', 'b2']);
   }
 
-  private isFreshInstanceCall(opt: { inputSize: number, hiddenUnits: number, outputSize: number, mu?: number, std?: number }) {
-    return Net.has(opt, ['inputSize', 'hiddenUnits', 'outputSize']);
+  private isFreshInstanceCall(opt: NetOpts) {
+    return Net.has(opt, ['architecture']) && Net.has(opt.architecture, ['inputSize', 'hiddenUnits', 'outputSize']);
   }
 
   private initializeFromJSONObject(opt: { W1, b1, W2, b2 }) {
@@ -41,11 +41,15 @@ export class Net {
     this.b2 = Mat.fromJSON(opt['b2']);
   }
 
-  private initializeAsFreshInstance(opt: { inputSize: number, hiddenUnits: number, outputSize: number, mu?: number, std?: number }) {
-    const mu = opt['mu'] ? opt['mu'] : 0;
-    const std = opt['std'] ? opt['std'] : 0.01;
+  private initializeAsFreshInstance(opt: NetOpts) {
+    let mu = 0;
+    let std = 0.01;
+    if(Net.has(opt, ['other'])) {
+      mu = opt.other['mu'] ? opt.other['mu'] : mu;
+      std = opt.other['std'] ? opt.other['std'] : std;
+    }
     this.W1 = new RandMat(opt['hiddenUnits'], opt['inputSize'], mu, std);
-    this.b1 = new Mat(opt['hiddenUnits'], 1);
+    this.b1 = new Mat(opt['hiddenUnits'][0], 1);
     this.W2 = new RandMat(opt['outputSize'], opt['hiddenUnits'], mu, std);
     this.b2 = new Mat(opt['outputSize'], 1);
   }
