@@ -1,4 +1,4 @@
-import { Mat, Graph, NetOpts } from './..';
+import { Mat, NetOpts } from './..';
 import { FNNModel } from './fnn-model';
 
 export class DNN extends FNNModel {

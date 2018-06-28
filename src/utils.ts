@@ -1,5 +1,3 @@
-import { Mat } from '.';
-
 export class Utils {
   /**
    * Returns a random floating point number of a uniform distribution between `min` and `max`
