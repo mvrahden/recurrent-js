@@ -48,10 +48,11 @@ export class Net {
       mu = opt.other['mu'] ? opt.other['mu'] : mu;
       std = opt.other['std'] ? opt.other['std'] : std;
     }
-    this.W1 = new RandMat(opt['hiddenUnits'], opt['inputSize'], mu, std);
-    this.b1 = new Mat(opt['hiddenUnits'][0], 1);
-    this.W2 = new RandMat(opt['outputSize'], opt['hiddenUnits'], mu, std);
-    this.b2 = new Mat(opt['outputSize'], 1);
+    const firstLayer = 0; // only consider the first layer => shallowness
+    this.W1 = new RandMat(opt.architecture['hiddenUnits'][firstLayer], opt.architecture['inputSize'], mu, std);
+    this.b1 = new Mat(opt.architecture['hiddenUnits'][firstLayer], 1);
+    this.W2 = new RandMat(opt.architecture['outputSize'], opt.architecture['hiddenUnits'][firstLayer], mu, std);
+    this.b2 = new Mat(opt.architecture['outputSize'], 1);
   }
 
   /**
