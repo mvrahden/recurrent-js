@@ -13,7 +13,11 @@
 [docs-rnn]: https://github.com/mvrahden/recurrent-js/blob/master/docs/rnn/rnn.md
 [docs-lstm]: https://github.com/mvrahden/recurrent-js/blob/master/docs/rnn/lstm.md
 
-**The recurrent-js library** &ndash; Amazingly simple to build and train various neural networks. The library is an object-oriented neural network approach (baked with [Typescript](https://github.com/Microsoft/TypeScript)), containing stateless and stateful neural network architectures. It is a redesigned and extended version of _Andrej Karpathy's_ RecurrentJS library that implements the following:
+**Call For Volunteers:** Due to my lack of time, I'm desperately looking for voluntary help. Should you be interested in the training of neural networks (even though you're a newbie) and willing to develop this educational project a little further, please contact me :) There are some points on the agenda, that I'd still like to see implemented to make this project a nice library for abstract educational purposes.
+
+> INACTIVE: Due to lack of time and help
+
+**The recurrent-js library** &ndash; Various amazingly simple to build and train neural network architectures. This Library is for **educational purposes** only. The library is an object-oriented neural network approach (baked with [Typescript](https://github.com/Microsoft/TypeScript)), containing stateless and stateful neural network architectures. It is a redesigned and extended version of _Andrej Karpathy's_ RecurrentJS library that implements the following:
 
 * Vanilla Feedforward Neural Network (Net)
 * Deep **Recurrent Neural Networks** (RNN)
@@ -80,79 +84,51 @@ const DNN = require('recurrent-js').DNN;
 ### How to train?
 
 Training of neural networks is achieved by iteratively reinforcing wanted neural activations or by suppressing unwanted activation paths through adjusting their respective slopes.
-The training is achieved via an expression `Graph`, that memorizes the sequence of matrix operations being executed during the forward-pass.
+The training is achieved via an expression `Graph`, which memorizes the sequence of matrix operations being executed during the forward-pass operation of a neural network.
 The results of the Matrix operations are contained in `Mat`-objects, which contain the resulting values (`w`) and their corresponding derivatives (`dw`).
 The `Graph`-object can be used to calculate the resulting gradient and propagate a loss value back into the memorized sequence of matrix operations.
 The update of the weights of the neural connections will then lead to supporting wanted neural network activity and suppressing unwanted activation behavior.
 The described backpropagation can be achieved as follows:
 
 ```typescript
-import { Graph, DNN, Mat } from 'recurrent-js';
+import { Graph, DNN } from 'recurrent-js';
 
 /* define network structure configuration */
 const netOpts = {
-  inputSize: 3,
-  hiddenUnits: [ 6, 2, 6 ],
-  outputSize: 4
-};
+    architecture: { inputSize: 2, hiddenUnits: [2, 3], outputSize: 3 },
+    training: { loss: 1e-11 }
+  };
 
 /* instantiate network */
 const net = new DNN(netOpts);
 
+/* activate the net for trainability */
+net.setTrainability(true);
 
-/* 
-1. Instantiate a graph with the ability to perform backpropagation
-*/
-const graph = new Graph(true);
+/** 
+ * Perform an iterative training by first forward passing an input
+ * and second backward propagating the according target output.
+ * You'll receive the squared loss, that gives you a hint of the networks
+ * approximation quality.
+ * Repeat this action until the quality of the output of the forward pass 
+ * suits your needs, or the mean squared error is small enough, e.g. < 1.
+ */
+do {
+  const someOutput = net.forward([0, 1] /* an array of input values */);
+  // Train with a (varying) custom learning rate, to optimize training efforts:
+  /* net.backward([0, 1, 0], 0.03); */
+  // or keep it more simple:
+  const squaredLoss = net.backward([0, 1, 0] /* an array of target output */);
+} while(squaredLoss > 0.1);
+/**
+ * --> Keep in mind: you actually want a low MEAN squaredLoss which would make this loop
+ * more complex than the three simple lines displayed here.
+ */
 
-/*
-2. Before forward pass:
-Create a single row of type `Mat`, which holds an observation.
-We will refer to this as the state.
-Dimensions of state are according to the configuration of the net (rows = inputSize = 3, cols = 1).
-*/
-const observation = [1, 0, 1]; /* an observation (ideally normalized) */
-const state = new Mat(3, 1);
-state.setFrom(observation);
-
-/*
-3. Decision making:
-Forward pass with observed state of type `Mat` and graph.
-The resulting decision is of type `Mat` and is holding multiple output values (here: 4).
-*/
-const decision = net.forward(state, graph);
-
-/* 
-4. After forward pass:
-Compute the decision errors.
-We refer to this as the loss value(s).
-Inject that loss value into the derivative of your targeted value.
-Here you could also apply e.g. loss clipping before injecting the value.
-NOTE: You can also apply multiple loss values, to the respective array fields.
-*/
-decision.dw[1] = /* some value e.g. 0.5 */;
-
-/*
-5. After injecting the loss value:
-since graph is keeping a reference of `decision`, it can now perform the backpropagation and therefore calculate a new decision gradient.
-*/
-graph.backward();
-
-/*
-6. After determining a new decision gradient:
-The gradient determined with the loss value has now been calculated.
-To propagate the slope of the new gradient back into the network and therefore adjust the actual decision gradient, the weights need to be updated accordingly.
-With the injected `alpha`-value you can control the degree of the weight update.
-The underlying formula is as follows: 
-w[i] = w[i] - (dw[i] * alpha)
-*/
-net.update(0.01);
-
-/* REPEAT numbers 1 to 6 till the loss value(s) reach a certain threshold */
 ```
+**HINT #1**: providing an additional *custom learning rate* for the backpropagation can accelerate the training. For further info please consult the respective`test-examples.spec.ts` file.
 
-The training is somehow identical for `Net`, `DNN`, `BNN`, `RNN`, `LSTM`.
-For timely unfolding `RNN` and `LSTM` networks, keep in mind the statefulness of those approximators.
+**HINT #2**: The *Recurrent Neural Network Architectures* (RNN, LSTM) are not yet updated to this new training API. Due to my current lack of time, this likely won't change for a while... (unless this repo gets some voluntary help). Please consult the README of the [commit v.1.6.2](https://github.com/mvrahden/recurrent-js/tree/4065e644a36a26ae31598070dd0197008fe1a88b) for the details of the former training style. Thanks!
 
 Should you want to get some deeper insights on "how to train the network", it is recommendable to have a look into the source of the DQN-Solver from the [reinforce-js](https://github.com/mvrahden/reinforce-js) library (`learnFromSarsaTuple`-Method).
 
@@ -171,7 +147,7 @@ Everybody is more than welcome to contribute and extend the functionality!
 
 Please feel free to contribute to this project as much as you wish to.
 
-1. clone from GitHub via `git clone https://github.com/mvrahden/treasurer.git`
+1. clone from GitHub via `git clone https://github.com/mvrahden/recurrent-js.git`
 2. `cd` into the directory and `npm install` for initialization
 3. Try to `npm run test`. If everything is green, you're ready to go :sunglasses:
 
