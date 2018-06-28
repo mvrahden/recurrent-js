@@ -1,11 +1,13 @@
 {
   "name": "recurrent-js",
   "version": "1.6.2",
-  "description": "Amazingly simple to build and train various neural networks. The library is an object-oriented neural network approach (baked with Typescript), containing stateless and statefull neural network architectures.",
+  "description": "Various amazingly simple to build and train neural network architectures. The library is an object-oriented neural network approach (baked with Typescript), containing stateless and stateful neural network architectures.",
   "keywords": [
     "ai",
     "artificial intelligence",
     "recurrent",
+    "stateless",
+    "stateful",
     "recurrent neural network",
     "rnn",
     "deep learning",
