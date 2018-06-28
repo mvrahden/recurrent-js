@@ -14,7 +14,7 @@ describe('Examples with Neural Networks:', () => {
     trainingSet = new TrainingSet();
   });
 
-  fdescribe('Stateless Network Architectures:', () => {
+  describe('Stateless Network Architectures:', () => {
 
     beforeEach(() => {
       trainingSet.setSamples([
