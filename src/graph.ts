@@ -24,6 +24,13 @@ export class Graph {
   }
 
   /**
+   * Gives back the state of either memorizing or not a sequence of operations
+   */
+  public isMemorizingSequence(): boolean {
+    return this.needsBackpropagation;
+  }
+
+  /**
    * Clears the memorized sequence of operations
    */
   public forgetCurrentSequence(): void {
