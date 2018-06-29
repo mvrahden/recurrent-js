@@ -1,8 +1,7 @@
-import { Utils, DNN, BNN, Net, NetOpts } from '.';
-import { ANN } from './fnn/ann';
+import { Utils, DNN, BNN, Mat, Net, NetOpts } from '.';
 import { TrainingSet } from './fnn/utils/training-set';
+import { ANN } from './fnn/ann';
 import { Graph } from './graph';
-import { Mat } from '.';
 
 describe('Examples with Neural Networks:', () => {
   /**
@@ -36,129 +35,67 @@ describe('Examples with Neural Networks:', () => {
 
       it('given fresh instance >> perform iterative training routine >> should output exact expected results after 200 iterations', () => {
         // for (let j = 0; j < 10000; j++) {
-          const trainingIterations = 200;
+        const trainingIterations = 200;
 
-          sut = new Net(config);
+        sut = new Net(config);
 
-          const actualOutputsForSample = getAllOutputsFromForwardPass();
+        const actualOutputsForSample = getAllOutputsFromForwardPass();
 
-          // Expect untrained output not to be matching the expected results (even with a low precision)
-          expectOutputOfUntrainedNetworkToNotBeCloseToExpectedOutputs(actualOutputsForSample);
+        // Expect untrained output not to be matching the expected results (even with a low precision)
+        expectOutputOfUntrainedNetworkToNotBeCloseToExpectedOutputs(actualOutputsForSample);
 
-          // Prepare for Training
-          // sut.setTrainability(true);
+        // keep track of the squared prediction loss
+        const losses = [];
 
-          // keep track of the squared prediction loss
-          const losses = [];
-          const performTrainingRoutineForSample = (i: number): void => {
-            const graph = new Graph();
-            graph.memorizeOperationSequence(true); // with backprop
-            const input = new Mat(config.architecture.inputSize, 1);
-            input.setFrom(trainingSet.getInputForSample(i));
+        // Start Training (with Stochastic Gradient)
+        for (let i = 0; i < trainingIterations; i++) {
+          const ix = getRandomIndex();
+          // perform training routine for sample and gather squared loss
+          losses[i] = performTrainingRoutineForSample(ix, config.training.alpha);
+        }
 
-            const actualOutput = sut.forward(input, graph);
-            const expectedOutput = trainingSet.getExpectedOutputForSample(i);
+        // Get Output of the trained network
+        const actualTrainedOutputsForSample = getAllOutputsFromForwardPass();
 
-            // propagate Loss
-            for(let j=0; j < config.architecture.outputSize; j++) {
-              // calculate loss
-              const loss = [];
-              loss[j] = actualOutput.get(j, 0) - expectedOutput[j]; // calculate loss
-              loss[j] = Math.sign(loss[j]) * Math.min(Math.abs(loss[j]), 1);  // clip loss to 1
-              if(Math.abs(loss[j]) <= config.training.loss) { loss[j] = 0; }  // loss target achieved, skip propagation
-              
-              // apply loss to derivative weights
-              actualOutput.dw[j] = loss[j];
-            }
-
-            // backprop through sequence
-            graph.backward();
-            // update weights
-            sut.update(config.training.alpha);
-
-            // return squaredLosses;
-          };
-
-          // Start Training (with Stochastic Gradient)
-          for (let i = 0; i < trainingIterations; i++) {
-            const ix = getRandomIndex();
-            // perform training routine for sample and gather squared loss
-            losses[i] = performTrainingRoutineForSample(ix);
-          }
-
-          // Get Output of the trained network
-          const actualTrainedOutputsForSample = getAllOutputsFromForwardPass();
-
-          // Expect trained output to be close to the expected results (with a high precision of 1e-11 resp. 10)
-          expectOutputOfTrainedNetworkToBeCloseToExpectedOutputs(actualTrainedOutputsForSample, 10);
-          // Expect squared error to be near 0
-          // expect(losses[trainingIterations - 1]).toBeCloseTo(0);
+        // Expect trained output to be close to the expected results (with a high precision of 1e-11 resp. 10)
+        expectOutputOfTrainedNetworkToBeCloseToExpectedOutputs(actualTrainedOutputsForSample, 10);
+        // Expect squared error to be near 0
+        // expect(losses[trainingIterations - 1]).toBeCloseTo(0);
         // }
       });
 
       it('given fresh instance >> perform iterative training routine with varying alpha >> should output exact expected results after 200 iterations', () => {
         // for (let j = 0; j < 10000; j++) {
         const trainingIterations = 200;
+        const isVarying = true;
         const alphaMin = 0.3;
         const alphaMax = 0.9;
 
-          sut = new Net(config);
+        sut = new Net(config);
 
-          const actualOutputsForSample = getAllOutputsFromForwardPass();
+        const actualOutputsForSample = getAllOutputsFromForwardPass();
 
-          // Expect untrained output not to be matching the expected results (even with a low precision)
-          expectOutputOfUntrainedNetworkToNotBeCloseToExpectedOutputs(actualOutputsForSample);
+        // Expect untrained output not to be matching the expected results (even with a low precision)
+        expectOutputOfUntrainedNetworkToNotBeCloseToExpectedOutputs(actualOutputsForSample);
 
-          // Prepare for Training
-          // sut.setTrainability(true);
+        // keep track of the squared prediction loss
+        const losses = [];
 
-          // keep track of the squared prediction loss
-          const losses = [];
-          const performTrainingRoutineForSample = (i: number): void => {
-            const graph = new Graph();
-            graph.memorizeOperationSequence(true); // with backprop
-            const input = new Mat(config.architecture.inputSize, 1);
-            input.setFrom(trainingSet.getInputForSample(i));
+        // Start Training (with Stochastic Gradient)
+        for (let i = 0; i < trainingIterations; i++) {
+          const ix = getRandomIndex();
+          // perform training routine for sample and gather squared loss
+          const alpha = getRandomAlpha(alphaMin, alphaMax);
+          losses[i] = performTrainingRoutineForSample(ix, alpha);
+        }
 
-            const actualOutput = sut.forward(input, graph);
-            const expectedOutput = trainingSet.getExpectedOutputForSample(i);
+        // Get Output of the trained network
+        const actualTrainedOutputsForSample = getAllOutputsFromForwardPass();
 
-            // propagate Loss
-            for(let j=0; j < config.architecture.outputSize; j++) {
-              // calculate loss
-              const loss = [];
-              loss[j] = actualOutput.get(j, 0) - expectedOutput[j]; // calculate loss
-              loss[j] = Math.sign(loss[j]) * Math.min(Math.abs(loss[j]), 1);  // clip loss to 1
-              if(Math.abs(loss[j]) <= config.training.loss) { loss[j] = 0; }  // loss target achieved, skip propagation
-              
-              // apply loss to derivative weights
-              actualOutput.dw[j] = loss[j];
-            }
-
-            // backprop through sequence
-            graph.backward();
-            // perform training routine for sample and gather squared loss
-            const alpha = getRandomAlpha(alphaMin, alphaMax);
-            // update weights
-            sut.update(alpha);
-
-            // return squaredLosses;
-          };
-
-          // Start Training (with Stochastic Gradient)
-          for (let i = 0; i < trainingIterations; i++) {
-            const ix = getRandomIndex();
-            // perform training routine for sample and gather squared loss
-            losses[i] = performTrainingRoutineForSample(ix);
-          }
-
-          // Get Output of the trained network
-          const actualTrainedOutputsForSample = getAllOutputsFromForwardPass();
-
-          // Expect trained output to be close to the expected results (with a high precision of 1e-11 resp. 10)
-          expectOutputOfTrainedNetworkToBeCloseToExpectedOutputs(actualTrainedOutputsForSample, 10);
-          // Expect squared error to be near 0
-          // expect(losses[trainingIterations - 1]).toBeCloseTo(0);
+        // Expect trained output to be close to the expected results (with a high precision of 1e-11 resp. 10)
+        expectOutputOfTrainedNetworkToBeCloseToExpectedOutputs(actualTrainedOutputsForSample, 10);
+        // Expect squared error to be near 0
+        // expect(losses[trainingIterations - 1]).toBeCloseTo(0);
         // }
       });
 
@@ -175,6 +112,35 @@ describe('Examples with Neural Networks:', () => {
         }
 
         return actualOutputsForSample;
+      };
+
+      const performTrainingRoutineForSample = (i: number, alpha: number): void => {
+        const graph = new Graph();
+        graph.memorizeOperationSequence(true); // with backprop
+        const input = new Mat(config.architecture.inputSize, 1);
+        input.setFrom(trainingSet.getInputForSample(i));
+
+        const actualOutput = sut.forward(input, graph);
+        const expectedOutput = trainingSet.getExpectedOutputForSample(i);
+
+        // propagate Loss
+        for (let j = 0; j < config.architecture.outputSize; j++) {
+          // calculate loss
+          const loss = [];
+          loss[j] = actualOutput.get(j, 0) - expectedOutput[j]; // calculate loss
+          loss[j] = Math.sign(loss[j]) * Math.min(Math.abs(loss[j]), 1);  // clip loss to 1
+          if (Math.abs(loss[j]) <= config.training.loss) { loss[j] = 0; }  // loss target achieved, skip propagation
+
+          // apply loss to derivative weights
+          actualOutput.dw[j] = loss[j];
+        }
+
+        // backprop through sequence
+        graph.backward();
+        // update weights
+        sut.update(alpha);
+
+        // return squaredLosses;
       };
 
     });
@@ -208,11 +174,6 @@ describe('Examples with Neural Networks:', () => {
 
         // keep track of the squared prediction loss
         const losses = [];
-        const performTrainingRoutineForSample = (i: number): number => {
-          sut.forward(trainingSet.getInputForSample(i));
-          const actualLoss = sut.backward(trainingSet.getExpectedOutputForSample(i));
-          return actualLoss;
-        };
 
         // Start Training (with Stochastic Gradient)
         for (let i = 0; i < trainingIterations; i++) {
@@ -257,11 +218,6 @@ describe('Examples with Neural Networks:', () => {
 
         // keep track of the squared prediction loss
         const losses = [];
-        const performTrainingRoutineForSample = (i: number, alpha: number): number => {
-          sut.forward(trainingSet.getInputForSample(i));
-          const actualLoss = sut.backward(trainingSet.getExpectedOutputForSample(i), alpha);
-          return actualLoss;
-        };
 
         // Start Training (with Stochastic Gradient)
         for (let i = 0; i < trainingIterations; i++) {
@@ -282,6 +238,15 @@ describe('Examples with Neural Networks:', () => {
         expect(losses[trainingIterations - 1]).toBeCloseTo(0);
         // }
       });
+
+      const performTrainingRoutineForSample = (i: number, alpha?: number): number => {
+        const input = trainingSet.getInputForSample(i);
+        const expectedOutput = trainingSet.getExpectedOutputForSample(i);
+        sut.forward(input);
+        sut.backward(expectedOutput, alpha);
+        const actualLoss = sut.getSquaredLossFor(input, expectedOutput);
+        return actualLoss;
+      };
     });
 
     describe('Deep Bayesian Feedforward Neural Network (BNN):', () => {
@@ -320,11 +285,14 @@ describe('Examples with Neural Networks:', () => {
 
         // keep track of the squared prediction loss
         const losses = [];
-        const performTrainingRoutineForSample = (i: number): number => {
-          const fuzzyInput = distort(trainingSet.getInputForSample(i));
+        const performTrainingRoutineForSample = (i: number, alpha?: number): number => {
+          const input = trainingSet.getInputForSample(i);
+          const expectedOutput = trainingSet.getExpectedOutputForSample(i);
+          const fuzzyInput = distort(input);
           sut.forward(fuzzyInput);
-          const actualLoss = sut.backward(trainingSet.getExpectedOutputForSample(i));
-          return actualLoss;
+          sut.backward(expectedOutput, alpha);
+          const actualSquaredLoss = sut.getSquaredLossFor(fuzzyInput, expectedOutput);
+          return actualSquaredLoss;
         };
 
         // Start Training (with Stochastic Gradient)
@@ -371,9 +339,12 @@ describe('Examples with Neural Networks:', () => {
         // keep track of the squared prediction loss
         const losses = [];
         const performTrainingRoutineForSample = (i: number, alpha: number): number => {
-          sut.forward(trainingSet.getInputForSample(i));
-          const actualLoss = sut.backward(trainingSet.getExpectedOutputForSample(i), alpha);
-          return actualLoss;
+          const input = trainingSet.getInputForSample(i);
+          const expectedOutput = trainingSet.getExpectedOutputForSample(i);
+          sut.forward(input);
+          sut.backward(expectedOutput, alpha);
+          const actualSquaredLoss = sut.getSquaredLossFor(input, expectedOutput);
+          return actualSquaredLoss;
         };
 
         // Start Training (with Stochastic Gradient Descent)

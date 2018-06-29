@@ -11,7 +11,6 @@ export abstract class FNNModel extends Assertable implements ANN {
 
   protected graph: Graph;
   protected previousOutput: Mat;
-  protected previousInput: Array<number> | Float64Array;
 
   /**
    * Generates a Neural Net instance from a pre-trained Neural Net JSON.
@@ -153,21 +152,13 @@ export abstract class FNNModel extends Assertable implements ANN {
    * @param alpha update factor
    * @returns squared summed loss
    */
-  public backward(expectedOutput: Array<number> | Float64Array, alpha?: number): number {
-    FNNModel.assert(this.graph['needsBackpropagation'], '['+ this.constructor.name +'] Trainability is not enabled.');
+  public backward(expectedOutput: Array<number> | Float64Array, alpha?: number): void {
+    FNNModel.assert(this.graph.isMemorizingSequence(), '['+ this.constructor.name +'] Trainability is not enabled.');
     FNNModel.assert(typeof this.previousOutput !== 'undefined', '['+ this.constructor.name +'] Please execute `forward()` before calling `backward()`');
     this.propagateLossIntoDecoderLayer(expectedOutput);
     this.backwardGraph();
     this.updateWeights(alpha);
-    const lossSum = this.calculateLossSumByForwardPass(expectedOutput);
-    this.cleanUp();
-    return lossSum * lossSum;
-  }
-
-  private cleanUp(): void {
     this.resetGraph();
-    this.previousOutput = undefined;
-    this.previousInput = undefined;
   }
 
   private backwardGraph(): void {
@@ -191,16 +182,6 @@ export abstract class FNNModel extends Assertable implements ANN {
     }
   }
 
-  private calculateLossSumByForwardPass(expected: Array<number> | Float64Array): number {
-    let loss, lossSum = 0;
-    const out = this.forward(this.previousInput);
-    for (let i = 0; i < this.architecture.outputSize; i++) {
-      loss = out[i] - expected[i];
-      lossSum += loss;
-    }
-    return lossSum;
-  }
-
   private clipLoss(loss: number): number {
     if (loss > this.training.lossClamp) { return this.training.lossClamp; }
     else if (loss < -this.training.lossClamp) { return -this.training.lossClamp; }
@@ -213,14 +194,14 @@ export abstract class FNNModel extends Assertable implements ANN {
     this.updateDecoderLayer(alpha);
   }
 
-  private updateHiddenLayer(alpha: number): void {
+  protected updateHiddenLayer(alpha: number): void {
     for (let i = 0; i < this.architecture.hiddenUnits.length; i++) {
       this.model.hidden.Wh[i].update(alpha);
       this.model.hidden.bh[i].update(alpha);
     }
   }
 
-  private updateDecoderLayer(alpha: number): void {
+  protected updateDecoderLayer(alpha: number): void {
     this.model.decoder.Wh.update(alpha);
     this.model.decoder.b.update(alpha);
   }
@@ -236,7 +217,6 @@ export abstract class FNNModel extends Assertable implements ANN {
     const activations = this.specificForwardpass(mat);
     const outputMat = this.computeOutput(activations);
     const output = this.transformMatToArray(outputMat);
-    this.previousInput = input;
     this.previousOutput = outputMat;
     return output;
   }
@@ -257,6 +237,24 @@ export abstract class FNNModel extends Assertable implements ANN {
   protected computeOutput(hiddenUnitActivations: Array<Mat>): Mat {
     const weightedInputs = this.graph.mul(this.model.decoder.Wh, hiddenUnitActivations[hiddenUnitActivations.length - 1]);
     return this.graph.add(weightedInputs, this.model.decoder.b);
+  }
+
+  public getSquaredLossFor(input: number[] | Float64Array, expectedOutput: number[] | Float64Array): number {
+    const trainability = this.graph.isMemorizingSequence();
+    this.setTrainability(false);
+    const lossSum = this.calculateLossSumByForwardPass(input, expectedOutput);
+    this.setTrainability(trainability);
+    return lossSum * lossSum;
+  }
+
+  private calculateLossSumByForwardPass(input: Array<number> | Float64Array, expected: Array<number> | Float64Array): number {
+    let lossSum = 0;
+    const actualOutput = this.forward(input);
+    for (let i = 0; i < this.architecture.outputSize; i++) {
+      const loss = actualOutput[i] - expected[i];
+      lossSum += loss;
+    }
+    return lossSum;
   }
 
   private static has(obj: any, keys: Array<string>): boolean {
