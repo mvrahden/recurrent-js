@@ -124,8 +124,8 @@ do {
   const squaredLoss = net.getSquaredLoss(someInput, someExpectedOutput);
 } while(squaredLoss > 0.1);
 /**
- * --> Keep in mind: you actually want a low MEAN squaredLoss which would make this loop
- * more complex than the three simple lines displayed here.
+ * --> Keep in mind: you actually want a low MEAN squaredLoss, this is
+ * left out in this example, to keep the focus on the important parts
  */
 
 ```
