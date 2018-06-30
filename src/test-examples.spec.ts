@@ -96,7 +96,6 @@ describe('Examples with Neural Networks:', () => {
         expectOutputOfTrainedNetworkToBeCloseToExpectedOutputs(actualTrainedOutputsForSample, 10);
         // Expect squared error to be near 0
         expect(losses[trainingIterations - 1]).toBeCloseTo(0);
-        console.log(losses[trainingIterations - 1]);
         // }
       });
 
