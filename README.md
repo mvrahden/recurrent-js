@@ -6,6 +6,7 @@
 
 [docs-utils]: https://github.com/mvrahden/recurrent-js/blob/master/docs/utils.md
 [docs-mat]: https://github.com/mvrahden/recurrent-js/blob/master/docs/mat.md
+[docs-mat-opts]: https://github.com/mvrahden/recurrent-js/blob/master/docs/mat-opts.md
 [docs-graph]: https://github.com/mvrahden/recurrent-js/blob/master/docs/graph.md
 [docs-net]: https://github.com/mvrahden/recurrent-js/blob/master/docs/fnn/net.md
 [docs-dnn]: https://github.com/mvrahden/recurrent-js/blob/master/docs/fnn/dnn.md
@@ -38,7 +39,7 @@ The class names are linked to more detailed descriptions of the specific classes
 * **[Utils][docs-utils]** - Collection of Utility functions: Array creation & manipulation, Statistical evaluation methods etc.
 * **[Mat][docs-mat]** - Matrix Class holding weights and their derivatives for the neural networks.
 * **RandMat** - A convenient subclass of `Mat`. `RandMat` objects are automatically populated with random values on their creation.
-* **[MatOps][docs-mat]** - Class with matrix operations (add, multiply, sigmoid etc.) and their respective derivative functions.
+* **[MatOps][docs-mat-opts]** - Class with matrix operations (add, multiply, sigmoid etc.) and their respective derivative functions.
 * **[Graph][docs-graph]** - Graph memorizing the sequences of matrix operations and matching their respective derivative functions for backpropagation.
 * **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
 <!-- * **FNNModel** - Generalized Class containing the Weights (and `Graph`) for stateless `FNN`-models
@@ -102,7 +103,7 @@ const netOpts = {
 /* instantiate network */
 const net = new DNN(netOpts);
 
-/* activate the net for trainability */
+/* make it trainable */
 net.setTrainability(true);
 
 /** 
@@ -114,11 +115,13 @@ net.setTrainability(true);
  * suits your needs, or the mean squared error is small enough, e.g. < 1.
  */
 do {
-  const someOutput = net.forward([0, 1] /* an array of input values */);
-  // Train with a (varying) custom learning rate, to optimize training efforts:
-  /* net.backward([0, 1, 0], 0.03); */
-  // or keep it more simple:
-  const squaredLoss = net.backward([0, 1, 0] /* an array of target output */);
+  const someInput = [0, 1]; /* an array of intput values */
+  const someExpectedOutput = [0, 1, 0]; /* an array of target output */
+
+  const someOutput = net.forward(someInput);
+  
+  net.backward(someExpectedOutput /* , alpha?: number */);
+  const squaredLoss = net.getSquaredLoss(someInput, someExpectedOutput);
 } while(squaredLoss > 0.1);
 /**
  * --> Keep in mind: you actually want a low MEAN squaredLoss which would make this loop
@@ -126,7 +129,7 @@ do {
  */
 
 ```
-**HINT #1**: providing an additional *custom learning rate* for the backpropagation can accelerate the training. For further info please consult the respective`test-examples.spec.ts` file.
+**HINT #1**: providing an additional *custom learning rate* (`alpha`) for the backpropagation can accelerate the training. For further info please consult the respective`test-examples.spec.ts` file.
 
 **HINT #2**: The *Recurrent Neural Network Architectures* (RNN, LSTM) are not yet updated to this new training API. Due to my current lack of time, this likely won't change for a while... (unless this repo gets some voluntary help). Please consult the README of the [commit v.1.6.2](https://github.com/mvrahden/recurrent-js/tree/4065e644a36a26ae31598070dd0197008fe1a88b) for the details of the former training style. Thanks!
 
