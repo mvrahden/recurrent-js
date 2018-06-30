@@ -19,7 +19,7 @@ export class Graph {
    * Switch whether to memorize the operation sequence for Backpropagation (true) or ignore it (false).
    * @param {boolean} isMemorizing true or false [defaults to false]
    */
-  public memorizeOperationSequence(isMemorizing: boolean = false) {
+  public memorizeOperationSequence(isMemorizing: boolean = false): void {
     this.needsBackpropagation = isMemorizing;
   }
 
@@ -126,24 +126,6 @@ export class Graph {
   }
 
   /**
-   * Non-destructive matrix multiplication
-   * @param m1 
-   * @param m2 
-   */
-  public mul(m1: Mat, m2: Mat): Mat {
-    const out = MatOps.mul(m1, m2);
-    this.addMultiplyToBackpropagationStack(m1, m2, out);
-    return out;
-  }
-
-  private addMultiplyToBackpropagationStack(m1: Mat, m2: Mat, out: Mat) {
-    if (this.needsBackpropagation) {
-      const backward = MatOps.getMulBackprop(m1, m2, out);
-      this.backpropagationStack.push(backward);
-    }
-  }
-
-  /**
    * Non-destructive elementwise addition
    * @param m1 
    * @param m2 
@@ -157,6 +139,24 @@ export class Graph {
   private addAdditionToBackpropagationStack(m1: Mat, m2: Mat, out: Mat) {
     if (this.needsBackpropagation) {
       const backward = MatOps.getAddBackprop(m1, m2, out);
+      this.backpropagationStack.push(backward);
+    }
+  }
+
+  /**
+   * Non-destructive matrix multiplication
+   * @param m1 
+   * @param m2 
+   */
+  public mul(m1: Mat, m2: Mat): Mat {
+    const out = MatOps.mul(m1, m2);
+    this.addMultiplyToBackpropagationStack(m1, m2, out);
+    return out;
+  }
+
+  private addMultiplyToBackpropagationStack(m1: Mat, m2: Mat, out: Mat) {
+    if (this.needsBackpropagation) {
+      const backward = MatOps.getMulBackprop(m1, m2, out);
       this.backpropagationStack.push(backward);
     }
   }
