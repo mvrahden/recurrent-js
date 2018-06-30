@@ -4,13 +4,14 @@ The Graph class is important for the neural networks in a way that it keeps trac
 The following sections further describe the `Graph` class and its usage.
 
 ## Class Structure
-* Constructor: `Graph(needsBackpropagation: boolean)`
+* Constructor: `Graph()`
 * Provided Matrix Operations:
   * Delegate the actual Matrix Operation call
-  * Adds the Derivative of that Matrix Operation to Backpropagation Stack
-  * Returns a new Matrix object containing the results.
+  * Keeps protocol of the sequence of matrix operations
+  * Each operation returns a new `Mat`-Object, containing the specific results.
   * Available Matrix Operations are:
     * `rowPluck(m: Mat, rowIndex: number): Mat`
+    * `gauss(m: Mat, std: Mat): Mat`
     * `tanh(m: Mat): Mat`
     * `sig(m: Mat): Mat`
     * `relu(m: Mat): Mat`
@@ -18,6 +19,9 @@ The following sections further describe the `Graph` class and its usage.
     * `mul(mat1: Mat, mat2: Mat): Mat`
     * `dot(mat1: Mat, mat2: Mat): Mat`
     * `eltmul(mat1: Mat, mat2: Mat): Mat`
+* `memorizeOperationSequence(isMemorizing: boolean): void`: Switch, whether the graph should keep a protocol of the operation sequence for backpropagation
+* `isMemorizingSequence(): boolean`: Get current state
+* `forgetCurrentSequence(): void`: Clear the graph memory
 * `backward(): void`: Calls the Backpropagation Stack in reverse (LIFO) order of Matrix Operation Derivatives.
 
 ## Usage
