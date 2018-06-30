@@ -1,6 +1,6 @@
 # Class: `Mat`
 
-The Mat class is important for the neural networks in a way that it holds the matrix values, their associated values of derivative operations and it holds the matrix operations.
+The Mat class is important for the neural networks as it holds the weights and their associated derivative values in form of matrix values.
 The following sections further describe the `Mat` and its usage.
 
 ## Class Structure
@@ -14,22 +14,10 @@ The following sections further describe the `Mat` and its usage.
   * `setFrom(arr: Array<number> | Float64Array): void`
   <!-- * `setRow(m: Mat, rowIndex): void` -->
   * `setColumn(m: Mat, colIndex: number): void`
+  * `equals(m: Mat): boolean`
   * `[static] toJSON(m: Mat | any): {rows, cols, w}`
   * `[static] fromJSON(m: {rows, cols, w}): Mat`
-* Matrix Operations:
-  * Execute the actual Matrix Operation
-  * Throw an Error Message if dimensions are not aligned
-  * Available Matrix Operations are:
-    * `[static] rowPluck(m: Mat, rowIndex: number): Mat`
-    * `[static] gauss(m: Mat, std: Mat): Mat`
-    * `[static] tanh(m: Mat): Mat`
-    * `[static] sig(m: Mat): Mat`
-    * `[static] relu(m: Mat): Mat`
-    * `[static] add(mat1: Mat, mat2: Mat): Mat`
-    * `[static] mul(mat1: Mat, mat2: Mat): Mat`
-    * `[static] dot(mat1: Mat, mat2: Mat): Mat`
-    * `[static] eltmul(mat1: Mat, mat2: Mat): Mat`
-* Other Methods:
+* For Backpropagation:
   * `update(alpha: number): void`
 
 ## Usage
