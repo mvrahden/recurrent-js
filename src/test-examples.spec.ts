@@ -60,7 +60,8 @@ describe('Examples with Neural Networks:', () => {
         // Expect trained output to be close to the expected results (with a high precision of 1e-11 resp. 10)
         expectOutputOfTrainedNetworkToBeCloseToExpectedOutputs(actualTrainedOutputsForSample, 10);
         // Expect squared error to be near 0
-        // expect(losses[trainingIterations - 1]).toBeCloseTo(0);
+        expect(losses[trainingIterations - 1]).toBeCloseTo(0);
+        console.log(losses[trainingIterations - 1]);
         // }
       });
 
@@ -95,7 +96,8 @@ describe('Examples with Neural Networks:', () => {
         // Expect trained output to be close to the expected results (with a high precision of 1e-11 resp. 10)
         expectOutputOfTrainedNetworkToBeCloseToExpectedOutputs(actualTrainedOutputsForSample, 10);
         // Expect squared error to be near 0
-        // expect(losses[trainingIterations - 1]).toBeCloseTo(0);
+        expect(losses[trainingIterations - 1]).toBeCloseTo(0);
+        console.log(losses[trainingIterations - 1]);
         // }
       });
 
@@ -114,7 +116,7 @@ describe('Examples with Neural Networks:', () => {
         return actualOutputsForSample;
       };
 
-      const performTrainingRoutineForSample = (i: number, alpha: number): void => {
+      const performTrainingRoutineForSample = (i: number, alpha: number): number => {
         const graph = new Graph();
         graph.memorizeOperationSequence(true); // with backprop
         const input = new Mat(config.architecture.inputSize, 1);
@@ -140,7 +142,21 @@ describe('Examples with Neural Networks:', () => {
         // update weights
         sut.update(alpha);
 
-        // return squaredLosses;
+        /**
+         * Calculate new loss
+         * -- after backpropagation propagation
+         * -- with same input and same expected output and a fresh graph, that doesn't memorize the sequence
+         */
+        const freshGraph = new Graph();
+        const actualUpdatedOutput = sut.forward(input, freshGraph);
+        
+        // calculate sum of prediction losses
+        let lossSum = 0;
+        for (let j = 0; j < config.architecture.outputSize; j++) {
+          lossSum += actualUpdatedOutput.get(j, 0) - expectedOutput[j]; // calculate loss
+        }
+        const squaredLoss = lossSum * lossSum;
+        return squaredLoss;
       };
 
     });
@@ -251,13 +267,6 @@ describe('Examples with Neural Networks:', () => {
 
     describe('Deep Bayesian Feedforward Neural Network (BNN):', () => {
 
-      const distort = (arr: Array<number>): Array<number> => {
-        for (let i = 0; i < arr.length; i++) {
-          arr[i] = Utils.randn(arr[i], 0.000001);
-        }
-        return arr;
-      };
-
       const config = {
         architecture: { inputSize: 2, hiddenUnits: [2, 3], outputSize: 3 },
         training: { loss: 1e-11 }
@@ -367,6 +376,12 @@ describe('Examples with Neural Networks:', () => {
         // }
       });
 
+      const distort = (arr: Array<number>): Array<number> => {
+        for (let i = 0; i < arr.length; i++) {
+          arr[i] = Utils.randn(arr[i], 0.000001);
+        }
+        return arr;
+      };
     });
 
     const expectOutputOfUntrainedNetworkToNotBeCloseToExpectedOutputs = (actualOutputs: number[][] | Float64Array[]) => {
