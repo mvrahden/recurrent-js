@@ -53,7 +53,7 @@ export class Mat extends Assertable {
    * @param row 
    * @param col 
    */
-  protected getIndexBy(row: number, col: number) {
+  protected getIndexBy(row: number, col: number): number {
     return (row * this.cols) + col;
   }
 
@@ -98,19 +98,6 @@ export class Mat extends Assertable {
     return true;
   }
 
-  /**
-   * Discounts all values as follows: w[i] = w[i] - (alpha * dw[i])
-   * @param alpha discount factor
-   */
-  public update(alpha: number): void {
-    for (let i = 0; i < this._length; i++) {
-      if (this.dw[i] !== 0) {
-        this.w[i] = this.w[i] - alpha * this.dw[i];
-        this.dw[i] = 0;
-      }
-    }
-  }
-
   public static toJSON(m: Mat | any): {rows, cols, w} {
     const json = {rows: 0, cols: 0, w: []};
     json.rows = m.rows || m.n;
@@ -127,6 +114,19 @@ export class Mat extends Assertable {
       mat.w[i] = json.w[i];
     }
     return mat;
+  }
+
+  /**
+   * Discounts all values as follows: w[i] = w[i] - (alpha * dw[i])
+   * @param alpha discount factor
+   */
+  public update(alpha: number): void {
+    for (let i = 0; i < this._length; i++) {
+      if (this.dw[i] !== 0) {
+        this.w[i] = this.w[i] - alpha * this.dw[i];
+        this.dw[i] = 0;
+      }
+    }
   }
 
 }
