@@ -399,12 +399,48 @@ describe('Utils:', () => {
       };
     });
 
-    describe('Argmax:', () => {
+    describe('Output Functions:', () => {
 
-      it('Populated Array >> argmax >> should return index of field with max value', () => {
-        const actual = sut.argmax([0, 1, 10, 3, 4]);
+      fdescribe('Softmax:', () => {
+  
+        it('Populated Array >> softmax >> returning array values should sum up to 1', () => {
+          const actual = sut.softmax([0, 1, 10, 3, 4]);
+  
+          expect(sut.sum(actual)).toBe(1);
+        });
+  
+        it('Populated Array >> softmax >> should contain values that are exponentially scaled and then normalized', () => {
+          const input = [0, 1, 10, 3, 4];
+          const actual = sut.softmax(input);
+  
+          expectValuesToBeExponentiallyNormalized(input, actual);
+        });
 
-        expect(actual).toBe(2);
+        const expectValuesToBeExponentiallyNormalized = (input: Array<number>, actual: Array<number> | Float64Array): void => {
+          const expSum = getExponentialSumOf(input);
+
+          for (let i = 0; i < input.length; i++) {
+            const expected = Math.exp(input[i]) / expSum;
+            expect(actual[i]).toBe(expected);
+          }
+        };
+
+        const getExponentialSumOf = (arr: Array<number>): number => {
+          let expSum = 0;
+          for (let i = 0; i < arr.length; i++) {
+            expSum += Math.exp(arr[i]);
+          }
+          return expSum;
+        };
+      });
+
+      describe('Argmax:', () => {
+  
+        it('Populated Array >> argmax >> should return index of field with max value', () => {
+          const actual = sut.argmax([0, 1, 10, 3, 4]);
+  
+          expect(actual).toBe(2);
+        });
       });
     });
 

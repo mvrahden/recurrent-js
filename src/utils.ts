@@ -252,8 +252,25 @@ export class Utils {
   }
 
   /**
-   * Argmax of Array `arr`
-   * @param {Array<number> | Float64Array} arr Array of Numbers
+   * Softmax of a given set of values
+   * @param {Array<number> | Float64Array} arr set of values
+   */
+  public static softmax(arr: Array<number> | Float64Array): Array<number> | Float64Array {
+    const output = [];
+    let expSum = 0;
+    for(let i = 0; i < arr.length; i++) {
+      expSum += Math.exp(arr[i]);
+    }
+    for(let i = 0; i < arr.length; i++) {
+      output[i] = Math.exp(arr[i]) / expSum;
+    }
+
+    return output;
+  }
+
+  /**
+   * Argmax of a given set of values
+   * @param {Array<number> | Float64Array} arr set of values
    * @returns {number} Index of Argmax Operation
    */
   public static argmax(arr: Array<number> | Float64Array): number {
