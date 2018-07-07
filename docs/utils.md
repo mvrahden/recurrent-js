@@ -20,5 +20,22 @@
 * Array Creation
   * `static zeros(n: number): Array<number> | Float64Array`
   * `static ones(n: number): Array<number> | Float64Array`
+* Output Functions
+  * `static softmax(arr: Array<number> | Float64Array): Array<number> | Float64Array`
   * `static argmax(arr: Array<number> | Float64Array): number`
   * `static sampleWeighted(arr: Array<number> | Float64Array): number`
+
+## Usage
+
+Import the `Utils`-class and use the provided **static** methods.
+Each method comes with its respective description.
+
+```typescript
+import { Utils } from 'recurrent-js';
+
+const randomFloat = Utils.randf(0, 10);
+const randomInt = Utils.randi(0, 10);
+const randomNormal = Utils.randi(0, 1);
+
+const sum = Utils.sum([1, 2, 4, 10]);
+```
