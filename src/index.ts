@@ -4,10 +4,11 @@ import { Graph } from './graph';
 import { InnerState } from './utils/inner-state';
 import { LSTM } from './rnn/lstm';
 import { Mat } from './mat';
+import { MatOps } from './utils/mat-ops';
 import { Net } from './net';
 import { NetOpts } from './utils/net-opts';
 import { Utils } from './utils';
 import { RandMat } from './rand-mat';
 import { RNN } from './rnn/rnn';
 
-export { BNN, DNN, Graph, InnerState, LSTM, Mat, Net, NetOpts, Utils, RandMat, RNN };
+export { BNN, DNN, Graph, InnerState, LSTM, Mat, MatOps, Net, NetOpts, Utils, RandMat, RNN };
