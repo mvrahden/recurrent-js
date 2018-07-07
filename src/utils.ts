@@ -98,7 +98,7 @@ export class Utils {
    * Calculates the median of a given set
    * @param arr set of values
    */
-  public static median(arr: Array<number>): number {
+  public static median(arr: Array<number> | Float64Array): number {
     // median of [3, 5, 4, 4, 1, 1, 2, 3] = 3
     let median = 0;
     const count = arr.length;
@@ -118,7 +118,7 @@ export class Utils {
    * @param arr set of values
    * @param precision the floating point precision for grouping results, e.g. 1e3 [defaults to 1e6]
    */
-  public static mode(arr: Array<number>, precision?: number): Array<number> {
+  public static mode(arr: Array<number> | Float64Array, precision?: number): Array<number> | Float64Array {
     // as result can be bimodal or multimodal,
     // the returned result is provided as an array
     // mode of [3, 5, 4, 4, 1, 1, 2, 3] = [1, 3, 4]
@@ -151,7 +151,7 @@ export class Utils {
    * @param arr set of values
    * @param normalization defaults to sample variance ('unbiased')
    */
-  public static var(arr: Array<number>, normalization?: 'uncorrected' | 'biased' | 'unbiased'): number {
+  public static var(arr: Array<number> | Float64Array, normalization?: 'uncorrected' | 'biased' | 'unbiased'): number {
     normalization = normalization ? normalization : 'unbiased';
     const count = arr.length;
 
@@ -184,7 +184,7 @@ export class Utils {
    * @param arr set of values
    * @param normalization defaults to sample variance ('unbiased')
    */
-  public static std = (arr: Array<number>, normalization?: 'uncorrected' | 'biased' | 'unbiased'): number => {
+  public static std = (arr: Array<number> | Float64Array, normalization?: 'uncorrected' | 'biased' | 'unbiased'): number => {
     return Math.sqrt(Utils.var(arr, normalization));
   }
 
