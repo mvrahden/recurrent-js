@@ -401,7 +401,7 @@ describe('Utils:', () => {
 
     describe('Output Functions:', () => {
 
-      fdescribe('Softmax:', () => {
+      describe('Softmax:', () => {
   
         it('Populated Array >> softmax >> returning array values should sum up to 1', () => {
           const actual = sut.softmax([0, 1, 10, 3, 4]);
