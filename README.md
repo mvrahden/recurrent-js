@@ -6,7 +6,7 @@
 
 [docs-utils]: https://github.com/mvrahden/recurrent-js/blob/master/docs/utils.md
 [docs-mat]: https://github.com/mvrahden/recurrent-js/blob/master/docs/mat.md
-[docs-mat-opts]: https://github.com/mvrahden/recurrent-js/blob/master/docs/mat-opts.md
+[docs-mat-ops]: https://github.com/mvrahden/recurrent-js/blob/master/docs/mat-ops.md
 [docs-graph]: https://github.com/mvrahden/recurrent-js/blob/master/docs/graph.md
 [docs-net]: https://github.com/mvrahden/recurrent-js/blob/master/docs/fnn/net.md
 [docs-dnn]: https://github.com/mvrahden/recurrent-js/blob/master/docs/fnn/dnn.md
@@ -39,7 +39,7 @@ The class names are linked to more detailed descriptions of the specific classes
 * **[Utils][docs-utils]** - Collection of Utility functions: Array creation & manipulation, Statistical evaluation methods etc.
 * **[Mat][docs-mat]** - Matrix Class holding weights and their derivatives for the neural networks.
 * **RandMat** - A convenient subclass of `Mat`. `RandMat` objects are automatically populated with random values on their creation.
-* **[MatOps][docs-mat-opts]** - Class with matrix operations (add, multiply, sigmoid etc.) and their respective derivative functions.
+* **[MatOps][docs-mat-ops]** - Class with matrix operations (add, multiply, sigmoid etc.) and their respective derivative functions.
 * **[Graph][docs-graph]** - Graph memorizing the sequences of matrix operations and matching their respective derivative functions for backpropagation.
 * **NetOpts** - Standardized `Interface` for the initial configuration of all Neural Networks.
 <!-- * **FNNModel** - Generalized Class containing the Weights (and `Graph`) for stateless `FNN`-models
