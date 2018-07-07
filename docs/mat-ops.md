@@ -3,6 +3,8 @@
 The class `MatOps` holds all the necessary matrix operations for assambling a forward-pass and their respective derivatives (`get...Backprop`) to perform backpropagation.
 All methods are static (stateindependent) methods.
 
+## Class Structure
+
 * Each Matrix Operation:
   * executes the actual Matrix Operation
   * throws an Error Message if dimensions are not aligned
