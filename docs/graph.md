@@ -39,11 +39,13 @@ graph.memorizeOperationSequence(true);
 
 ### Matrix Operation Call e.g. `sig(m: Mat): Mat`
 
-Create a graph and inject a `Mat` object to call a sigmoid operation on its respective elements. A graph object - with backpropagation enabled - memorizes the derivatives of the matrix operations in the order they have been called.
+Create a graph and inject a `Mat` object to call a sigmoid operation on its respective elements.
+A graph object - with backpropagation enabled - memorizes the derivatives of the matrix operations in the order they have been called.
 
 ```typescript
 const graph = new Graph();
-graph.memorizeOperationSequence(true); /* OPTIONAL: Set Backprop-state to `true` */
+/* OPTIONAL: Set Backprop-state to `true` */
+graph.memorizeOperationSequence(true);
 
 const mat = new Mat(4, 1);
 mat.setFrom([0.1, 0.3, 0.9, 0.4]); /* fill Matrix with values */
@@ -65,5 +67,23 @@ After the execution of a sequence of matrix operations via a `Graph`-object, thi
 * Check the memorization state of graph with `graph.isMemorizingSequence();`
 
 ```typescript
+const graph = new Graph();
+
+const mat = new Mat(4, 1);
+mat.setFrom([0.1, 0.3, 0.9, 0.4]); /* fill Matrix with values */
+
+/* IMPORTANT: Set Backprop-state to `true` to be able to memorize matrix operation sequence */
+graph.memorizeOperationSequence(true);
+
+/* now: perform some sequence of matrix operations */
+const result = graph.sig(mat);
+
+/* manipulate the derivatives of `result`-Matrix */
+result.dw[1] = -0.8;
+
+/* propagate the modification back, by calling the memorized sequence of matrox operations */
 graph.backward();
+
+/* OPTIONAL: reset the graphs memory/protocol */
+graph.forgetCurrentSequence();
 ```
