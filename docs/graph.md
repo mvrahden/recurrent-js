@@ -20,7 +20,7 @@ The following sections further describe the `Graph` class and its usage.
     * `dot(mat1: Mat, mat2: Mat): Mat`
     * `eltmul(mat1: Mat, mat2: Mat): Mat`
 * `memorizeOperationSequence(isMemorizing: boolean): void`: Switch, whether the graph should keep a protocol of the operation sequence for backpropagation
-* `isMemorizingSequence(): boolean`: Get current state
+* `isMemorizingSequence(): boolean`: Get current memorization state
 * `forgetCurrentSequence(): void`: Clear the graph memory
 * `backward(): void`: Calls the Backpropagation Stack in reverse (LIFO) order of Matrix Operation Derivatives.
 
@@ -31,31 +31,38 @@ The following sections further describe the `Graph` class and its usage.
 Create a graph that does (or does not) memorize the sequence of Matrix Operations.
 
 ```typescript
-const graph = new Graph(true); // if no backpropagation needed: false
+const graph = new Graph();
+
+/* OPTIONAL: Set Backprop-state to `true` */
+graph.memorizeOperationSequence(true);
 ```
 
 ### Matrix Operation Call e.g. `sig(m: Mat): Mat`
 
-Create a graph and inject a `Mat` object to call a sigmoid operation on its respective elements. A graph object with backpropagation memorizes the derivatives of the matrix operations in the order they have been called.
+Create a graph and inject a `Mat` object to call a sigmoid operation on its respective elements. A graph object - with backpropagation enabled - memorizes the derivatives of the matrix operations in the order they have been called.
 
 ```typescript
-const graph = new Graph(true); // if no backpropagation needed: false
-const mat = new Mat(4, 1);
+const graph = new Graph();
+graph.memorizeOperationSequence(true); /* OPTIONAL: Set Backprop-state to `true` */
 
-/* fill Matrix with values */
-mat.setFrom([0.1, 0.3, 0.9, 0.4]);
+const mat = new Mat(4, 1);
+mat.setFrom([0.1, 0.3, 0.9, 0.4]); /* fill Matrix with values */
 
 /* 
- - call sigmoid operation on matrix,
- - register the matrix operation to the backpropagation stack and
- - receive a new matrix object with results
-*/
+ * - calls sigmoid operation on matrix,
+ * - registers the matrix operation to the backpropagation stack (if activated) and
+ * - returns a new matrix object with respective results
+ */
 const result = graph.sig(mat);
 ```
 
 ### Call of the `backward(): void` Method
 
-After the execution of a sequence of matrix operations via a graph-object, the graph is then able to execute the backpropagation process in reverse (LIFO) order.
+After the execution of a sequence of matrix operations via a `Graph`-object, this graph is then able to execute the backpropagation process in reverse (LIFO) order.
+
+**Prerequisite:** The `Graph`-object needs to memorize the sequence of matrix operations.
+* Call `graph.memorizeOperationSequence(true);` for that
+* Check the memorization state of graph with `graph.isMemorizingSequence();`
 
 ```typescript
 graph.backward();
